@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juan Carlos Alizo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:     #080908;
+      --s1:     #0d100d;
+      --s2:     #111512;
+      --s3:     #161a16;
+      --fg:     #f0eeea;
+      --dim:    rgba(240,238,234,0.45);
+      --faint:  rgba(240,238,234,0.08);
+      --line:   rgba(240,238,234,0.08);
+      --accent: #84B179;
+      --a2:     #6fa364;
+      --glow:   rgba(132,177,121,0.15);
+    }
+
+    /* ── CAD BLUEPRINT THEME ── */
+    body.blueprint {
+      --bg:     #041524;
+      --s1:     #071e33;
+      --s2:     #0b2845;
+      --s3:     #11365c;
+      --fg:     #ffffff;
+      --dim:    rgba(255,255,255,0.7);
+      --faint:  rgba(255,255,255,0.15);
+      --line:   rgba(255,255,255,0.3);
+      --accent: #00ffcc;
+      --glow:   rgba(0,255,204,0.15);
+    }
+    body.blueprint .box::after { border: 1px solid var(--line); }
+    body.blueprint #c-ring { border-color: rgba(0,255,204,0.5); }
+    body.blueprint .c-nav { background: rgba(4,21,36,0.9); }
+
+    /* Hide native scrollbar for the airbrake */
+    ::-webkit-scrollbar { width: 0px; background: transparent; display: none; }
+    html { -ms-overflow-style: none; scrollbar-width: none; scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      cursor: none;
+      padding: 1.25rem;
+      transition: background 0.4s, color 0.4s;
+    }
+
+    /* Grain */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 9999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    }
+
+    /* ── DYNAMIC AIRBRAKE SCROLLBAR ── */
+    #airbrake-scrollbar {
+      position: fixed; right: 8px; top: 20px; bottom: 20px; width: 14px;
+      z-index: 9999; pointer-events: none;
+    }
+    #ab-track {
+      position: absolute; left: 6px; top: 0; bottom: 0; width: 2px;
+      background: var(--line);
+    }
+    #ab-thumb {
+      position: absolute; left: 0; top: 0; width: 14px; height: 36px;
+      transform: translateY(0);
+      will-change: transform;
+    }
+    .ab-core {
+      position: absolute; left: 5px; top: 0; width: 4px; height: 100%;
+      background: var(--accent); border-radius: 2px; z-index: 2;
+    }
+    .ab-flap {
+      position: absolute; top: 8px; width: 3px; height: 20px;
+      background: var(--fg); border-radius: 2px; z-index: 1;
+      transform-origin: top center;
+      will-change: transform;
+    }
+    .flap-left { left: 5px; }
+    .flap-right { right: 5px; }
+
+    /* ── CURSOR ── */
+    #c-dot {
+      position: fixed; top:0; left:0;
+      width:14px; height:14px;
+      background: transparent;
+      pointer-events:none; z-index:99999;
+      transform:translate(-50%,-50%);
+      transition: width .15s, height .15s;
+    }
+    #c-dot::before, #c-dot::after {
+      content: ''; position: absolute;
+      background: var(--accent);
+      transition: background .2s;
+    }
+    #c-dot::before { width: 100%; height: 2px; top: 50%; left: 0; transform: translateY(-50%); }
+    #c-dot::after { width: 2px; height: 100%; top: 0; left: 50%; transform: translateX(-50%); }
+
+    #c-ring {
+      position:fixed; top:0; left:0;
+      width:40px; height:40px;
+      border: 1.5px dashed var(--accent); opacity: 0.5;
+      border-radius: 0; 
+      pointer-events:none; z-index:99998;
+      transform:translate(-50%,-50%);
+      transition: width .3s ease, height .3s ease, border-color .3s, transform .2s ease;
+    }
+    
+    body.ch #c-dot::before, body.ch #c-dot::after { background: var(--fg); }
+    body.ch #c-ring { 
+      width:48px; height:48px; opacity: 1;
+      border-color:var(--accent); 
+      transform:translate(-50%,-50%) rotate(45deg);
+    }
+    a,button { cursor:none; }
+
+    /* ── GRID ── */
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(12,1fr);
+      gap:3px;
+      max-width:1560px;
+      margin:0 auto;
+    }
+
+    /* ── BASE BOX ── */
+    .box {
+      background: var(--s1);
+      padding:2rem;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      transition: background 0.4s;
+    }
+    .box::after {
+      content:'';
+      position:absolute; inset:0;
+      border:1px solid var(--line);
+      pointer-events:none;
+      transition: border-color 0.4s;
+    }
+
+    /* ── LABEL ── */
+    .lbl {
+      font-family:'DM Mono',monospace;
+      font-size:0.65rem; letter-spacing:0.18em; text-transform:uppercase;
+      color:var(--accent);
+      margin-bottom:1.4rem;
+      display:flex; align-items:center; gap:0.6rem;
+    }
+    .lbl::before {
+      content:'';
+      display:block; width:18px; height:1px;
+      background:var(--accent); opacity:0.5; flex-shrink:0;
+    }
+
+    /* ── CELL PLACEMENTS ── */
+    .c-nav    { grid-column:span 12; padding:0.9rem 1.8rem; background:rgba(8,9,8,0.9); backdrop-filter:blur(20px); position:sticky; top:0; z-index:500; }
+    .c-hero   { grid-column:span 7;  padding:3.5rem 2.5rem; background:var(--bg); justify-content:flex-end; min-height:340px; }
+    .c-info   { grid-column:span 5;  background:var(--s2); justify-content:space-between; }
+    .c-ticker { grid-column:span 12; padding:0; background:var(--accent); overflow:hidden; }
+    .c-viewer { grid-column:span 7;  padding:0; background:var(--bg); min-height:400px; }
+    .c-exp    { grid-column:span 5;  background:var(--s2); }
+    .c-ptitle { grid-column:span 12; padding:1rem 2rem; background:var(--s3); flex-direction:row; align-items:center; justify-content:space-between; }
+    .c-p1     { grid-column:span 3; aspect-ratio:1; background:var(--s1); }
+    .c-p2     { grid-column:span 3; aspect-ratio:1; background:var(--s2); }
+    .c-p3     { grid-column:span 3; aspect-ratio:1; background:var(--s1); }
+    .c-p4     { grid-column:span 3; aspect-ratio:1; background:var(--s3); }
+    .c-art    { grid-column:span 6; background:var(--s2); }
+    .c-resume { grid-column:span 6; background:var(--s3); }
+    .c-footer { grid-column:span 12; flex-direction:row; justify-content:space-between; align-items:center; padding:1.2rem 2rem; background:var(--bg); }
+
+    /* ── NAV ── */
+    .nav-inner { display:flex; justify-content:space-between; align-items:center; }
+    .nav-logo {
+      font-family:'Syne',sans-serif;
+      font-weight:700; font-size:0.85rem;
+      letter-spacing:0.12em; text-transform:uppercase;
+      color:var(--accent); text-decoration:none;
+      display:inline-block;
+    }
+    .nav-logo .char { display:inline-block; transition:transform .2s; }
+    .nav-links { display:flex; gap:2rem; list-style:none; }
+    .nav-links a {
+      font-family:'DM Mono',monospace;
+      font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase;
+      color:var(--dim); text-decoration:none; transition:color .2s;
+      position:relative;
+    }
+    .nav-links a::after {
+      content:'';
+      position:absolute; left:0; bottom:-3px;
+      width:0; height:1px; background:var(--accent);
+      transition:width .3s;
+    }
+    .nav-links a:hover { color:var(--fg); }
+    .nav-links a:hover::after { width:100%; }
+
+    .nav-right { display:flex; align-items:center; gap:1.5rem; }
+    .status-dot {
+      width:6px; height:6px; border-radius:50%;
+      background:var(--accent);
+      animation:pulse 2.5s ease-in-out infinite; flex-shrink:0;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow:0 0 0 0 rgba(132,177,121,.5); }
+      50%      { box-shadow:0 0 0 5px rgba(132,177,121,0); }
+    }
+    .nav-clock {
+      font-family:'DM Mono',monospace;
+      font-size:0.68rem; letter-spacing:0.1em; color:var(--accent); opacity:.7;
+    }
+    
+    .theme-btn {
+      font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:.1em; text-transform:uppercase;
+      background:rgba(255,255,255,0.05); border:1px solid var(--line); color:var(--dim);
+      padding:.3rem .7rem; transition:background .2s, color .2s, border-color .2s; border-radius: 4px;
+    }
+    .theme-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+    /* ── HERO ── */
+    .hero-eyebrow {
+      font-family:'DM Mono',monospace;
+      font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase;
+      color:var(--accent); margin-bottom:1.2rem;
+    }
+    .hero-name {
+      font-family:'Syne',sans-serif;
+      font-weight:800;
+      font-size:clamp(3.2rem,7vw,7rem);
+      line-height:0.92; letter-spacing:-0.04em;
+      color:var(--fg); margin-bottom:1.8rem;
+    }
+    .hero-desc { font-size:.95rem; color:var(--dim); max-width:38ch; line-height:1.7; }
+    .c-hero::before {
+      content:'';
+      position:absolute; bottom:-20%; left:-10%;
+      width:60%; height:60%;
+      background:radial-gradient(ellipse,var(--glow) 0%,transparent 65%);
+      pointer-events:none;
+    }
+    .stars { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+    .star {
+      position:absolute; background:var(--fg); border-radius:50%;
+      animation:twinkle var(--d,3s) ease-in-out infinite;
+      animation-delay:var(--dl,0s); opacity:var(--o,.3);
+    }
+    @keyframes twinkle {
+      0%,100% { opacity:var(--o,.3); }
+      50%      { opacity:calc(var(--o,.3)*0.1); }
+    }
+
+    /* ── INFO / ABOUT ── */
+    .about-text { font-size:1rem; color:var(--dim); line-height:1.75; margin-bottom:1.4rem; }
+    .tag-row { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:2rem; }
+    .tag {
+      font-family:'DM Mono',monospace;
+      font-size:.62rem; letter-spacing:.1em; text-transform:uppercase;
+      color:var(--accent);
+      border:1px solid var(--line);
+      background:rgba(255,255,255,0.02);
+      padding:.3rem .8rem; border-radius:999px;
+      transition:background .2s, color .2s;
+    }
+    .tag:hover { background:var(--glow); }
+
+    .info-photo {
+      width:100%; aspect-ratio:4/3;
+      background:var(--s3);
+      display:flex; align-items:center; justify-content:center;
+      flex-direction:column; gap:0.5rem;
+      margin-top:auto;
+      position:relative; overflow:hidden;
+    }
+
+    /* ── TICKER ── */
+    .ticker-inner { display:flex; white-space:nowrap; overflow:hidden; padding:.6rem 0; }
+    .ticker-track {
+      display:flex; gap:2.5rem;
+      animation:ticker 18s linear infinite;
+      font-family:'DM Mono',monospace;
+      font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; color:#000;
+    }
+    .c-ticker:hover .ticker-track { animation-direction:reverse; }
+    @keyframes ticker { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+    .ticker-sep { color:rgba(0,0,0,.3); }
+
+    /* ── 3D VIEWER ── */
+    .viewer-wrap { position:relative; width:100%; height:100%; min-height:400px; }
+    #threejs-canvas { display:block; width:100%; height:100%; }
+    .viewer-ui {
+      position:absolute; inset:0; pointer-events:none;
+      padding:1.4rem; display:flex; flex-direction:column; justify-content:space-between;
+    }
+    .viewer-top { display:flex; justify-content:space-between; align-items:flex-start; pointer-events:auto; }
+    .viewer-tag {
+      font-family:'DM Mono',monospace; font-size:.62rem;
+      letter-spacing:.14em; text-transform:uppercase; color:var(--accent); opacity:.7;
+    }
+    .viewer-btns { display:flex; gap:.5rem; }
+    .viewer-btn {
+      font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:.1em; text-transform:uppercase;
+      background:transparent; border:1px solid var(--line); color:var(--accent);
+      padding:.4rem .9rem; transition:background .2s, color .2s, border-color .2s;
+    }
+    .viewer-btn:hover { background:var(--accent); color:#000; border-color:var(--accent); }
+    #stl-input { display:none; }
+    .viewer-bottom {
+      font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase;
+      color:var(--dim); line-height:1.8;
+    }
+    .viewer-hint { opacity:0; transition:opacity .4s; font-size:.6rem; color:var(--accent); margin-top:.3rem; }
+    .viewer-hint.vis { opacity:1; }
+
+    /* ── EXPERIENCE ── */
+    .exp-item {
+      padding:1.8rem 0; border-bottom:1px solid var(--line);
+      transition:padding-left .25s;
+      position:relative;
+    }
+    .exp-item:last-child { border-bottom:none; }
+    .exp-item:hover { padding-left:.6rem; }
+    .exp-item::before {
+      content:'';
+      position:absolute; left:0; top:0; bottom:0;
+      width:2px; background:var(--accent);
+      transform:scaleY(0); transform-origin:top; transition:transform .3s;
+    }
+    .exp-item:hover::before { transform:scaleY(1); }
+
+    .exp-body { 
+      display:grid; 
+      grid-template-columns: 200px 1fr; 
+      gap: 1.8rem; 
+      align-items: start; 
+    }
+    .exp-body > div:first-child { order: 2; } 
+    
+    .exp-photo {
+      order: 1; 
+      width: 100%; 
+      height: auto;
+      aspect-ratio: 4/3;
+      background: var(--s3);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: .5rem;
+      font-family: 'DM Mono', monospace; color: var(--faint);
+      letter-spacing: .1em; text-transform: uppercase; text-align: center;
+      line-height: 1.4; padding: 0;
+      overflow: hidden; position: relative;
+    }
+
+    .exp-meta { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:.35rem; }
+    .exp-co { font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); display:inline-block; }
+    .exp-date { font-family:'DM Mono',monospace; font-size:.62rem; color:var(--dim); }
+    .exp-role { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:600; letter-spacing:-.01em; margin-bottom:.3rem; }
+    .exp-desc { font-size:.88rem; color:var(--dim); line-height:1.65; }
+
+    /* ── PROJECT CELLS ── */
+    .c-ptitle .lbl { margin:0; }
+    .ptitle-right {
+      font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);
+    }
+    .proj-cell {
+      position:relative; overflow:hidden;
+      transform-style:preserve-3d;
+      will-change:transform;
+      transition:box-shadow .3s;
+    }
+    .proj-cell:hover { box-shadow:0 18px 50px rgba(0,0,0,.6), 0 0 0 1px var(--glow); }
+    
+    .proj-inner {
+      position:absolute; inset:0;
+      transition:transform .6s cubic-bezier(.25,.46,.45,.94), background-color 0.4s;
+    }
+
+    /* Image Thumbnails for Projects */
+    .c-p1 .proj-inner { background: url('airbrake.jpg') center/cover no-repeat; }
+    .c-p2 .proj-inner { background: url('synth.jpg') center/cover no-repeat; }
+    .c-p3 .proj-inner { background: url('satellite.jpg') center/cover no-repeat; }
+    .c-p4 .proj-inner { background: url('projects.jpg') center/cover no-repeat; }
+    
+    body.blueprint .proj-inner { 
+      background-color: var(--s3);
+      background-blend-mode: screen; 
+      filter: grayscale(100%) contrast(1.2);
+    }
+
+    .proj-cell:hover .proj-inner { transform:scale(1.05); }
+    .proj-num {
+      position:absolute; top:1.2rem; left:1.4rem; z-index:2;
+      font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.14em;
+      color:var(--accent); opacity:.6;
+    }
+    .proj-overlay {
+      position:absolute; inset:0; z-index:3;
+      background:linear-gradient(to top,var(--bg) 0%,transparent 70%);
+      opacity:0; transition:opacity .35s;
+      display:flex; align-items:flex-end; padding:1.3rem;
+    }
+    .proj-cell:hover .proj-overlay { opacity:1; }
+    .proj-name {
+      font-family:'Syne',sans-serif;
+      font-size:.95rem; font-weight:600; letter-spacing:-.01em; line-height:1.2;
+      color:var(--fg); max-width:20ch;
+    }
+    .proj-arrow {
+      margin-left:auto; font-size:1rem; color:var(--accent);
+      transition:transform .25s; flex-shrink:0;
+    }
+    .proj-cell:hover .proj-arrow { transform:translate(3px,-3px); }
+
+    /* ── ART ── */
+    .art-grid { display:grid; grid-template-columns:1fr 1fr; gap:3px; margin-top:1.2rem; flex:1; }
+    .art-thumb {
+      background:var(--s3); aspect-ratio:1; overflow:hidden; position:relative;
+      transition:filter .3s;
+    }
+    .art-thumb:hover { filter:brightness(1.2); }
+
+    /* ── RESUME / SKILLS ── */
+    .resume-skills { display:flex; flex-wrap:wrap; gap:.5rem; margin:1.2rem 0; }
+    .skill-tag {
+      font-family:'DM Mono',monospace;
+      font-size:.6rem; letter-spacing:.08em; text-transform:uppercase;
+      border:1px solid var(--line); padding:.3rem .75rem; color:var(--dim);
+      transition:border-color .2s, color .2s;
+    }
+    .skill-tag:hover { border-color:var(--accent); color:var(--accent); }
+
+    /* ── CTA BUTTON (magnetic) ── */
+    .cta-btn {
+      display:inline-flex; align-items:center; justify-content:space-between;
+      width:100%; padding:.85rem 1.1rem; margin-top:auto;
+      border:1px solid var(--line);
+      font-family:'DM Mono',monospace; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase;
+      color:var(--fg); text-decoration:none;
+      transition:background .2s, border-color .2s, color .2s, transform .15s;
+      will-change:transform;
+    }
+    .cta-btn .arrow { transition:transform .2s; }
+    .cta-btn:hover { background:var(--accent); border-color:var(--accent); color:#000; }
+    .cta-btn:hover .arrow { transform:translate(3px,-3px); }
+    .cta-btn.filled {
+      background:var(--accent); border-color:var(--accent); color:#000; font-weight:700;
+      box-shadow:0 0 24px var(--glow);
+    }
+    .cta-btn.filled:hover { background:var(--fg); }
+
+    /* ── FOOTER ── */
+    .ft-l { font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:.1em; color:var(--dim); display:flex; align-items:center; gap:0.4rem; }
+    .ft-r { display:flex; gap:2rem; }
+    .ft-r a {
+      font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:.1em; text-transform:uppercase;
+      color:var(--dim); text-decoration:none; transition:color .2s;
+    }
+    .ft-r a:hover { color:var(--accent); }
+    
+    /* Audio Egg Button */
+    .audio-egg-btn { background: none; border: none; font-size: 0.8rem; color: var(--dim); cursor: none; transition: color 0.3s; opacity: 0.5; }
+    .audio-egg-btn:hover { color: var(--accent); opacity: 1; }
+    .audio-egg-btn.active { color: var(--accent); opacity: 1; animation: pulseEgg 2s infinite; }
+    @keyframes pulseEgg { 0%,100% {transform: scale(1);} 50% {transform: scale(1.2);} }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity:0; transform:translateY(16px); transition:opacity .8s ease, transform .8s ease; }
+    .reveal.vis { opacity:1; transform:none; }
+    .d1 { transition-delay:.1s; } .d2 { transition-delay:.2s; } .d3 { transition-delay:.3s; }
+
+    /* ── PROJECT MODAL ── */
+    .modal-backdrop {
+      position:fixed; inset:0; z-index:10000;
+      background:rgba(0,0,0,.75); backdrop-filter:blur(8px);
+      opacity:0; pointer-events:none; transition:opacity .35s;
+    }
+    .modal-backdrop.open { opacity:1; pointer-events:all; }
+    .modal-panel {
+      position:fixed; bottom:0; left:0; right:0; z-index:10001;
+      background:var(--s1); border-top:1px solid var(--line);
+      transform:translateY(100%); transition:transform .45s cubic-bezier(.32,0,.15,1);
+      max-height:85vh; overflow-y:auto;
+    }
+    .modal-panel.open { transform:translateY(0); }
+    .modal-inner {
+      max-width:1000px; margin:0 auto; padding:3rem 3rem 4rem;
+      display:grid; grid-template-columns:1fr 1.3fr; gap:3rem;
+    }
+    .modal-close {
+      position:absolute; top:1.4rem; right:1.8rem;
+      background:none; border:1px solid var(--line); color:var(--dim);
+      font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:.12em;
+      padding:.4rem .9rem; text-transform:uppercase; transition:border-color .2s, color .2s;
+    }
+    .modal-close:hover { border-color:var(--accent); color:var(--accent); }
+    .modal-num  { font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.2em; color:var(--accent); margin-bottom:.8rem; }
+    .modal-title { font-family:'Syne',sans-serif; font-size:clamp(1.8rem,4vw,2.8rem); font-weight:700; letter-spacing:-.03em; line-height:1.05; margin-bottom:.9rem; }
+    .modal-subtitle { font-family:'DM Mono',monospace; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:1.5rem; }
+    .modal-desc { font-size:1rem; color:var(--dim); line-height:1.8; margin-bottom:1.5rem; max-width:52ch; }
+    .modal-tags { display:flex; flex-wrap:wrap; gap:.45rem; }
+    .modal-tag { font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; border:1px solid var(--line); padding:.3rem .75rem; color:var(--dim); }
+    .modal-visual {
+      background:var(--s3); border:1px solid var(--line);
+      aspect-ratio:4/3; display:flex; align-items:center; justify-content:center;
+      flex-direction:column; gap:.6rem; position:relative; overflow:hidden;
+    }
+    .modal-visual-lbl { font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.15em; text-transform:uppercase; color:var(--faint); }
+
+    /* ── FLOATING STICKER ── */
+    .sticker {
+      position:absolute; z-index:4;
+      font-family:'Syne',sans-serif; font-size:.75rem; font-weight:700;
+      background:var(--accent); color:#000;
+      padding:.45rem .9rem; border-radius:999px;
+      letter-spacing:-.01em;
+      animation:float 3s ease-in-out infinite;
+      pointer-events:none;
+    }
+    @keyframes float {
+      0%,100% { transform:rotate(-3deg) translateY(0); }
+      50%      { transform:rotate(-3deg) translateY(-6px); }
+    }
+
+    .exp-item:hover .exp-co { animation:wiggle .4s ease; }
+    @keyframes wiggle {
+      0%,100% { transform:rotate(0); }
+      25%      { transform:rotate(-3deg); }
+      75%      { transform:rotate(3deg); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width:1024px) {
+      .c-hero,.c-info   { grid-column:span 12; }
+      .c-viewer,.c-exp  { grid-column:span 12; }
+      .c-p1,.c-p2,.c-p3,.c-p4 { grid-column:span 6; }
+      .c-art,.c-resume  { grid-column:span 12; }
+      .modal-inner      { grid-template-columns:1fr; }
+    }
+    @media (max-width:640px) {
+      body { padding:.6rem; }
+      .c-p1,.c-p2,.c-p3,.c-p4 { grid-column:span 12; }
+      .nav-links { display:none; }
+      .hero-name { font-size:3rem; }
+      .exp-body { display:flex; flex-direction:column; gap:1rem; }
+      .exp-body > div:first-child { order: 2; }
+      .exp-photo { order: 1; width: 100%; aspect-ratio: 16/9; margin-bottom: 0.5rem; }
+      #airbrake-scrollbar { display: none; } 
+    }
+
+    /* ══ PLAYFUL EXTRAS ══ */
+    .trail-dot { position:fixed; border-radius:50%; pointer-events:none; z-index:99990; background:var(--accent); opacity:0; transition:opacity .3s; }
+    .hero-desc em { font-style:normal; color:var(--accent); }
+    .tag { transition:transform .2s, background .2s, color .2s; }
+    .tag:hover { transform:rotate(-2deg) scale(1.06); }
+    .skill-tag { cursor:default; transition:border-color .2s, color .2s, transform .15s; }
+    .skill-tag:hover { border-color:var(--accent); color:var(--accent); transform:translateY(-2px); }
+    .proj-cell:hover .proj-num { opacity:1; color:var(--fg); }
+    .c-ticker:hover .ticker-track { animation-direction:reverse; }
+
+    .eq-bars {
+      position:absolute; bottom:1.5rem; left:1.4rem; z-index:2;
+      display:flex; gap:3px; align-items:flex-end;
+      opacity:0; transition:opacity .3s;
+    }
+    .c-p2:hover .eq-bars { opacity:1; }
+    .eq-bar {
+      width:3px; background:var(--accent); border-radius:2px;
+      animation: eq var(--spd,.6s) ease-in-out infinite alternate;
+    }
+    @keyframes eq { from{height:4px;} to{height:var(--h,14px);} }
+
+    .orbit-ring {
+      position:absolute; top:50%; left:50%; z-index:2;
+      width:80px; height:80px; margin:-40px 0 0 -40px;
+      border:1px dashed var(--line); border-radius:50%;
+      opacity:0; transition:opacity .3s, border-color .3s;
+      animation:spin 8s linear infinite;
+    }
+    .c-p3:hover .orbit-ring { opacity:1; border-color: var(--accent); }
+    @keyframes spin { to{transform:rotate(360deg);} }
+
+  </style>
+</head>
+<body>
+
+  <div id="c-dot"></div>
+  <div id="c-ring"></div>
+  
+  <div id="airbrake-scrollbar">
+    <div id="ab-track"></div>
+    <div id="ab-thumb">
+      <div class="ab-core"></div>
+      <div class="ab-flap flap-left"></div>
+      <div class="ab-flap flap-right"></div>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <div class="box c-nav">
+      <div class="nav-inner">
+        <a href="#" class="nav-logo" id="nav-logo">Alizo</a>
+        <div class="nav-right">
+          <ul class="nav-links">
+            <li><a href="#about-anchor">About</a></li>
+            <li><a href="#exp-anchor">Experience</a></li>
+            <li><a href="#proj-anchor">Projects</a></li>
+            <li><a href="#art-anchor">Art</a></li>
+            <li><a href="#resume-anchor">Resume</a></li>
+          </ul>
+          <div style="display:flex;align-items:center;gap:.6rem;">
+            <div class="status-dot"></div>
+            <span class="nav-clock" id="clock">00:00:00</span>
+            <button id="theme-btn" class="theme-btn">Blueprint</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box c-hero reveal" id="about-anchor">
+      <div class="stars" id="stars"></div>
+      <p class="hero-eyebrow">Mechanical Engineering · UGA '27</p>
+      <h1 class="hero-name">Juan Carlos<br>Alizo</h1>
+      <p class="hero-desc">Bridging precision aerospace engineering with embedded systems and studio art.</p>
+      <div class="sticker" style="top:2rem;right:2rem;">Available '26 ✦</div>
+    </div>
+
+    <div class="box c-info reveal d1">
+      <div>
+        <div class="lbl">About</div>
+        <p class="about-text">Born in Venezuela, based in Athens, GA. Interested in space and the engineering that takes us there. I like to draw and make stuff.</p>
+        <div class="tag-row">
+          <span class="tag">Vast Space</span>
+          <span class="tag">AIAA IREC</span>
+          <span class="tag">CNC Machining</span>
+          <span class="tag">Embedded Systems</span>
+        </div>
+      </div>
+      <div class="info-photo">
+        <img src="profile.jpg" alt="Juan Carlos Alizo" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;" />
+      </div>
+    </div>
+
+    <div class="box c-ticker">
+      <div class="ticker-inner">
+        <div class="ticker-track">
+          <span>Available for Internships</span><span class="ticker-sep">◆</span>
+          <span>Aerospace</span><span class="ticker-sep">◆</span>
+          <span>CNC Machining</span><span class="ticker-sep">◆</span>
+          <span>Embedded Systems</span><span class="ticker-sep">◆</span>
+          <span>Analog Synthesis</span><span class="ticker-sep">◆</span>
+          <span>Space Systems</span><span class="ticker-sep">◆</span>
+          <span>Venezuela → Georgia</span><span class="ticker-sep">◆</span>
+          <span>Available for Internships</span><span class="ticker-sep">◆</span>
+          <span>Aerospace</span><span class="ticker-sep">◆</span>
+          <span>CNC Machining</span><span class="ticker-sep">◆</span>
+          <span>Embedded Systems</span><span class="ticker-sep">◆</span>
+          <span>Analog Synthesis</span><span class="ticker-sep">◆</span>
+          <span>Space Systems</span><span class="ticker-sep">◆</span>
+          <span>Venezuela → Georgia</span><span class="ticker-sep">◆</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="box c-viewer" style="padding:0;" id="viewer-cell">
+      <div class="viewer-wrap" id="viewer-wrap">
+        <canvas id="threejs-canvas"></canvas>
+        <div class="viewer-ui">
+          <div class="viewer-top">
+            <span class="viewer-tag">3D Model — Airbrake</span>
+            <div class="viewer-btns">
+              <button class="viewer-btn" id="upload-btn">Load STL</button>
+              <button class="viewer-btn" id="wireframe-btn">Wireframe</button>
+              <input type="file" id="stl-input" accept=".stl" />
+            </div>
+          </div>
+          <div class="viewer-bottom">
+            <div>Object: Electromechanical Airbrake · AIAA IREC 2025</div>
+            <div class="viewer-hint" id="vhint">Drag to rotate · Scroll to zoom</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box c-exp reveal d1" id="exp-anchor">
+      <div class="lbl">Experience</div>
+
+      <div class="exp-item">
+        <div class="exp-meta">
+          <span class="exp-co">Vast</span>
+          <span class="exp-date">Sep–Nov 2025</span>
+        </div>
+        <div class="exp-body">
+          <div>
+            <div class="exp-role">Integration Engineering Intern</div>
+            <p class="exp-desc">Designed life-support alignment tools and directed waste system integration for commercial space station infrastructure.</p>
+          </div>
+          <div class="exp-photo">
+            <img src="vast.jpg" alt="Vast Experience" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-meta">
+          <span class="exp-co">GTRI</span>
+          <span class="exp-date">Jan–May 2025</span>
+        </div>
+        <div class="exp-body">
+          <div>
+            <div class="exp-role">Mechanical Engineering Intern</div>
+            <p class="exp-desc">Engineered PCB enclosures and developed applications utilizing shape-memory alloys and haptic glove technologies.</p>
+          </div>
+          <div class="exp-photo">
+            <img src="gtri.jpg" alt="GTRI Experience" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-meta">
+          <span class="exp-co">UGA Fablab</span>
+          <span class="exp-date">Mar 2023–Dec 2024</span>
+        </div>
+        <div class="exp-body">
+          <div>
+            <div class="exp-role">Student Manufacturing Technician</div>
+            <p class="exp-desc">Precision CNC machining and mentoring students in DFM, GD&T, and rapid prototyping.</p>
+          </div>
+          <div class="exp-photo">
+            <img src="fablab.jpg" alt="UGA Fablab Experience" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box c-ptitle" id="proj-anchor">
+      <div class="lbl" style="margin:0;">Selected Projects</div>
+      <span class="ptitle-right">2023 — Present</span>
+    </div>
+
+    <div class="box c-p1 proj-cell reveal" data-project="1">
+      <div class="proj-inner"></div>
+      <span class="proj-num">01</span>
+      <div class="proj-overlay">
+        <span class="proj-name">AIAA IREC 2025 Airbrake</span>
+        <span class="proj-arrow">↗</span>
+      </div>
+    </div>
+    <div class="box c-p2 proj-cell reveal d1" data-project="2">
+      <div class="proj-inner"></div>
+      <span class="proj-num">02</span>
+      <div class="eq-bars"><div class="eq-bar" style="--spd:.5s;--h:16px"></div><div class="eq-bar" style="--spd:.7s;--h:10px;animation-delay:.15s"></div><div class="eq-bar" style="--spd:.4s;--h:18px;animation-delay:.05s"></div><div class="eq-bar" style="--spd:.6s;--h:8px;animation-delay:.25s"></div><div class="eq-bar" style="--spd:.45s;--h:14px;animation-delay:.1s"></div></div>
+      <div class="proj-overlay">
+        <span class="proj-name">ESP32 Polyphonic Synthesizer</span>
+        <span class="proj-arrow">↗</span>
+      </div>
+    </div>
+    <div class="box c-p3 proj-cell reveal d2" data-project="3">
+      <div class="proj-inner"></div>
+      <span class="proj-num">03</span>
+      <div class="orbit-ring"></div>
+      <div class="proj-overlay">
+        <span class="proj-name">M.E.M.E. Satellite Structures</span>
+        <span class="proj-arrow">↗</span>
+      </div>
+    </div>
+    <div class="box c-p4 proj-cell reveal d3">
+      <div class="proj-inner"></div>
+      <span class="proj-num" style="color:var(--accent);opacity:1;font-size:1rem;">+</span>
+      <div class="proj-overlay" style="opacity:1;background:none;align-items:center;justify-content:center;">
+        <a href="https://www.alizo.xyz/projects" style="font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);text-decoration:none;text-align:center;">All Projects →</a>
+      </div>
+    </div>
+
+    <div class="box c-art reveal" id="art-anchor">
+      <div class="lbl">Studio Art</div>
+      <p class="about-text" style="max-width:44ch;">Illustrations, sketches, and creative work made alongside the engineering.</p>
+      <div class="art-grid">
+        <div class="art-thumb" style="background: url('art1.jpg') center/cover;"></div>
+        <div class="art-thumb" style="background: url('art2.jpg') center/cover;"></div>
+        <div class="art-thumb" style="background: url('art3.jpg') center/cover;"></div>
+        <div class="art-thumb" style="background: url('art4.jpg') center/cover;"></div>
+      </div>
+      <a href="https://www.alizo.xyz/art" class="cta-btn" style="margin-top:1.2rem;">
+        <span>View Gallery</span><span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="box c-resume reveal d1" id="resume-anchor">
+      <div class="lbl">Documentation</div>
+      <p class="about-text" style="max-width:42ch;">B.S. Mechanical Engineering, University of Georgia, Class of 2027.</p>
+      <div class="resume-skills">
+        <span class="skill-tag">SolidWorks</span>
+        <span class="skill-tag">NX / Teamcenter</span>
+        <span class="skill-tag">FEA / FEM</span>
+        <span class="skill-tag">CNC + G-Code</span>
+        <span class="skill-tag">ESP32 / Arduino</span>
+        <span class="skill-tag">GD&T</span>
+        <span class="skill-tag">DFM</span>
+        <span class="skill-tag">Python</span>
+      </div>
+      <a href="https://www.alizo.xyz/resume" class="cta-btn filled" target="_blank">
+        <span>Download Resume PDF</span><span class="arrow">↓</span>
+      </a>
+    </div>
+
+    <div class="box c-footer">
+      <span class="ft-l">© 2025 Juan Carlos Alizo · Athens, GA <button id="audio-egg" class="audio-egg-btn" aria-label="Play synth sequence">♪</button></span>
+      <div class="ft-r">
+        <a href="https://instagram.com/alizo.art" target="_blank">@alizo.art</a>
+        <a href="mailto:jca39819@uga.edu">jca39819@uga.edu</a>
+      </div>
+    </div>
+
+  </div><div class="modal-backdrop" id="modal-backdrop"></div>
+  <div class="modal-panel" id="modal-panel">
+    <button class="modal-close" id="modal-close">Close ✕</button>
+    <div class="modal-inner">
+      <div>
+        <div class="modal-num"  id="modal-num">01</div>
+        <h2 class="modal-title" id="modal-title">Project</h2>
+        <div class="modal-subtitle" id="modal-subtitle">Category</div>
+        <p class="modal-desc"   id="modal-desc">Description</p>
+        <div class="modal-tags" id="modal-tags"></div>
+      </div>
+      <div class="modal-visual">
+        <span class="modal-visual-lbl" id="modal-visual-lbl">Image / Media placeholder</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <script>
+  // ════════════════════════════════
+  //  CURSOR + TRAIL
+  // ════════════════════════════════
+  const dot  = document.getElementById('c-dot');
+  const ring = document.getElementById('c-ring');
+  let rx=0,ry=0,mx=0,my=0;
+
+  const TRAIL = Array.from({length:8},()=>{ const d=document.createElement('div'); d.className='trail-dot'; document.body.appendChild(d); return {el:d,x:0,y:0}; });
+  
+  document.addEventListener('mousemove', e=>{
+    mx = e.clientX; 
+    my = e.clientY;
+    dot.style.left=mx+'px'; dot.style.top=my+'px';
+  });
+
+  (function animCursor(){
+    rx+=(mx-rx)*0.11; ry+=(my-ry)*0.11;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    let px=mx, py=my;
+    TRAIL.forEach((t,i)=>{
+      t.x+=(px-t.x)*(0.22+i*0.03); t.y+=(py-t.y)*(0.22+i*0.03);
+      const sz=5-i*0.5; const op=0.18-i*0.02;
+      t.el.style.cssText=`left:${t.x}px;top:${t.y}px;width:${sz}px;height:${sz}px;opacity:${op};transform:translate(-50%,-50%);`;
+      px=t.x; py=t.y;
+    });
+    requestAnimationFrame(animCursor);
+  })();
+
+  document.querySelectorAll('a,button,.proj-cell,.exp-item,.art-thumb,.cta-btn,.skill-tag,.tag').forEach(el=>{
+    el.addEventListener('mouseenter',()=>document.body.classList.add('ch'));
+    el.addEventListener('mouseleave',()=>document.body.classList.remove('ch'));
+  });
+
+  // ════════════════════════════════
+  //  CLOCK & THEME TOGGLE
+  // ════════════════════════════════
+  setInterval(()=>{ document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-US',{hour12:false}); },1000);
+  
+  const themeBtn = document.getElementById('theme-btn');
+  themeBtn.addEventListener('click', () => {
+    document.body.classList.toggle('blueprint');
+    themeBtn.textContent = document.body.classList.contains('blueprint') ? 'Dark Mode' : 'Blueprint';
+  });
+
+  // ════════════════════════════════
+  //  AIRBRAKE SCROLLBAR LOGIC
+  // ════════════════════════════════
+  const abThumb = document.getElementById('ab-thumb');
+  const flapL = document.querySelector('.flap-left');
+  const flapR = document.querySelector('.flap-right');
+  let lastScrollY = window.scrollY;
+  let lastTime = performance.now();
+  let scrollSpeed = 0;
+
+  function updateScrollbar() {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = maxScroll > 0 ? Math.max(0, Math.min(1, window.scrollY / maxScroll)) : 0;
+    
+    const maxThumbTop = window.innerHeight - 76;
+    abThumb.style.transform = `translateY(${scrollPercent * maxThumbTop}px)`;
+
+    const now = performance.now();
+    const dt = now - lastTime;
+    const dy = window.scrollY - lastScrollY;
+    
+    if (dt > 0) {
+      const currentSpeed = Math.abs(dy / dt);
+      scrollSpeed = scrollSpeed * 0.8 + currentSpeed * 0.2;
+      
+      const maxAngle = 60;
+      const angle = Math.min(maxAngle, scrollSpeed * 12);
+      
+      flapL.style.transform = `rotate(${angle}deg)`;
+      flapR.style.transform = `rotate(${-angle}deg)`;
+    }
+
+    lastScrollY = window.scrollY;
+    lastTime = now;
+    if (Math.abs(dy) < 1) { scrollSpeed *= 0.9; }
+
+    requestAnimationFrame(updateScrollbar);
+  }
+  updateScrollbar();
+
+  // ════════════════════════════════
+  //  LIVE AUDIO EASTER EGG (Minecraft "Wet Hands" Extended)
+  // ════════════════════════════════
+  const audioEgg = document.getElementById('audio-egg');
+  let audioCtx;
+  let isPlayingEgg = false;
+  let sequenceTimeout;
+  let loopCount = 0;
+
+  const D2 = 73.42, Fs2 = 92.50, A2 = 110.00, Cs3 = 138.59, D3 = 146.83;
+  const E3 = 164.81, Fs3 = 185.00, A3 = 220.00, Cs4 = 277.18, E4 = 329.63;
+
+  const wetHandsSeq = [
+    // A Major
+    A2, E3, A3, Cs4, E4, 0, 0, 0,
+    // D Major
+    D2, A2, D3, Fs3, A3, 0, 0, 0,
+    // F# Minor
+    Fs2, Cs3, Fs3, A3, Cs4, 0, 0, 0,
+    // D Major
+    D2, A2, D3, Fs3, A3, 0, 0, 0,
+    // A Major (falling variation)
+    A2, E3, A3, Cs4, E4, Cs4, A3, E3,
+    // D Major (falling variation)
+    D2, A2, D3, Fs3, A3, Fs3, D3, A2
+  ];
+
+  const bpm = 74; 
+  const noteDuration = (60 / bpm) / 2; // Eighth notes
+  let step = 0;
+
+  function playPianoNote() {
+    if (!isPlayingEgg || audioCtx.state !== 'running') return;
+
+    if (step === 0) {
+      loopCount++;
+      if (loopCount > 3) {
+        stopAudio();
+        return;
+      }
+    }
+
+    const freq = wetHandsSeq[step];
+
+    if (freq !== 0) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+      gain.gain.setValueAtTime(0, audioCtx.currentTime);
+      
+      const velocity = 0.35 + (Math.random() * 0.1); 
+      gain.gain.linearRampToValueAtTime(velocity, audioCtx.currentTime + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 3.5);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(audioCtx.currentTime);
+      osc.stop(audioCtx.currentTime + 4.0); 
+    }
+
+    step = (step + 1) % wetHandsSeq.length;
+    sequenceTimeout = setTimeout(playPianoNote, noteDuration * 1000);
+  }
+
+  function stopAudio() {
+    isPlayingEgg = false;
+    clearTimeout(sequenceTimeout);
+    if(audioCtx) audioCtx.close();
+    audioEgg.classList.remove('active');
+  }
+
+  audioEgg.addEventListener('click', async () => {
+    if (isPlayingEgg) {
+      stopAudio();
+      return;
+    }
+    
+    isPlayingEgg = true;
+    audioEgg.classList.add('active');
+    
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') {
+        await audioCtx.resume();
+    }
+
+    step = 0;
+    loopCount = 0;
+    playPianoNote();
+  });
+
+  // ════════════════════════════════
+  //  STARS
+  // ════════════════════════════════
+  const sc=document.getElementById('stars');
+  for(let i=0;i<80;i++){
+    const s=document.createElement('div'); s.className='star';
+    const sz=Math.random()*1.4+0.3;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--o:${(Math.random()*.4+.08).toFixed(2)};--d:${(Math.random()*4+2).toFixed(1)}s;--dl:${(Math.random()*5).toFixed(1)}s;`;
+    sc.appendChild(s);
+  }
+
+  // ════════════════════════════════
+  //  SCROLL REVEAL
+  // ════════════════════════════════
+  const io=new IntersectionObserver(es=>{ es.forEach(e=>{ if(!e.isIntersecting)return; e.target.classList.add('vis'); io.unobserve(e.target); }); },{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // ════════════════════════════════
+  //  TEXT SCRAMBLE (logo hover)
+  // ════════════════════════════════
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#%';
+  const logo=document.getElementById('nav-logo');
+  const logoText='Alizo'; let scrambleTimer=null;
+  logo.addEventListener('mouseenter',()=>{
+    let iter=0; clearInterval(scrambleTimer);
+    scrambleTimer=setInterval(()=>{
+      logo.textContent=logoText.split('').map((c,i)=>{
+        if(i<iter) return logoText[i];
+        return chars[Math.floor(Math.random()*chars.length)];
+      }).join('');
+      iter+=0.35;
+      if(iter>=logoText.length){ logo.textContent=logoText; clearInterval(scrambleTimer); }
+    },40);
+  });
+
+  // ════════════════════════════════
+  //  TILT ON PROJECT CARDS
+  // ════════════════════════════════
+  document.querySelectorAll('.proj-cell[data-project]').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+      card.style.transform=`perspective(600px) rotateY(${x*14}deg) rotateX(${-y*10}deg) scale(1.025)`;
+    });
+    card.addEventListener('mouseleave',()=>{ card.style.transform=''; });
+  });
+
+  // ════════════════════════════════
+  //  MAGNETIC CTAs
+  // ════════════════════════════════
+  document.querySelectorAll('.cta-btn').forEach(btn=>{
+    btn.addEventListener('mousemove',e=>{
+      const r=btn.getBoundingClientRect();
+      btn.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.2}px,${(e.clientY-r.top-r.height/2)*.3}px)`;
+    });
+    btn.addEventListener('mouseleave',()=>{ btn.style.transform=''; });
+  });
+
+  // ════════════════════════════════
+  //  PROJECT MODAL
+  // ════════════════════════════════
+  const PROJECTS={
+    1:{num:'01',title:'Electromechanical Airbrake',subtitle:'AIAA IREC 2025 · Rocketry',desc:'Active drag mechanism for precise apogee targeting on a competition rocket. Custom linkages, servo-driven actuation, and full mechanical team integration at AIAA IREC 2025.',tags:['SolidWorks','Servo Actuation','Linkage Design','Team Lead','Rocketry']},
+    2:{num:'02',title:'ESP32 Polyphonic Synthesizer',subtitle:'Embedded Audio · Personal Project',desc:'Analog synth built around a CD40106BE hex Schmitt trigger, controlled by an ESP32 running real-time FFT. Listens to live guitar and harmonizes with it — part analog chaos, part digital brain.',tags:['ESP32','CD40106BE','FFT','Analog Circuits','PCB Design']},
+    3:{num:'03',title:'M.E.M.E. Satellite',subtitle:'Small Sat Research Lab · Mechanical Lead',desc:'Mechanical design and FEA for the Mission for Education and Multimedia Engagement Satellite at UGA SSRL. NX/Teamcenter assemblies, structural simulation, and cross-subsystem wrangling.',tags:['NX / Teamcenter','FEA','CubeSat','Structural Analysis','Systems Integration']}
+  };
+  const backdrop=document.getElementById('modal-backdrop');
+  const panel=document.getElementById('modal-panel');
+  const closeBtn=document.getElementById('modal-close');
+  function openProject(id){
+    const p=PROJECTS[id]; if(!p)return;
+    document.getElementById('modal-num').textContent=p.num;
+    document.getElementById('modal-title').textContent=p.title;
+    document.getElementById('modal-subtitle').textContent=p.subtitle;
+    document.getElementById('modal-desc').textContent=p.desc;
+    const tc=document.getElementById('modal-tags'); tc.innerHTML='';
+    p.tags.forEach(t=>{ const s=document.createElement('span'); s.className='modal-tag'; s.textContent=t; tc.appendChild(s); });
+    backdrop.classList.add('open'); panel.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeModal(){
+    backdrop.classList.remove('open'); panel.classList.remove('open');
+    document.body.style.overflow='';
+  }
+  document.querySelectorAll('.proj-cell[data-project]').forEach(c=>c.addEventListener('click',()=>openProject(+c.dataset.project)));
+  closeBtn.addEventListener('click',closeModal);
+  backdrop.addEventListener('click',closeModal);
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+
+  // ════════════════════════════════
+  //  KONAMI EASTER EGG 🥚
+  // ════════════════════════════════
+  const konami=[38,38,40,40,37,39,37,39,66,65]; let ki=0;
+  document.addEventListener('keydown',e=>{
+    if(e.keyCode===konami[ki++]){
+      if(ki===konami.length){
+        ki=0;
+        const emojis=['🚀','⚙️','🎨','🛸','🔧','✦','🌿'];
+        for(let i=0;i<30;i++){
+          const s=document.createElement('div');
+          s.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+          s.style.cssText=`position:fixed;top:-40px;left:${Math.random()*100}vw;font-size:${1.5+Math.random()*1.5}rem;z-index:99997;pointer-events:none;animation:confettiFall ${1.5+Math.random()*2}s linear ${Math.random()*.8}s forwards;`;
+          document.body.appendChild(s); setTimeout(()=>s.remove(),4000);
+        }
+        if(!document.getElementById('kss')){ const st=document.createElement('style'); st.id='kss'; st.textContent='@keyframes confettiFall{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}'; document.head.appendChild(st); }
+      }
+    } else ki=0;
+  });
+
+  // ════════════════════════════════
+  //  THREE.JS STL VIEWER
+  // ════════════════════════════════
+  (function(){
+    const canvas    = document.getElementById('threejs-canvas');
+    const wrap      = document.getElementById('viewer-wrap');
+    const fileInput = document.getElementById('stl-input');
+    const uploadBtn = document.getElementById('upload-btn');
+    const wfBtn     = document.getElementById('wireframe-btn');
+    const vhint     = document.getElementById('vhint');
+
+    const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+
+    const scene = new THREE.Scene();
+    const grid  = new THREE.GridHelper(12,24,0x1a1a1a,0x111111);
+    scene.add(grid);
+
+    const camera = new THREE.PerspectiveCamera(45,1,0.001,10000);
+    camera.position.set(3,2,4);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping   = true;
+    controls.dampingFactor   = 0.07;
+    controls.autoRotate      = true;
+    controls.autoRotateSpeed = 1.2;
+
+    scene.add(new THREE.AmbientLight(0xffffff,0.35));
+    const key=new THREE.DirectionalLight(0xf0eeea,1.8); key.position.set(5,8,5); scene.add(key);
+    const fill=new THREE.DirectionalLight(0x84B179,0.4); fill.position.set(-5,3,-3); scene.add(fill);
+    const rim=new THREE.DirectionalLight(0xffeedd,0.3);  rim.position.set(0,-4,-5);  scene.add(rim);
+
+    function resize(){
+      const w=wrap.clientWidth, h=Math.max(wrap.clientHeight,380);
+      renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
+    }
+    resize(); new ResizeObserver(resize).observe(wrap);
+
+    let mesh=null, isWF=false;
+    (function animate(){ requestAnimationFrame(animate); controls.update(); renderer.render(scene,camera); })();
+
+    function loadSTL(buffer){
+      uploadBtn.textContent='Parsing…';
+      setTimeout(()=>{
+        try {
+          const loader = new THREE.STLLoader();
+          const geo    = loader.parse(buffer);
+          geo.computeVertexNormals(); geo.center(); geo.computeBoundingBox();
+          const sz=new THREE.Vector3(); geo.boundingBox.getSize(sz);
+          const maxD=Math.max(sz.x,sz.y,sz.z), s=2.5/maxD;
+          if(mesh){ scene.remove(mesh); mesh.geometry.dispose(); mesh.material.dispose(); }
+          mesh=new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0xc4c0b8,metalness:.6,roughness:.3}));
+          mesh.scale.setScalar(s); scene.add(mesh);
+          grid.position.y=-(sz.y*s*.5)-.05;
+          const dist=maxD*s*2.2;
+          camera.position.set(dist*.7,dist*.5,dist);
+          controls.target.set(0,0,0); controls.minDistance=dist*.15; controls.maxDistance=dist*10; controls.update();
+          uploadBtn.textContent='Load STL'; vhint.classList.add('vis');
+          controls.addEventListener('start',()=>{ controls.autoRotate=false; },{once:true});
+        } catch(err){ uploadBtn.textContent='Error — try again'; console.error('STL error:',err); }
+      },20);
+    }
+
+    uploadBtn.addEventListener('click',()=>fileInput.click());
+    fileInput.addEventListener('change',e=>{
+      const f=e.target.files[0]; if(!f)return;
+      uploadBtn.textContent='Reading…';
+      const r=new FileReader(); r.onload=ev=>loadSTL(ev.target.result); r.readAsArrayBuffer(f);
+    });
+    wfBtn.addEventListener('click',()=>{
+      if(!mesh)return; isWF=!isWF; mesh.material.wireframe=isWF; wfBtn.textContent=isWF?'Solid':'Wireframe';
+    });
+    wrap.addEventListener('dragover',e=>{ e.preventDefault(); wrap.style.outline='2px dashed rgba(132,177,121,.5)'; });
+    wrap.addEventListener('dragleave',()=>{ wrap.style.outline=''; });
+    wrap.addEventListener('drop',e=>{
+      e.preventDefault(); wrap.style.outline='';
+      const f=e.dataTransfer.files[0];
+      if(f&&f.name.toLowerCase().endsWith('.stl')){
+        uploadBtn.textContent='Reading…';
+        const r=new FileReader(); r.onload=ev=>loadSTL(ev.target.result); r.readAsArrayBuffer(f);
+      }
+    });
+  })();
+  </script>
+
+</body>
+</html>
