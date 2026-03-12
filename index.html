@@ -683,9 +683,7 @@
           <div class="viewer-top">
             <span class="viewer-tag">3D Model — Airbrake</span>
             <div class="viewer-btns">
-              <button class="viewer-btn" id="upload-btn">Load STL</button>
               <button class="viewer-btn" id="wireframe-btn">Wireframe</button>
-              <input type="file" id="stl-input" accept=".stl" />
             </div>
           </div>
           <div class="viewer-bottom">
@@ -1142,8 +1140,6 @@
   (function(){
     const canvas    = document.getElementById('threejs-canvas');
     const wrap      = document.getElementById('viewer-wrap');
-    const fileInput = document.getElementById('stl-input');
-    const uploadBtn = document.getElementById('upload-btn');
     const wfBtn     = document.getElementById('wireframe-btn');
     const vhint     = document.getElementById('vhint');
 
@@ -1179,46 +1175,32 @@
     let mesh=null, isWF=false;
     (function animate(){ requestAnimationFrame(animate); controls.update(); renderer.render(scene,camera); })();
 
-    function loadSTL(buffer){
-      uploadBtn.textContent='Parsing…';
-      setTimeout(()=>{
-        try {
-          const loader = new THREE.STLLoader();
-          const geo    = loader.parse(buffer);
-          geo.computeVertexNormals(); geo.center(); geo.computeBoundingBox();
-          const sz=new THREE.Vector3(); geo.boundingBox.getSize(sz);
-          const maxD=Math.max(sz.x,sz.y,sz.z), s=2.5/maxD;
-          if(mesh){ scene.remove(mesh); mesh.geometry.dispose(); mesh.material.dispose(); }
-          mesh=new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0xc4c0b8,metalness:.6,roughness:.3}));
-          mesh.scale.setScalar(s); scene.add(mesh);
-          grid.position.y=-(sz.y*s*.5)-.05;
-          const dist=maxD*s*2.2;
-          camera.position.set(dist*.7,dist*.5,dist);
-          controls.target.set(0,0,0); controls.minDistance=dist*.15; controls.maxDistance=dist*10; controls.update();
-          uploadBtn.textContent='Load STL'; vhint.classList.add('vis');
-          controls.addEventListener('start',()=>{ controls.autoRotate=false; },{once:true});
-        } catch(err){ uploadBtn.textContent='Error — try again'; console.error('STL error:',err); }
-      },20);
+    function setupModel(geo) {
+        geo.computeVertexNormals(); geo.center(); geo.computeBoundingBox();
+        const sz=new THREE.Vector3(); geo.boundingBox.getSize(sz);
+        const maxD=Math.max(sz.x,sz.y,sz.z), s=2.5/maxD;
+        if(mesh){ scene.remove(mesh); mesh.geometry.dispose(); mesh.material.dispose(); }
+        mesh=new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0xc4c0b8,metalness:.6,roughness:.3}));
+        mesh.scale.setScalar(s); scene.add(mesh);
+        grid.position.y=-(sz.y*s*.5)-.05;
+        const dist=maxD*s*2.2;
+        camera.position.set(dist*.7,dist*.5,dist);
+        controls.target.set(0,0,0); controls.minDistance=dist*.15; controls.maxDistance=dist*10; controls.update();
+        vhint.classList.add('vis');
+        controls.addEventListener('start',()=>{ controls.autoRotate=false; },{once:true});
     }
 
-    uploadBtn.addEventListener('click',()=>fileInput.click());
-    fileInput.addEventListener('change',e=>{
-      const f=e.target.files[0]; if(!f)return;
-      uploadBtn.textContent='Reading…';
-      const r=new FileReader(); r.onload=ev=>loadSTL(ev.target.result); r.readAsArrayBuffer(f);
-    });
+    function loadAndSetupSTL(url){
+      const loader = new THREE.STLLoader();
+      loader.load(url, setupModel, undefined, (error) => {
+        console.error('An error happened while loading the STL file.', error);
+      });
+    }
+
+    loadAndSetupSTL('airbrake_model.stl');
+
     wfBtn.addEventListener('click',()=>{
       if(!mesh)return; isWF=!isWF; mesh.material.wireframe=isWF; wfBtn.textContent=isWF?'Solid':'Wireframe';
-    });
-    wrap.addEventListener('dragover',e=>{ e.preventDefault(); wrap.style.outline='2px dashed rgba(132,177,121,.5)'; });
-    wrap.addEventListener('dragleave',()=>{ wrap.style.outline=''; });
-    wrap.addEventListener('drop',e=>{
-      e.preventDefault(); wrap.style.outline='';
-      const f=e.dataTransfer.files[0];
-      if(f&&f.name.toLowerCase().endsWith('.stl')){
-        uploadBtn.textContent='Reading…';
-        const r=new FileReader(); r.onload=ev=>loadSTL(ev.target.result); r.readAsArrayBuffer(f);
-      }
     });
   })();
   </script>
