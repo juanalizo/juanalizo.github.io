@@ -26,30 +26,23 @@
 
     /* ── LIGHT THEME ── */
     body.light {
-      --bg:     #fdfdfd; 
-      --bg:     #f0f4f8; 
+      --bg:     #f0f4f8;
       --s1:     #ffffff; 
-      --s2:     #f5f5f5; 
-      --s3:     #eeeeee;
-      --fg:     #1a1a1a; 
-      --dim:    rgba(26, 26, 26, 0.6);
-      --faint:  rgba(0, 0, 0, 0.05);
-      --line:   rgba(0, 0, 0, 0.08); 
-      --accent: #007aff;
-      --glow:   rgba(0, 122, 255, 0.1);
       --s2:     #e2e8f0; 
       --s3:     #cbd5e1;
       --fg:     #0f172a; 
       --dim:    rgba(15, 23, 42, 0.6);
       --faint:  rgba(15, 23, 42, 0.04);
       --line:   rgba(15, 23, 42, 0.1); 
-      --accent: #2563eb;
+      --accent: #2563eb; /* Blue for general accents in light mode */
       --glow:   rgba(37, 99, 235, 0.15);
     }
     body.light .box::after { border: 1px solid var(--line); }
     body.light #c-ring { border-color: var(--accent); }
-    body.light .c-nav { background: rgba(253,253,253,0.8); }
-    body.light .c-nav { background: rgba(240,244,248,0.8); }
+    body.light .c-nav {
+      background: #FFC300; /* Venezuelan Yellow for nav bar */
+      --bg: #080908; /* Override --bg locally for text contrast */
+    }
 
 
     /* Hide native scrollbar for the airbrake */
@@ -123,7 +116,7 @@
     }
     #c-dot::before, #c-dot::after {
       content: ''; position: absolute;
-      background: var(--accent);
+      background: var(--fg);
       transition: background .2s;
     }
     #c-dot::before { width: 100%; height: 2px; top: 50%; left: 0; transform: translateY(-50%); }
@@ -132,14 +125,13 @@
     #c-ring {
       position:fixed; top:0; left:0;
       width:40px; height:40px;
-      border: 1.5px dashed var(--accent); opacity: 0.5;
+      border: 1.5px dashed var(--fg); opacity: 0.5;
       border-radius: 0; 
       pointer-events:none; z-index:99998;
       transform:translate(-50%,-50%);
       transition: width .3s ease, height .3s ease, border-color .3s, transform .2s ease;
     }
     
-    body.ch #c-dot::before, body.ch #c-dot::after { background: var(--fg); }
     body.ch #c-ring { 
       width:48px; height:48px; opacity: 1;
       border-color:var(--accent); 
@@ -191,7 +183,19 @@
     }
 
     /* ── CELL PLACEMENTS ── */
-    .c-nav    { grid-column:span 12; padding:0.9rem 1.8rem; background:rgba(8,9,8,0.9); backdrop-filter:blur(20px); position:sticky; top:0; z-index:500; }
+    .c-nav    { 
+      grid-column:span 12; padding:0.9rem 1.8rem; 
+      background:var(--accent); position:sticky; top:0; z-index:500; 
+    }
+    /* Nav Contrast Overrides */
+    .c-nav .nav-logo, .c-nav .nav-clock { color: var(--bg) !important; }
+    .c-nav .nav-links a { color: var(--bg); opacity: 0.75; }
+    .c-nav .nav-links a:hover { opacity: 1; }
+    .c-nav .nav-links a::after { background: var(--bg); }
+    .c-nav .status-dot { background: var(--bg); animation: none; opacity: 0.75; }
+    .c-nav .theme-btn { border-color: var(--bg); color: var(--bg); opacity: 0.8; }
+    .c-nav .theme-btn:hover { background: rgba(0,0,0,0.1); opacity: 1; }
+
     .c-hero   { grid-column:span 7;  padding:3.5rem 2.5rem; background:var(--bg); justify-content:flex-end; min-height:340px; }
     .c-info   { 
       grid-column:span 5; 
@@ -202,7 +206,12 @@
       --accent: #FFC300;
       --line: rgba(255, 255, 255, 0.15);
     }
-    .c-ticker { grid-column:span 12; padding:0; background:var(--accent); overflow:hidden; }
+    .c-ticker { 
+      grid-column:span 12; padding:0; 
+      background: #A41623; /* Venezuelan Red */ 
+      overflow:hidden; 
+      --bg: #f0eeea; /* Force light text for children */
+    }
     .c-viewer { grid-column:span 7;  padding:0; background:var(--bg); min-height:400px; }
     .c-exp    { 
       grid-column:span 5; 
@@ -333,7 +342,7 @@
     }
     .c-ticker:hover .ticker-track { animation-direction:reverse; }
     @keyframes ticker { from{transform:translateX(0);} to{transform:translateX(-50%);} }
-    .ticker-sep { color:rgba(0,0,0,.3); }
+    .ticker-sep { color:rgba(255,255,255,0.4); }
 
     /* ── 3D VIEWER ── */
     .viewer-wrap { position:relative; width:100%; height:100%; min-height:400px; }
@@ -585,6 +594,17 @@
     @keyframes float {
       0%,100% { transform:rotate(-3deg) translateY(0); }
       50%      { transform:rotate(-3deg) translateY(-6px); }
+    }
+    
+    /* ── HERO STARS ── */
+    .hero-star {
+      position: absolute; background: var(--fg);
+      border-radius: 50%; opacity: 0; pointer-events: none; z-index: 0;
+      animation: starTwinkle var(--dur, 3s) ease-in-out infinite;
+    }
+    @keyframes starTwinkle { 0%,100% { opacity:0; transform:scale(0.5); } 50% { opacity:0.8; transform:scale(1); } }
+    body.light .hero-star {
+      background: var(--accent); /* Make stars blue in light mode */
     }
 
     /* ── RESPONSIVE ── */
@@ -1306,6 +1326,24 @@
   // ════════════════════════════════
   //  INTERACTIVE PARTICLE BACKGROUND
   // ════════════════════════════════
+  (function(){
+    const hero = document.getElementById('about-anchor');
+    if(!hero) return;
+    // Ensure hero content is above stars
+    Array.from(hero.children).forEach(c => { if(getComputedStyle(c).position==='static') c.style.position='relative'; c.style.zIndex='1'; });
+
+    for(let i=0; i<30; i++) {
+      const s = document.createElement('div');
+      s.className = 'hero-star';
+      const sz = Math.random()*3 + 1;
+      s.style.width = sz + 'px'; s.style.height = sz + 'px';
+      s.style.left = Math.random()*100 + '%';
+      s.style.top = Math.random()*100 + '%';
+      s.style.setProperty('--dur', (2 + Math.random()*4) + 's');
+      s.style.animationDelay = (Math.random()*4) + 's';
+      hero.prepend(s);
+    }
+  })();
   </script>
 </body>
 </html>
