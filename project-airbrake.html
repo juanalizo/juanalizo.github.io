@@ -499,7 +499,8 @@
       let pivotArmLen = BASE_PIVOT;
       let flapLen = BASE_FLAP;
 
-      let flapOffsetAngle = 3.14*0.6; // Dynamic
+      const flapOffsetAngle = 2;  // User-specified offset in radians
+
       const NUT_Y_START = 65.7;      // Retracted Y position of nut
       const NUT_Y_END = 16;          // Extended Y position of nut
       const FLAP_PLATE_LEN = 75.0;   // Length of the flap plate itself
@@ -512,14 +513,14 @@
       // 2. KINEMATIC MODEL
       // ══════════════════════════════════════════════
 
-      function calculateKinematics(sliderValue) {
+      function calculateCoreKinematics(sliderValue) {
         // Calculate Point D (Cuff-linkage Pin) based on slider
         const t = sliderValue / 100;
         const Dy = NUT_Y_START + t * (NUT_Y_END - NUT_Y_START);
         const D = { x: SCREW_X, y: Dy };
         const displacement = Math.abs(NUT_Y_START - Dy);
 
-        // Calculate Point C (Linkage-pivot Connection) via circle-circle intersection
+        // Calculate Point C via circle-circle intersection
         const B = PIVOT_B;
         
         const dx = B.x - D.x;
@@ -542,16 +543,9 @@
           y: y2 - h * (B.x - D.x) / dist
         };
 
-        // Calculate Point A (Flap Connection Point) via rigid body rotation
         const thetaBC = Math.atan2(C.y - B.y, C.x - B.x);
-        const thetaFlap = thetaBC + flapOffsetAngle;
-        
-        const A = {
-          x: B.x + flapLen * Math.cos(thetaFlap),
-          y: B.y + flapLen * Math.sin(thetaFlap)
-        };
 
-        return { A, B, C, D, displacement, thetaFlap, thetaBC };
+        return { B, C, D, displacement, thetaBC };
       }
 
       // ══════════════════════════════════════════════
@@ -577,26 +571,34 @@
         if(cbText) cbText.innerText = pivotArmLen.toFixed(1) + ' mm';
         if(baText) baText.innerText = flapLen.toFixed(1) + ' mm';
 
-        // Calibrate Offset (Retracted State -> Vertical Flap)
-        // At t=0 (Retracted/Max Y), we want thetaFlap = PI (Vertical)
-        // thetaFlap = thetaBC + offset => offset = PI - thetaBC
-        const stateZero = calculateKinematics(0);
-        if (stateZero) {
-            flapOffsetAngle = Math.PI - stateZero.thetaBC;
-        }
+        // --- KINEMATIC CALIBRATION & CALCULATION ---
 
-        const state = calculateKinematics(slider.value);
-        if (!state) {
+        // 1. First, calculate the geometry at the start (slider=0) to get a reference angle.
+        // This allows us to calibrate the visual rotation so the flap starts perfectly vertical.
+        const coreStateZero = calculateCoreKinematics(0);
+        if (!coreStateZero) {
           if(dispText) dispText.innerText = 'Error';
           return;
         }
+        const thetaFlap_initial = coreStateZero.thetaBC + flapOffsetAngle;
 
-        const { A, B, C, D, displacement, thetaFlap, thetaBC } = state;
+        // 2. Now, calculate the core geometry for the current slider position.
+        const coreState = calculateCoreKinematics(slider.value);
+        if (!coreState) {
+          if(dispText) dispText.innerText = 'Error';
+          return;
+        }
+        const { B, C, D, displacement, thetaBC } = coreState;
 
-        // Calculate Flap Angle relative to Vertical (0 deg = Vertical)
-        // We need the currentFlapAngle for drawing the plate
-        const currentFlapAngle = thetaFlap - Math.PI/2; // Adjust for visual alignment if needed, or derive from delta
+        // 3. Calculate the full state for the current position using the fixed offset.
+        const thetaFlap = thetaBC + flapOffsetAngle;
+        const A = {
+          x: B.x + flapLen * Math.cos(thetaFlap),
+          y: B.y + flapLen * Math.sin(thetaFlap)
+        };
         
+        // --- DRAWING & UI UPDATES ---
+
         // Update UI Readout
         if(dispText) dispText.innerText = `${displacement.toFixed(1)} mm`;
 
@@ -604,6 +606,12 @@
         const toCanvas = (p) => ({ x: ORIGIN.x + p.x * SCALE, y: ORIGIN.y - p.y * SCALE });
         const sA = toCanvas(A), sB = toCanvas(B), sC = toCanvas(C), sD = toCanvas(D);
         const sScrewX = ORIGIN.x + SCREW_X * SCALE;
+
+        // 4. Calculate the calibrated angle for drawing the flap plate.
+        // The final angle is the desired start angle (vertical = PI/2) plus the change
+        // in the arm's angle from its initial position. This ensures the flap starts
+        // vertically and rotates correctly according to the kinematics.
+        const currentFlapAngle = (Math.PI / 2) + (thetaFlap - thetaFlap_initial);
 
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';

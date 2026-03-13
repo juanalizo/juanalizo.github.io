@@ -19,27 +19,37 @@
       --dim:    rgba(240,238,234,0.45);
       --faint:  rgba(240,238,234,0.08);
       --line:   rgba(240,238,234,0.08);
-      --accent: #84B179;
-      --a2:     #6fa364;
-      --glow:   rgba(132,177,121,0.15);
+      --accent: #FFC300; /* Venezuelan Yellow */
+      --a2:     #d9a600;
+      --glow:   rgba(255, 195, 0, 0.15);
     }
 
-    /* ── CAD BLUEPRINT THEME ── */
-    body.blueprint {
-      --bg:     #041524;
-      --s1:     #071e33;
-      --s2:     #0b2845;
-      --s3:     #11365c;
-      --fg:     #ffffff;
-      --dim:    rgba(255,255,255,0.7);
-      --faint:  rgba(255,255,255,0.15);
-      --line:   rgba(255,255,255,0.3);
-      --accent: #00ffcc;
-      --glow:   rgba(0,255,204,0.15);
+    /* ── LIGHT THEME ── */
+    body.light {
+      --bg:     #fdfdfd; 
+      --bg:     #f0f4f8; 
+      --s1:     #ffffff; 
+      --s2:     #f5f5f5; 
+      --s3:     #eeeeee;
+      --fg:     #1a1a1a; 
+      --dim:    rgba(26, 26, 26, 0.6);
+      --faint:  rgba(0, 0, 0, 0.05);
+      --line:   rgba(0, 0, 0, 0.08); 
+      --accent: #007aff;
+      --glow:   rgba(0, 122, 255, 0.1);
+      --s2:     #e2e8f0; 
+      --s3:     #cbd5e1;
+      --fg:     #0f172a; 
+      --dim:    rgba(15, 23, 42, 0.6);
+      --faint:  rgba(15, 23, 42, 0.04);
+      --line:   rgba(15, 23, 42, 0.1); 
+      --accent: #2563eb;
+      --glow:   rgba(37, 99, 235, 0.15);
     }
-    body.blueprint .box::after { border: 1px solid var(--line); }
-    body.blueprint #c-ring { border-color: rgba(0,255,204,0.5); }
-    body.blueprint .c-nav { background: rgba(4,21,36,0.9); }
+    body.light .box::after { border: 1px solid var(--line); }
+    body.light #c-ring { border-color: var(--accent); }
+    body.light .c-nav { background: rgba(253,253,253,0.8); }
+    body.light .c-nav { background: rgba(240,244,248,0.8); }
 
 
     /* Hide native scrollbar for the airbrake */
@@ -183,11 +193,30 @@
     /* ── CELL PLACEMENTS ── */
     .c-nav    { grid-column:span 12; padding:0.9rem 1.8rem; background:rgba(8,9,8,0.9); backdrop-filter:blur(20px); position:sticky; top:0; z-index:500; }
     .c-hero   { grid-column:span 7;  padding:3.5rem 2.5rem; background:var(--bg); justify-content:flex-end; min-height:340px; }
-    .c-info   { grid-column:span 5;  background:var(--s2); justify-content:space-between; }
+    .c-info   { 
+      grid-column:span 5; 
+      background: #0A2463; /* Venezuelan Blue */
+      justify-content:space-between;
+      --fg: #f0f0f0;
+      --dim: rgba(240, 240, 240, 0.75);
+      --accent: #FFC300;
+      --line: rgba(255, 255, 255, 0.15);
+    }
     .c-ticker { grid-column:span 12; padding:0; background:var(--accent); overflow:hidden; }
     .c-viewer { grid-column:span 7;  padding:0; background:var(--bg); min-height:400px; }
-    .c-exp    { grid-column:span 5;  background:var(--s2); }
-    .c-ptitle { grid-column:span 12; padding:1rem 2rem; background:var(--s3); flex-direction:row; align-items:center; justify-content:space-between; }
+    .c-exp    { 
+      grid-column:span 5; 
+      background: #0A2463; /* Venezuelan Blue */
+      --fg: #f0f0f0;
+      --dim: rgba(240, 240, 240, 0.75);
+      --accent: #FFC300;
+      --line: rgba(255, 255, 255, 0.15);
+      --s3: rgba(255,255,255,0.1);
+    }
+    .c-ptitle { grid-column:span 12; padding:1rem 2rem; background: #A41623; /* Venezuelan Red */ flex-direction:row; align-items:center; justify-content:space-between; 
+      --accent: #fff;
+      --dim: rgba(255,255,255,0.7);
+    }
     .c-p1     { grid-column:span 3; aspect-ratio:1; background:var(--s1); }
     .c-p2     { grid-column:span 3; aspect-ratio:1; background:var(--s2); }
     .c-p3     { grid-column:span 3; aspect-ratio:1; background:var(--s1); }
@@ -233,8 +262,8 @@
       animation:pulse 2.5s ease-in-out infinite; flex-shrink:0;
     }
     @keyframes pulse {
-      0%,100% { box-shadow:0 0 0 0 rgba(132,177,121,.5); }
-      50%      { box-shadow:0 0 0 5px rgba(132,177,121,0); }
+      0%,100% { box-shadow:0 0 0 0 rgba(255,195,0,.5); }
+      50%      { box-shadow:0 0 0 5px rgba(255,195,0,0); }
     }
     .nav-clock {
       font-family:'DM Mono',monospace;
@@ -300,7 +329,7 @@
       display:flex; gap:2.5rem;
       animation:ticker 18s linear infinite;
       font-family:'DM Mono',monospace;
-      font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; color:#000;
+      font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; color:var(--bg);
     }
     .c-ticker:hover .ticker-track { animation-direction:reverse; }
     @keyframes ticker { from{transform:translateX(0);} to{transform:translateX(-50%);} }
@@ -324,7 +353,7 @@
       background:transparent; border:1px solid var(--line); color:var(--accent);
       padding:.4rem .9rem; transition:background .2s, color .2s, border-color .2s;
     }
-    .viewer-btn:hover { background:var(--accent); color:#000; border-color:var(--accent); }
+    .viewer-btn:hover { background:var(--accent); color:var(--bg); border-color:var(--accent); }
     #stl-input { display:none; }
     .viewer-bottom {
       font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase;
@@ -467,11 +496,6 @@
     .c-p6 .proj-inner { background: var(--s3); }
     .c-p7 .proj-inner { background: var(--s2); }
     .c-p8 .proj-inner { background: var(--s3); }
-    
-    body.blueprint .proj-inner { 
-      background-color: var(--s3);
-      background-blend-mode: screen; 
-    }
 
     .proj-cell:hover .proj-inner { transform:scale(1.05); }
     .proj-num {
@@ -520,12 +544,13 @@
       transition:background .2s, border-color .2s, color .2s, transform .15s;
       will-change:transform;
     }
-    .cta-btn:hover { background:var(--accent); border-color:var(--accent); color:#000; }
+    .cta-btn:hover { background:var(--accent); border-color:var(--accent); color:var(--bg); }
     .cta-btn.filled {
-      background:var(--accent); border-color:var(--accent); color:#000; font-weight:700;
+      background:var(--accent); border-color:var(--accent); color:var(--bg); font-weight:700;
       box-shadow:0 0 24px var(--glow);
     }
     .cta-btn.filled:hover { background:var(--fg); }
+    body.light .cta-btn.filled:hover { background: var(--s3); color: var(--fg); }
 
     /* ── FOOTER ── */
     .ft-l { font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:.1em; color:var(--dim); display:flex; align-items:center; gap:0.4rem; }
@@ -551,7 +576,7 @@
     .sticker {
       position:absolute; z-index:4;
       font-family:'Syne',sans-serif; font-size:.75rem; font-weight:700;
-      background:var(--accent); color:#000;
+      background:var(--accent); color:var(--bg);
       padding:.45rem .9rem; border-radius:999px;
       letter-spacing:-.01em;
       animation:float 3s ease-in-out infinite;
@@ -648,7 +673,7 @@
           <div style="display:flex;align-items:center;gap:.6rem;">
             <div class="status-dot"></div>
             <span class="nav-clock" id="clock">00:00:00</span>
-            <button id="theme-btn" class="theme-btn">Blueprint</button>
+            <button id="theme-btn" class="theme-btn">Light Mode</button>
           </div>
         </div>
       </div>
@@ -926,8 +951,8 @@
   
   const themeBtn = document.getElementById('theme-btn');
   themeBtn.addEventListener('click', () => {
-    document.body.classList.toggle('blueprint');
-    themeBtn.textContent = document.body.classList.contains('blueprint') ? 'Dark Mode' : 'Blueprint';
+    document.body.classList.toggle('light');
+    themeBtn.textContent = document.body.classList.contains('light') ? 'Dark Mode' : 'Light Mode';
   });
 
   // ════════════════════════════════
