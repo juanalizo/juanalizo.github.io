@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Detail | Juan Carlos Alizo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    /* ── CORE STYLES (Shared with Home) ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #080908; --s1: #0d100d; --s2: #111512; --s3: #161a16;
+      --fg: #f0eeea; --dim: rgba(240,238,234,0.45);
+      --line: rgba(240,238,234,0.08); --accent: #84B179;
+    }
+    body {
+      background: var(--bg); color: var(--fg);
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+      line-height: 1.6; padding: 2rem;
+    }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1000px; margin: 0 auto; }
+    
+    /* Header */
+    header { margin-bottom: 4rem; border-bottom: 1px solid var(--line); padding-bottom: 2rem; }
+    .nav-back { 
+      font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); 
+      text-decoration: none; display: inline-block; margin-bottom: 1.5rem;
+    }
+    h1 { font-family: 'Syne', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1; margin-bottom: 0.5rem; }
+    .subtitle { font-family: 'DM Mono', monospace; color: var(--dim); font-size: 0.9rem; }
+
+    /* Grid Content */
+    .content-grid { display: grid; grid-template-columns: 250px 1fr; gap: 4rem; margin-bottom: 4rem; }
+    
+    /* Sidebar (Metadata) */
+    .meta-block { margin-bottom: 2rem; }
+    .meta-lbl { 
+      font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--accent); 
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; display: block;
+    }
+    .meta-val { font-size: 0.95rem; }
+    .tech-tag {
+      display: inline-block; border: 1px solid var(--line); 
+      font-family: 'DM Mono', monospace; font-size: 0.6rem; padding: 0.2rem 0.6rem;
+      margin: 0.2rem 0.2rem 0 0; border-radius: 4px; color: var(--dim);
+    }
+
+    .collab-list { list-style: none; margin-top: 0.5rem; }
+    .collab-item { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem; }
+    .collab-img { 
+        width: 36px; height: 36px; border-radius: 50%; 
+        object-fit: cover; background: var(--s3); border: 1px solid var(--line);
+    }
+    .collab-info a { text-decoration: none; color: var(--fg); }
+    .collab-info a:hover .collab-name { color: var(--accent); }
+    .collab-name { font-size: 0.9rem; font-weight: 700; display: block; transition: color 0.2s; }
+    .collab-role { font-size: 0.75rem; color: var(--dim); display: block; }
+
+    .paper-link {
+        display: inline-flex; align-items: center; gap: 0.6rem;
+        background: var(--s2); border: 1px solid var(--line);
+        padding: 0.6rem 1rem;
+        text-decoration: none;
+        color: var(--fg);
+        font-family: 'DM Mono', monospace;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        transition: background .2s, border-color .2s;
+    }
+    .paper-link:hover { background: var(--accent); border-color: var(--accent); color: #000; }
+
+    /* Main Body */
+    .body-text h2 { 
+      font-family: 'Syne', sans-serif; font-size: 1.8rem; margin: 2.5rem 0 1rem; 
+      color: var(--fg);
+    }
+    .body-text p { margin-bottom: 1.5rem; color: var(--dim); }
+    
+    /* Visuals */
+    .hero-img { 
+      width: 100%; aspect-ratio: 21/9; object-fit: cover; 
+      background: var(--s2); margin-bottom: 3rem; border: 1px solid var(--line); 
+    }
+    .img-full {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      margin: 2rem 0;
+      border: 1px solid var(--line); background: var(--s2);
+    }
+    .gallery-grid { display: grid; gap: 1rem; margin: 2rem 0; }
+    .gallery-2-col { grid-template-columns: 1fr 1fr; }
+    .gallery-3-col { grid-template-columns: 1fr 1fr 1fr; }
+    .gallery-grid img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border: 1px solid var(--line); background: var(--s2); }
+
+    /* 3D Viewer */
+    .viewer-container { margin: 2.5rem 0; border: 1px solid var(--line); }
+    .viewer-wrap { position:relative; width:100%; height:100%; min-height:500px; }
+    #threejs-canvas { display:block; width:100%; height:100%; }
+    .viewer-ui {
+      position:absolute; inset:0; pointer-events:none;
+      padding:1.4rem; display:flex; flex-direction:column; justify-content:space-between;
+    }
+    .viewer-top { display:flex; justify-content:space-between; align-items:flex-start; pointer-events:auto; }
+    .viewer-tag {
+      font-family:'DM Mono',monospace; font-size:.62rem;
+      letter-spacing:.14em; text-transform:uppercase; color:var(--accent); opacity:.7;
+    }
+    .viewer-btns { display:flex; gap:.5rem; }
+    .viewer-btn {
+      font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:.1em; text-transform:uppercase;
+      background:transparent; border:1px solid var(--line); color:var(--accent);
+      padding:.4rem .9rem; transition:background .2s, color .2s, border-color .2s; cursor: pointer;
+    }
+    .viewer-btn:hover { background:var(--accent); color:#000; border-color:var(--accent); }
+    .viewer-bottom {
+      font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase;
+      color:var(--dim); line-height:1.8; text-align: right;
+    }
+    .viewer-hint { opacity:0; transition:opacity .4s; font-size:.6rem; color:var(--accent); margin-top:.3rem; }
+    .viewer-hint.vis { opacity:1; }
+
+    /* Footer */
+    footer { 
+      margin-top: 6rem; padding-top: 2rem; border-top: 1px solid var(--line);
+      display: flex; justify-content: space-between;
+    }
+    .next-proj { 
+      text-align: right; text-decoration: none; color: var(--fg);
+      transition: color 0.2s;
+    }
+    .next-proj:hover { color: var(--accent); }
+    .np-lbl { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--dim); display: block; }
+    .np-title { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700; }
+
+    @media (max-width: 768px) {
+      .content-grid { grid-template-columns: 1fr; gap: 2rem; }
+      h1 { font-size: 2.5rem; }
+      body { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <a href="index.html" class="nav-back">← RETURN TO BASE</a>
+      <h1>Electromechanical Airbrake</h1>
+      <div class="subtitle">AIAA IREC 2025 · ACTIVE AERODYNAMICS SYSTEM</div>
+    </header>
+
+    <img src="airbrake_hero.jpg" alt="Airbrake System" class="hero-img" />
+
+    <div class="content-grid">
+      
+      <!-- Left Sidebar: Project Specs -->
+      <aside>
+        <div class="meta-block">
+          <span class="meta-lbl">Role</span>
+          <div class="meta-val">Lead Mechanical Engineer</div>
+        </div>
+        
+        <div class="meta-block">
+          <span class="meta-lbl">Timeline</span>
+          <div class="meta-val">Aug 2024 — Present</div>
+        </div>
+
+        <div class="meta-block">
+          <span class="meta-lbl">Tech Stack</span>
+          <div>
+            <span class="tech-tag">SolidWorks</span>
+            <span class="tech-tag">FEA Sim</span>
+            <span class="tech-tag">C++ / Arduino</span>
+            <span class="tech-tag">Servo Actuation</span>
+            <span class="tech-tag">Rapid Prototyping</span>
+          </div>
+        </div>
+
+        <div class="meta-block">
+          <span class="meta-lbl">Collaborators</span>
+          <ul class="collab-list">
+            <li class="collab-item">
+              <img src="placeholder_pfp.jpg" alt="Collaborator 1" class="collab-img">
+              <div class="collab-info">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <span class="collab-name">Jane Doe</span>
+                  <span class="collab-role">Avionics Lead</span>
+                </a>
+              </div>
+            </li>
+            <li class="collab-item">
+              <img src="placeholder_pfp.jpg" alt="Collaborator 2" class="collab-img">
+              <div class="collab-info">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <span class="collab-name">John Smith</span>
+                  <span class="collab-role">Recovery Systems</span>
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="meta-block">
+          <span class="meta-lbl">Documentation</span>
+          <a href="#" target="_blank" class="paper-link"><span>📄</span> <span>Read Technical Paper</span></a>
+        </div>
+
+        <div class="meta-block">
+          <span class="meta-lbl">Links</span>
+          <a href="#" style="color:var(--accent); text-decoration:none; border-bottom:1px solid var(--accent);">View on GitHub</a>
+        </div>
+      </aside>
+
+      <!-- Right Column: Narrative -->
+      <article class="body-text">
+        <h2>The Challenge</h2>
+        <p>
+          In high-powered rocketry competitions like AIAA IREC, hitting the target apogee (30,000 ft) precisely is crucial for scoring. Atmospheric variability makes this difficult with passive fins alone. We needed an active drag system capable of real-time adjustments during supersonic flight.
+        </p>
+
+        <img src="airbrake_sketch.jpg" alt="Initial sketch of the airbrake mechanism" class="img-full" />
+
+        <h2>The Solution</h2>
+        <p>
+          I designed a 3-fin actuation system driven by a single high-torque servo. The mechanism utilizes a custom linkage geometry that converts rotational servo motion into linear extension of drag plates.
+        </p>
+        <p>
+          The assembly was machined from 6061-T6 aluminum to withstand aerodynamic forces up to 200N per fin, verified through static FEA and dynamic airflow simulations.
+        </p>
+
+        <div class="gallery-grid gallery-2-col">
+          <img src="airbrake_cad.jpg" alt="CAD View" />
+          <img src="airbrake_proto.jpg" alt="Prototype Assembly" />
+        </div>
+
+        <h2>Results</h2>
+        <p>
+          The system successfully integrated with the avionics bay and passed initial ground actuation tests. Wind tunnel testing confirmed drag coefficient variations matched our theoretical models within 5%.
+        </p>
+        
+        <div class="gallery-grid gallery-3-col">
+          <img src="airbrake_detail1.jpg" alt="Detail view 1" />
+          <img src="airbrake_detail2.jpg" alt="Detail view 2" />
+          <img src="airbrake_detail3.jpg" alt="Detail view 3" />
+        </div>
+
+        <div class="viewer-container">
+          <div class="viewer-wrap" id="viewer-wrap">
+              <canvas id="threejs-canvas"></canvas>
+              <div class="viewer-ui">
+                  <div class="viewer-top">
+                      <span class="viewer-tag">3D Model — Airbrake Assembly</span>
+                      <div class="viewer-btns">
+                          <button class="viewer-btn" id="wireframe-btn">Wireframe</button>
+                      </div>
+                  </div>
+                  <div class="viewer-bottom">
+                      <div class="viewer-hint" id="vhint">Drag to rotate · Scroll to zoom</div>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <footer>
+      <div style="font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--dim);">
+        © 2025 Juan Carlos Alizo
+      </div>
+      <a href="project-synth.html" class="next-proj">
+        <span class="np-lbl">NEXT PROJECT</span>
+        <span class="np-title">ESP32 Synth →</span>
+      </a>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script>
+    // ════════════════════════════════
+    //  THREE.JS STL VIEWER
+    // ════════════════════════════════
+    (function(){
+      const canvas    = document.getElementById('threejs-canvas');
+      const wrap      = document.getElementById('viewer-wrap');
+      const wfBtn     = document.getElementById('wireframe-btn');
+      const vhint     = document.getElementById('vhint');
+
+      if (!canvas || !wrap) return;
+
+      const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.1;
+
+      const scene = new THREE.Scene();
+      const grid  = new THREE.GridHelper(12,24,0x1a1a1a,0x111111);
+      scene.add(grid);
+
+      const camera = new THREE.PerspectiveCamera(45,1,0.001,10000);
+      camera.position.set(3,2,4);
+
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping   = true;
+      controls.dampingFactor   = 0.07;
+      controls.autoRotate      = true;
+      controls.autoRotateSpeed = 1.2;
+
+      scene.add(new THREE.AmbientLight(0xffffff,0.35));
+      const key=new THREE.DirectionalLight(0xf0eeea,1.8); key.position.set(5,8,5); scene.add(key);
+      const fill=new THREE.DirectionalLight(0x84B179,0.4); fill.position.set(-5,3,-3); scene.add(fill);
+      const rim=new THREE.DirectionalLight(0xffeedd,0.3);  rim.position.set(0,-4,-5);  scene.add(rim);
+
+      function resize(){
+        const w=wrap.clientWidth, h=Math.max(wrap.clientHeight,380);
+        renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
+      }
+      resize(); new ResizeObserver(resize).observe(wrap);
+
+      let mesh=null, isWF=false;
+      (function animate(){ requestAnimationFrame(animate); controls.update(); renderer.render(scene,camera); })();
+
+      function setupModel(geo) {
+          geo.computeVertexNormals(); geo.center(); geo.computeBoundingBox();
+          const sz=new THREE.Vector3(); geo.boundingBox.getSize(sz);
+          const maxD=Math.max(sz.x,sz.y,sz.z), s=2.5/maxD;
+          if(mesh){ scene.remove(mesh); mesh.geometry.dispose(); mesh.material.dispose(); }
+          mesh=new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0xc4c0b8,metalness:.6,roughness:.3}));
+          mesh.scale.setScalar(s); scene.add(mesh);
+          grid.position.y=-(sz.y*s*.5)-.05;
+          const dist=maxD*s*1.6;
+          camera.position.set(dist*.7,dist*.5,dist);
+          controls.target.set(0,0,0); controls.minDistance=dist*.15; controls.maxDistance=dist*10; controls.update();
+          if(vhint) vhint.classList.add('vis');
+          controls.addEventListener('start',()=>{ controls.autoRotate=false; },{once:true});
+      }
+
+      function loadAndSetupSTL(url){
+        const loader = new THREE.STLLoader();
+        loader.load(url, setupModel, undefined, (error) => {
+          console.error('An error happened while loading the STL file.', error);
+        });
+      }
+
+      loadAndSetupSTL('airbrake_model.stl');
+
+      if(wfBtn) wfBtn.addEventListener('click',()=>{
+        if(!mesh)return; isWF=!isWF; mesh.material.wireframe=isWF; wfBtn.textContent=isWF?'Solid':'Wireframe';
+      });
+    })();
+  </script>
+</body>
+</html>
