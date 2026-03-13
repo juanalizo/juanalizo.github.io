@@ -493,7 +493,7 @@
     }
 
     /* ── ART ── */
-    .art-grid { display:grid; grid-template-columns:1fr 1fr; gap:3px; margin-top:1.2rem; flex:1; }
+    .art-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:3px; margin-top:1.2rem; flex:1; }
     .art-thumb {
       background:var(--s3); aspect-ratio:1; overflow:hidden; position:relative;
       transition:filter .3s;
@@ -1255,7 +1255,7 @@
         mesh=new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0xc4c0b8,metalness:.6,roughness:.3}));
         mesh.scale.setScalar(s); scene.add(mesh);
         grid.position.y=-(sz.y*s*.5)-.05;
-        const dist=maxD*s*2.2;
+        const dist=maxD*s*1.6;
         camera.position.set(dist*.7,dist*.5,dist);
         controls.target.set(0,0,0); controls.minDistance=dist*.15; controls.maxDistance=dist*10; controls.update();
         vhint.classList.add('vis');
