@@ -388,22 +388,10 @@
       color: var(--dim);
       transition: color 0.2s;
     }
-    .exp-role::after {
-      content: '↗';
-      display: inline-block;
-      font-size: 1rem;
-      color: var(--accent);
-      opacity: 0;
-      transform: translate(2px, -2px);
-      transition: opacity 0.3s, transform 0.3s;
-    }
-    .exp-item:hover .exp-role::after { opacity: 1; transform: translate(5px, -5px); }
     .exp-desc { font-size:.88rem; color:var(--dim); line-height:1.65; }
 
     /* ── SOUNDBOARD ── */
-    .soundboard {
-      position: fixed;
-      bottom: -100%;
+    .soundboard { position: fixed; bottom: -100%;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -503,11 +491,6 @@
       font-size:.95rem; font-weight:600; letter-spacing:-.01em; line-height:1.2;
       color:var(--fg); max-width:20ch;
     }
-    .proj-arrow {
-      margin-left:auto; font-size:1rem; color:var(--accent);
-      transition:transform .25s; flex-shrink:0;
-    }
-    .proj-cell:hover .proj-arrow { transform:translate(3px,-3px); }
 
     /* ── ART ── */
     .art-grid { display:grid; grid-template-columns:1fr 1fr; gap:3px; margin-top:1.2rem; flex:1; }
@@ -537,9 +520,7 @@
       transition:background .2s, border-color .2s, color .2s, transform .15s;
       will-change:transform;
     }
-    .cta-btn .arrow { transition:transform .2s; }
     .cta-btn:hover { background:var(--accent); border-color:var(--accent); color:#000; }
-    .cta-btn:hover .arrow { transform:translate(3px,-3px); }
     .cta-btn.filled {
       background:var(--accent); border-color:var(--accent); color:#000; font-weight:700;
       box-shadow:0 0 24px var(--glow);
@@ -590,6 +571,8 @@
     }
     @media (max-width:640px) {
       body { padding:.6rem; }
+      .box { padding: 1.5rem; }
+      .c-hero { padding: 2rem 1.5rem; }
       .c-p1,.c-p2,.c-p3,.c-p4,.c-p5,.c-p6,.c-p7,.c-p8 { grid-column:span 12; }
       .nav-links { display:none; }
       .hero-name { font-size:3rem; }
@@ -597,6 +580,9 @@
       .exp-meta { flex-direction: row; justify-content: space-between; width: 100%; align-items: baseline; }
       .exp-body { display: block; }
       #airbrake-scrollbar { display: none; } 
+      .c-footer { flex-direction: column; gap: 1rem; padding: 1.5rem; }
+      .ft-l { text-align: center; }
+      .ft-r { gap: 1.5rem; }
     }
 
     /* ══ PLAYFUL EXTRAS ══ */
@@ -608,7 +594,6 @@
     .skill-tag:hover { border-color:var(--accent); color:var(--accent); transform:translateY(-2px); }
     .proj-cell:hover .proj-num { opacity:1; color:var(--fg); }
     .c-ticker:hover .ticker-track { animation-direction:reverse; }
-
     .eq-bars {
       position:absolute; bottom:1.5rem; left:1.4rem; z-index:2;
       display:flex; gap:3px; align-items:flex-end;
@@ -785,7 +770,6 @@
       <span class="proj-num">01</span>
       <div class="proj-overlay">
         <span class="proj-name">AIAA IREC 2025 Airbrake</span>
-        <span class="proj-arrow">↗</span>
       </div>
     </a>
     <a href="./project-synth.html" target="_blank" class="box c-p2 proj-cell reveal d1">
@@ -794,7 +778,6 @@
       <div class="eq-bars"><div class="eq-bar" style="--spd:.5s;--h:16px"></div><div class="eq-bar" style="--spd:.7s;--h:10px;animation-delay:.15s"></div><div class="eq-bar" style="--spd:.4s;--h:18px;animation-delay:.05s"></div><div class="eq-bar" style="--spd:.6s;--h:8px;animation-delay:.25s"></div><div class="eq-bar" style="--spd:.45s;--h:14px;animation-delay:.1s"></div></div>
       <div class="proj-overlay">
         <span class="proj-name">ESP32 Polyphonic Synthesizer</span>
-        <span class="proj-arrow">↗</span>
       </div>
     </a>
     <a href="./project-satellite.html" target="_blank" class="box c-p3 proj-cell reveal d2">
@@ -803,7 +786,6 @@
       <div class="orbit-ring"></div>
       <div class="proj-overlay">
         <span class="proj-name">M.E.M.E. Satellite Structures</span>
-        <span class="proj-arrow">↗</span>
       </div>
     </a>
     <a href="./project-haptics.html" target="_blank" class="box c-p4 proj-cell reveal d3">
@@ -811,7 +793,6 @@
       <span class="proj-num">04</span>
       <div class="proj-overlay">
         <span class="proj-name">Haptic Glove Technology</span>
-        <span class="proj-arrow">↗</span>
       </div>
     </a>
     <a href="#" target="_blank" class="box c-p5 proj-cell reveal">
@@ -819,7 +800,6 @@
       <span class="proj-num">05</span>
       <div class="proj-overlay">
         <span class="proj-name">Project Five</span>
-        <span class="proj-arrow">↗</span>
       </div>
     </a>
     <a href="#" target="_blank" class="box c-p6 proj-cell reveal d1">
@@ -827,7 +807,6 @@
       <span class="proj-num">06</span>
       <div class="proj-overlay">
         <span class="proj-name">Project Six</span>
-        <span class="proj-arrow">↗</span>
       </div>
     </a>
     <a href="#" target="_blank" class="box c-p7 proj-cell reveal d2">
@@ -835,7 +814,6 @@
       <span class="proj-num">07</span>
       <div class="proj-overlay">
         <span class="proj-name">Project Seven</span>
-        <span class="proj-arrow">↗</span>
       </div>
     </a>
     <a href="#" target="_blank" class="box c-p8 proj-cell reveal d3">
@@ -843,7 +821,6 @@
       <span class="proj-num">08</span>
       <div class="proj-overlay">
         <span class="proj-name">Project Eight</span>
-        <span class="proj-arrow">↗</span>
       </div>
     </a>
 
@@ -857,7 +834,7 @@
         <div class="art-thumb" style="background: url('art4.jpg') center/cover;"></div>
       </div>
       <a href="https://www.alizo.xyz/art" class="cta-btn" style="margin-top:1.2rem;">
-        <span>View Gallery</span><span class="arrow">↗</span>
+        <span>View Gallery</span>
       </a>
     </div>
 
@@ -875,7 +852,7 @@
         <span class="skill-tag">Python</span>
       </div>
       <a href="https://www.alizo.xyz/resume" class="cta-btn filled" target="_blank">
-        <span>Download Resume PDF</span><span class="arrow">↓</span>
+        <span>Download Resume PDF</span>
       </a>
     </div>
 
