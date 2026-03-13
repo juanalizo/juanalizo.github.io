@@ -11,14 +11,16 @@
     /* ── CORE STYLES (Shared with Home) ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg:     #fdfdfd; 
-      --s1:     #ffffff; 
-      --s2:     #f5f5f5; 
-      --s3:     #eeeeee;
-      --fg:     #1a1a1a; 
-      --dim:    rgba(26, 26, 26, 0.6);
-      --line:   rgba(0, 0, 0, 0.08); 
-      --accent: #007aff; /* A modern, industrial blue */
+      --bg:     #f0f4f8;
+      --s1:     #ffffff;
+      --s2:     #e2e8f0;
+      --s3:     #cbd5e1;
+      --fg:     #0f172a;
+      --dim:    rgba(15, 23, 42, 0.6);
+      --line:   rgba(15, 23, 42, 0.1);
+      --accent: #0A2463; /* Venezuelan Blue */
+      --red:    #A41623; /* Venezuelan Red */
+      --blue:   #0A2463; /* Venezuelan Blue */
     }
     body {
       background: var(--bg); color: var(--fg);
@@ -30,13 +32,21 @@
     .container { max-width: 1000px; margin: 0 auto; }
     
     /* Header */
-    header { margin-bottom: 4rem; border-bottom: 1px solid var(--line); padding-bottom: 2rem; }
+    header { 
+      margin-bottom: 2rem; 
+      padding: 3rem 2rem; 
+      background: var(--blue);
+      color: #fff;
+    }
     .nav-back { 
-      font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); 
+      font-family: 'DM Mono', monospace; font-size: 0.7rem; color: #FFC300; 
       text-decoration: none; display: inline-block; margin-bottom: 1.5rem;
     }
     h1 { font-family: 'Syne', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1; margin-bottom: 0.5rem; }
-    .subtitle { font-family: 'DM Mono', monospace; color: var(--dim); font-size: 0.9rem; }
+    .subtitle { 
+      font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.7); 
+      font-size: 0.9rem; 
+    }
 
     /* Grid Content */
     .content-grid { display: grid; grid-template-columns: 250px 1fr; gap: 4rem; margin-bottom: 4rem; }
@@ -71,15 +81,16 @@
         font-size: 0.7rem;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        transition: background .2s, border-color .2s;
+        transition: background .2s, border-color .2s, color .2s;
     }
-    .paper-link:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .paper-link:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
 
     /* Main Body */
     .body-text h2 { 
       font-family: 'Syne', sans-serif; font-size: 1.8rem; margin: 2.5rem 0 1rem; 
       color: var(--fg);
     }
+    .body-text h2:first-of-type { margin-top: 0; }
     .body-text p { margin-bottom: 1.5rem; color: var(--dim); }
     
     /* Visuals */
@@ -118,7 +129,7 @@
       background:transparent; border:1px solid var(--line); color:var(--accent);
       padding:.4rem .9rem; transition:background .2s, color .2s, border-color .2s; cursor: pointer;
     }
-    .viewer-btn:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+    .viewer-btn:hover { background:var(--accent); color:var(--bg); border-color:var(--accent); }
     .viewer-bottom {
       font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase;
       color:var(--dim); line-height:1.8; text-align: right;
@@ -408,7 +419,7 @@
       renderer.toneMappingExposure = 1.1;
 
       const scene = new THREE.Scene();
-      const grid  = new THREE.GridHelper(12,24,0xcccccc,0xdadada);
+      const grid  = new THREE.GridHelper(12,24,0xcccccc,0xdddddd);
       scene.add(grid);
 
       const camera = new THREE.PerspectiveCamera(45,1,0.001,10000);
@@ -420,10 +431,10 @@
       controls.autoRotate      = true;
       controls.autoRotateSpeed = 1.2;
 
-      scene.add(new THREE.AmbientLight(0xffffff,0.7));
-      const key=new THREE.DirectionalLight(0xffffff,0.8); key.position.set(5,8,5); scene.add(key);
-      const fill=new THREE.DirectionalLight(0xffffff,0.4); fill.position.set(-5,3,-3); scene.add(fill);
-      const rim=new THREE.DirectionalLight(0xffffff,0.2);  rim.position.set(0,-4,-5);  scene.add(rim);
+      scene.add(new THREE.AmbientLight(0xffffff,0.35));
+      const key=new THREE.DirectionalLight(0xffffff,1.5); key.position.set(5,8,5); scene.add(key);
+      const fill=new THREE.DirectionalLight(0xFFC300,0.5); fill.position.set(-5,3,-3); scene.add(fill);
+      const rim=new THREE.DirectionalLight(0xffffff,0.3);  rim.position.set(0,-4,-5);  scene.add(rim);
 
       function resize(){
         const w=wrap.clientWidth, h=Math.max(wrap.clientHeight,380);
@@ -439,7 +450,7 @@
           const sz=new THREE.Vector3(); geo.boundingBox.getSize(sz);
           const maxD=Math.max(sz.x,sz.y,sz.z), s=2.5/maxD;
           if(mesh){ scene.remove(mesh); mesh.geometry.dispose(); mesh.material.dispose(); }
-          mesh=new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0x555555,metalness:.4,roughness:.5}));
+          mesh=new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0x666666,metalness:.5,roughness:.5}));
           mesh.scale.setScalar(s); scene.add(mesh);
           grid.position.y=-(sz.y*s*.5)-.05;
           const dist=maxD*s*1.6;
@@ -560,7 +571,14 @@
         ctx.scale(dpr, dpr);
         
         ctx.clearRect(0, 0, rect.width, rect.height);
-        const accentColor = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#007aff';
+        const theme = {
+          accent: getComputedStyle(document.body).getPropertyValue('--accent').trim(),
+          red: getComputedStyle(document.body).getPropertyValue('--red').trim(),
+          fg: getComputedStyle(document.body).getPropertyValue('--fg').trim(),
+          bg: getComputedStyle(document.body).getPropertyValue('--bg').trim(),
+          dim: getComputedStyle(document.body).getPropertyValue('--dim').trim(),
+          line: getComputedStyle(document.body).getPropertyValue('--line').trim()
+        };
 
         // Update Parameters
         linkageLen = parseFloat(dcSlider.value);
@@ -617,11 +635,11 @@
         ctx.lineJoin = 'round';
 
         // Draw Reference (Screw Axis)
-        ctx.strokeStyle = 'rgba(0,0,0,0.1)'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = theme.line; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
         ctx.beginPath(); ctx.moveTo(sScrewX, 0); ctx.lineTo(sScrewX, rect.height); ctx.stroke(); ctx.setLineDash([]);
 
         // Draw Dashed Constraint Circles
-        ctx.strokeStyle = 'rgba(0,0,0,0.2)'; ctx.lineWidth = 1; ctx.setLineDash([5, 5]);
+        ctx.strokeStyle = theme.dim; ctx.lineWidth = 1; ctx.setLineDash([5, 5]);
         
         // Circle around D (Radius DC)
         ctx.beginPath(); ctx.arc(sD.x, sD.y, linkageLen * SCALE, 0, Math.PI * 2); ctx.stroke();
@@ -635,15 +653,15 @@
         const LINK_WIDTH = 5;
 
         // Draw Linkage Arm (D to C)
-        ctx.strokeStyle = '#666'; ctx.lineWidth = LINK_WIDTH;
+        ctx.strokeStyle = theme.dim; ctx.lineWidth = LINK_WIDTH;
         ctx.beginPath(); ctx.moveTo(sD.x, sD.y); ctx.lineTo(sC.x, sC.y); ctx.stroke();
 
         // Draw Pivot Arm (B to C)
-        ctx.strokeStyle = '#007aff'; ctx.lineWidth = LINK_WIDTH;
+        ctx.strokeStyle = theme.accent; ctx.lineWidth = LINK_WIDTH;
         ctx.beginPath(); ctx.moveTo(sB.x, sB.y); ctx.lineTo(sC.x, sC.y); ctx.stroke();
 
         // Draw Arm Extension (from B to A)
-        ctx.strokeStyle = '#ff9500'; ctx.lineWidth = LINK_WIDTH;
+        ctx.strokeStyle = theme.red; ctx.lineWidth = LINK_WIDTH;
         ctx.beginPath(); ctx.moveTo(sB.x, sB.y); ctx.lineTo(sA.x, sA.y); ctx.stroke();
 
         // Draw Flap Plate (Centered at A)
@@ -656,17 +674,17 @@
         const fBx = sA.x - halfFlap * Math.cos(currentFlapAngle);
         const fBy = sA.y + halfFlap * Math.sin(currentFlapAngle);
 
-        ctx.strokeStyle = '#333'; ctx.lineWidth = 10; ctx.lineCap = 'butt';
+        ctx.strokeStyle = theme.fg; ctx.lineWidth = 10; ctx.lineCap = 'butt';
         ctx.beginPath(); ctx.moveTo(fTx, fTy); ctx.lineTo(fBx, fBy); ctx.stroke();
 
         // Draw Joints (Pins)
-        [sA, sB, sC, sD].forEach((p, i) => {
-          ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2;
+        [sA, sB, sC, sD].forEach((p, i) => { // Invert colors for dark mode
+          ctx.fillStyle = theme.bg; ctx.strokeStyle = theme.fg; ctx.lineWidth = 2;
           ctx.beginPath(); ctx.arc(p.x, p.y, (i === 1) ? 6 : 4, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
         });
 
         // Labels
-        ctx.fillStyle = '#666'; ctx.font = '12px monospace'; ctx.textAlign = 'left';
+        ctx.fillStyle = theme.dim; ctx.font = '12px monospace'; ctx.textAlign = 'left';
         ctx.fillText("Pivot (B)", sB.x + 10, sB.y);
         ctx.fillText("Nut (D)", sD.x + 10, sD.y);
         ctx.fillText("Flap (A)", sA.x + 10, sA.y);
