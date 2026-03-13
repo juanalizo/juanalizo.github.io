@@ -11,9 +11,14 @@
     /* ── CORE STYLES (Shared with Home) ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #080908; --s1: #0d100d; --s2: #111512; --s3: #161a16;
-      --fg: #f0eeea; --dim: rgba(240,238,234,0.45);
-      --line: rgba(240,238,234,0.08); --accent: #84B179;
+      --bg:     #fdfdfd; 
+      --s1:     #ffffff; 
+      --s2:     #f5f5f5; 
+      --s3:     #eeeeee;
+      --fg:     #1a1a1a; 
+      --dim:    rgba(26, 26, 26, 0.6);
+      --line:   rgba(0, 0, 0, 0.08); 
+      --accent: #007aff; /* A modern, industrial blue */
     }
     body {
       background: var(--bg); color: var(--fg);
@@ -51,10 +56,6 @@
 
     .collab-list { list-style: none; margin-top: 0.5rem; }
     .collab-item { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem; }
-    .collab-img { 
-        width: 36px; height: 36px; border-radius: 50%; 
-        object-fit: cover; background: var(--s3); border: 1px solid var(--line);
-    }
     .collab-info a { text-decoration: none; color: var(--fg); }
     .collab-info a:hover .collab-name { color: var(--accent); }
     .collab-name { font-size: 0.9rem; font-weight: 700; display: block; transition: color 0.2s; }
@@ -72,7 +73,7 @@
         letter-spacing: 0.08em;
         transition: background .2s, border-color .2s;
     }
-    .paper-link:hover { background: var(--accent); border-color: var(--accent); color: #000; }
+    .paper-link:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
 
     /* Main Body */
     .body-text h2 { 
@@ -117,13 +118,57 @@
       background:transparent; border:1px solid var(--line); color:var(--accent);
       padding:.4rem .9rem; transition:background .2s, color .2s, border-color .2s; cursor: pointer;
     }
-    .viewer-btn:hover { background:var(--accent); color:#000; border-color:var(--accent); }
+    .viewer-btn:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
     .viewer-bottom {
       font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase;
       color:var(--dim); line-height:1.8; text-align: right;
     }
     .viewer-hint { opacity:0; transition:opacity .4s; font-size:.6rem; color:var(--accent); margin-top:.3rem; }
     .viewer-hint.vis { opacity:1; }
+
+    /* Kinematic Canvas */
+    #airbrake-visualizer-container {
+      position: relative;
+      width: 100%;
+      margin: 2rem 0;
+      font-family: 'DM Mono', monospace; 
+      background: var(--s2); 
+      border: 1px solid var(--line);
+      padding: 1.5rem;
+      border-radius: 4px;
+      color: var(--fg);
+    }
+
+    #airbrake-visualizer-container canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: radial-gradient(circle at center, rgba(0,0,0,0.03) 0%, transparent 70%);
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--line);
+    }
+
+    #airbrake-visualizer-container .ab-controls {
+      display: flex; align-items: center; gap: 1rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--line);
+    }
+
+    #airbrake-visualizer-container label {
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent);
+    }
+
+    #airbrake-visualizer-container input[type=range] {
+      flex: 1; cursor: pointer; accent-color: var(--accent);
+    }
+
+    #airbrake-visualizer-container .ab-readout {
+      font-size: 0.9rem; min-width: 100px; text-align: right; color: var(--dim); font-feature-settings: "tnum";
+    }
+    #airbrake-visualizer-container .ab-readout span {
+      color: var(--fg); font-weight: bold;
+    }
 
     /* Footer */
     footer { 
@@ -158,7 +203,7 @@
 
     <div class="content-grid">
       
-      <!-- Left Sidebar: Project Specs -->
+      <!-- Left Sidebar -->
       <aside>
         <div class="meta-block">
           <span class="meta-lbl">Role</span>
@@ -174,10 +219,11 @@
           <span class="meta-lbl">Tech Stack</span>
           <div>
             <span class="tech-tag">SolidWorks</span>
-            <span class="tech-tag">FEA Sim</span>
-            <span class="tech-tag">C++ / Arduino</span>
-            <span class="tech-tag">Servo Actuation</span>
-            <span class="tech-tag">Rapid Prototyping</span>
+            <span class="tech-tag">Ansys Fluent</span>
+            <span class="tech-tag">RocketPy</span>
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">STM32 / C++</span>
+            <span class="tech-tag">DFMA</span>
           </div>
         </div>
 
@@ -185,20 +231,34 @@
           <span class="meta-lbl">Collaborators</span>
           <ul class="collab-list">
             <li class="collab-item">
-              <img src="placeholder_pfp.jpg" alt="Collaborator 1" class="collab-img">
               <div class="collab-info">
                 <a href="#" target="_blank" rel="noopener noreferrer">
-                  <span class="collab-name">Jane Doe</span>
-                  <span class="collab-role">Avionics Lead</span>
+                  <span class="collab-name">Nicholas Dagnino</span>
+                  <span class="collab-role">Mechanical Engineering</span>
                 </a>
               </div>
             </li>
             <li class="collab-item">
-              <img src="placeholder_pfp.jpg" alt="Collaborator 2" class="collab-img">
               <div class="collab-info">
                 <a href="#" target="_blank" rel="noopener noreferrer">
-                  <span class="collab-name">John Smith</span>
-                  <span class="collab-role">Recovery Systems</span>
+                  <span class="collab-name">Parsa Novin</span>
+                  <span class="collab-role">Electrical Engineering</span>
+                </a>
+              </div>
+            </li>
+            <li class="collab-item">
+              <div class="collab-info">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <span class="collab-name">Austin Applestone</span>
+                  <span class="collab-role">Mechanical Engineering</span>
+                </a>
+              </div>
+            </li>
+            <li class="collab-item">
+              <div class="collab-info">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <span class="collab-name">Brooklyn Schnupp</span>
+                  <span class="collab-role">Mechanical Engineering</span>
                 </a>
               </div>
             </li>
@@ -216,21 +276,24 @@
         </div>
       </aside>
 
-      <!-- Right Column: Narrative -->
+      <!-- Right Column -->
       <article class="body-text">
-        <h2>The Challenge</h2>
+        <h2>Mission Profile</h2>
         <p>
-          In high-powered rocketry competitions like AIAA IREC, hitting the target apogee (30,000 ft) precisely is crucial for scoring. Atmospheric variability makes this difficult with passive fins alone. We needed an active drag system capable of real-time adjustments during supersonic flight.
+          For the 2026 International Rocket Engineering Competition (IREC), the University of Georgia Rocketry Team is targeting a precise apogee of 10,000 ft (3048 m). Passive flight is highly susceptible to atmospheric variance; to guarantee accuracy, we engineered an active airbrake system to modulate drag in real-time.
+        </p>
+        <p>
+          The design constraints were strict: the mechanism had to fit within a 225 mm axial length inside a 6-inch airframe, weigh under 3.2 kg, cost less than $400, and draw no more than 25 A of current to preserve battery life for avionics.
         </p>
 
         <img src="airbrake_sketch.jpg" alt="Initial sketch of the airbrake mechanism" class="img-full" />
 
-        <h2>The Solution</h2>
+        <h2>Mechanical Architecture</h2>
         <p>
-          I designed a 3-fin actuation system driven by a single high-torque servo. The mechanism utilizes a custom linkage geometry that converts rotational servo motion into linear extension of drag plates.
+          The solution is a three-flap system driven by a single NEO 550 BLDC motor through a 4:1 gearbox. The motor rotates a central 1204 ball screw, driving a custom CNC-machined 6061-T6 aluminum cuff linearly. This linear motion is converted into radial flap deployment via a double-linkage system.
         </p>
         <p>
-          The assembly was machined from 6061-T6 aluminum to withstand aerodynamic forces up to 200N per fin, verified through static FEA and dynamic airflow simulations.
+          Material Selection: We selected 7075-T6 aluminum for the arms and linkages due to its high strength-to-weight ratio and fatigue resistance. The internal ribs and bulkheads are waterjet-cut from G10 fiberglass, ensuring alignment tolerance within ±0.5 mm while maintaining radio transparency for internal avionics.
         </p>
 
         <div class="gallery-grid gallery-2-col">
@@ -238,16 +301,39 @@
           <img src="airbrake_proto.jpg" alt="Prototype Assembly" />
         </div>
 
-        <h2>Results</h2>
+        <h2>Analysis & Optimization</h2>
         <p>
-          The system successfully integrated with the avionics bay and passed initial ground actuation tests. Wind tunnel testing confirmed drag coefficient variations matched our theoretical models within 5%.
+          Kinematics: We developed a custom kinematic-force optimization model in Python to minimize current draw. By iterating through thousands of linkage geometries, we optimized the torque curve to ensure the motor operates efficiently even under worst-case aerodynamic loads (Mach 0.981).
         </p>
         
+        <div id="airbrake-visualizer-container">
+          <canvas id="airbrake-canvas"></canvas>
+          <div class="ab-controls">
+            <label for="actuation-slider">Actuation</label>
+            <input type="range" id="actuation-slider" min="0" max="100" value="0">
+            <div class="ab-readout">
+              Angle: <span id="ab-angle-text">0.0°</span>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          CFD & FEA: Computational Fluid Dynamics (Ansys Fluent) at Mach 0.7 and 80° deployment verified a total drag force of 320 N. Structural Finite Element Analysis confirmed that critical stress points in the linkage pins remained well below yield strength (FS > 2.25).
+        </p>
+
         <div class="gallery-grid gallery-3-col">
           <img src="airbrake_detail1.jpg" alt="Detail view 1" />
           <img src="airbrake_detail2.jpg" alt="Detail view 2" />
           <img src="airbrake_detail3.jpg" alt="Detail view 3" />
         </div>
+
+        <h2>Control Strategy</h2>
+        <p>
+          The system is controlled by an STM32H5 microcontroller. We validated control algorithms using RocketPy, running over 370,000 Monte Carlo flight simulations. 
+        </p>
+        <p>
+          While PID and LQR controllers were tested, an Explicit Model Predictive Controller (EMPC) yielded the lowest Root Mean Square Error (RMSE) for apogee targeting, demonstrating superior robustness against wind gusts and motor performance variance.
+        </p>
 
         <div class="viewer-container">
           <div class="viewer-wrap" id="viewer-wrap">
@@ -301,7 +387,7 @@
       renderer.toneMappingExposure = 1.1;
 
       const scene = new THREE.Scene();
-      const grid  = new THREE.GridHelper(12,24,0x1a1a1a,0x111111);
+      const grid  = new THREE.GridHelper(12,24,0xcccccc,0xdadada);
       scene.add(grid);
 
       const camera = new THREE.PerspectiveCamera(45,1,0.001,10000);
@@ -313,10 +399,10 @@
       controls.autoRotate      = true;
       controls.autoRotateSpeed = 1.2;
 
-      scene.add(new THREE.AmbientLight(0xffffff,0.35));
-      const key=new THREE.DirectionalLight(0xf0eeea,1.8); key.position.set(5,8,5); scene.add(key);
-      const fill=new THREE.DirectionalLight(0x84B179,0.4); fill.position.set(-5,3,-3); scene.add(fill);
-      const rim=new THREE.DirectionalLight(0xffeedd,0.3);  rim.position.set(0,-4,-5);  scene.add(rim);
+      scene.add(new THREE.AmbientLight(0xffffff,0.7));
+      const key=new THREE.DirectionalLight(0xffffff,0.8); key.position.set(5,8,5); scene.add(key);
+      const fill=new THREE.DirectionalLight(0xffffff,0.4); fill.position.set(-5,3,-3); scene.add(fill);
+      const rim=new THREE.DirectionalLight(0xffffff,0.2);  rim.position.set(0,-4,-5);  scene.add(rim);
 
       function resize(){
         const w=wrap.clientWidth, h=Math.max(wrap.clientHeight,380);
@@ -332,7 +418,7 @@
           const sz=new THREE.Vector3(); geo.boundingBox.getSize(sz);
           const maxD=Math.max(sz.x,sz.y,sz.z), s=2.5/maxD;
           if(mesh){ scene.remove(mesh); mesh.geometry.dispose(); mesh.material.dispose(); }
-          mesh=new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0xc4c0b8,metalness:.6,roughness:.3}));
+          mesh=new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0x555555,metalness:.4,roughness:.5}));
           mesh.scale.setScalar(s); scene.add(mesh);
           grid.position.y=-(sz.y*s*.5)-.05;
           const dist=maxD*s*1.6;
@@ -354,6 +440,147 @@
       if(wfBtn) wfBtn.addEventListener('click',()=>{
         if(!mesh)return; isWF=!isWF; mesh.material.wireframe=isWF; wfBtn.textContent=isWF?'Solid':'Wireframe';
       });
+    })();
+  </script>
+  <script>
+    // ════════════════════════════════
+    //  KINEMATIC VISUALIZER
+    // ════════════════════════════════
+    (function(){
+      const canvas = document.getElementById('airbrake-canvas');
+      const slider = document.getElementById('actuation-slider');
+      const angleText = document.getElementById('ab-angle-text');
+      
+      if (!canvas || !slider || !angleText) return;
+
+      const ctx = canvas.getContext('2d');
+      
+      // ══════════════════════════════════════════════
+      // 1. CONFIGURATION
+      // ══════════════════════════════════════════════
+      
+      // CAD Geometry (in mm)
+      const PIVOT_B = { x: 57.9, y: 36.3 };
+      const SCREW_X = 10.0;
+      const LINKAGE_LEN_DC = 34.7;
+      const PIVOT_ARM_LEN_BC = 31.3;
+      const FLAP_LEN_BA = 55.9;
+      const FLAP_OFFSET_ANGLE = 3.14*0.6; // Radians
+      const NUT_Y_START = 65.7;      // Retracted Y position of nut
+      const NUT_Y_END = 16;          // Extended Y position of nut
+
+      // Visualizer Display Settings
+      const SCALE = 4.5;               // Pixels per mm
+      const ORIGIN = { x: 50, y: 300 }; // Canvas pixel coords for CAD (0,0)
+
+      // ══════════════════════════════════════════════
+      // 2. KINEMATIC MODEL
+      // ══════════════════════════════════════════════
+
+      function calculateKinematics(sliderValue) {
+        // Calculate Point D (Cuff-linkage Pin) based on slider
+        const t = sliderValue / 100;
+        const Dy = NUT_Y_START + t * (NUT_Y_END - NUT_Y_START);
+        const D = { x: SCREW_X, y: Dy };
+        const displacement = Math.abs(NUT_Y_START - Dy);
+
+        // Calculate Point C (Linkage-pivot Connection) via circle-circle intersection
+        const B = PIVOT_B;
+        
+        const dx = B.x - D.x;
+        const dy = B.y - D.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+
+        if (dist > LINKAGE_LEN_DC + PIVOT_ARM_LEN_BC || dist < Math.abs(LINKAGE_LEN_DC - PIVOT_ARM_LEN_BC) || dist === 0) {
+          return null; // Impossible geometry
+        }
+
+        const a = (LINKAGE_LEN_DC**2 - PIVOT_ARM_LEN_BC**2 + dist**2) / (2 * dist);
+        const h = Math.sqrt(Math.max(0, LINKAGE_LEN_DC**2 - a**2));
+
+        const x2 = D.x + a * (B.x - D.x) / dist;
+        const y2 = D.y + a * (B.y - D.y) / dist;
+
+        // Calculate the other intersection point as requested
+        const C = {
+          x: x2 + h * (B.y - D.y) / dist,
+          y: y2 - h * (B.x - D.x) / dist
+        };
+
+        // Calculate Point A (Flap Connection Point) via rigid body rotation
+        const thetaBC = Math.atan2(C.y - B.y, C.x - B.x);
+        const thetaFlap = thetaBC + FLAP_OFFSET_ANGLE;
+        
+        const A = {
+          x: B.x + FLAP_LEN_BA * Math.cos(thetaFlap),
+          y: B.y + FLAP_LEN_BA * Math.sin(thetaFlap)
+        };
+
+        return { A, B, C, D, displacement, thetaFlap };
+      }
+
+      // ══════════════════════════════════════════════
+      // 3. CANVAS RENDERER
+      // ══════════════════════════════════════════════
+
+      function draw() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+        
+        ctx.clearRect(0, 0, rect.width, rect.height);
+        const accentColor = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#007aff';
+
+        const state = calculateKinematics(slider.value);
+        if (!state) {
+          angleText.parentElement.childNodes[0].textContent = 'Error:';
+          angleText.innerText = 'Unsolvable';
+          return;
+        }
+
+        const { A, B, C, D, displacement, thetaFlap } = state;
+        
+        // Update UI Readout
+        angleText.parentElement.childNodes[0].textContent = 'Displacement: ';
+        angleText.innerText = `${displacement.toFixed(1)} mm`;
+
+        // Map CAD coordinates to Canvas coordinates
+        const toCanvas = (p) => ({ x: ORIGIN.x + p.x * SCALE, y: ORIGIN.y - p.y * SCALE });
+        const sA = toCanvas(A), sB = toCanvas(B), sC = toCanvas(C), sD = toCanvas(D);
+        const sScrewX = ORIGIN.x + SCREW_X * SCALE;
+
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        // Draw Reference (Screw Axis)
+        ctx.strokeStyle = 'rgba(0,0,0,0.1)'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.moveTo(sScrewX, 0); ctx.lineTo(sScrewX, rect.height); ctx.stroke(); ctx.setLineDash([]);
+
+        // Draw Linkage Arm (D to C)
+        ctx.strokeStyle = '#555'; ctx.lineWidth = 6;
+        ctx.beginPath(); ctx.moveTo(sD.x, sD.y); ctx.lineTo(sC.x, sC.y); ctx.stroke();
+
+        // Draw Pivot Arm (B to C)
+        ctx.strokeStyle = accentColor; ctx.lineWidth = 8;
+        ctx.beginPath(); ctx.moveTo(sB.x, sB.y); ctx.lineTo(sC.x, sC.y); ctx.stroke();
+
+        // Draw Flap (from B to A)
+        ctx.strokeStyle = accentColor; ctx.lineWidth = 6;
+        ctx.beginPath(); ctx.moveTo(sB.x, sB.y); ctx.lineTo(sA.x, sA.y); ctx.stroke();
+
+        // Draw Joints (Pins)
+        [sA, sB, sC, sD].forEach((p, i) => {
+          ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.arc(p.x, p.y, (i === 1) ? 6 : 4, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        });
+      }
+      
+      slider.addEventListener('input', draw);
+      window.addEventListener('resize', draw);
+      draw();
+
     })();
   </script>
 </body>
