@@ -147,12 +147,18 @@
       border-radius: 4px;
       margin-bottom: 1rem;
       border: 1px solid var(--line);
+      aspect-ratio: 1.6;
     }
 
     #airbrake-visualizer-container .ab-controls {
-      display: flex; align-items: center; gap: 1rem;
+      display: grid; grid-template-columns: auto 1fr auto; gap: 1rem 1.5rem;
+      align-items: center;
       padding-top: 0.5rem;
       border-top: 1px solid var(--line);
+    }
+    
+    #airbrake-visualizer-container .control-group {
+      display: contents; /* Allows grid items to align with parent grid */
     }
 
     #airbrake-visualizer-container label {
@@ -160,14 +166,14 @@
     }
 
     #airbrake-visualizer-container input[type=range] {
-      flex: 1; cursor: pointer; accent-color: var(--accent);
+      width: 100%; cursor: pointer; accent-color: var(--accent);
     }
 
     #airbrake-visualizer-container .ab-readout {
-      font-size: 0.9rem; min-width: 100px; text-align: right; color: var(--dim); font-feature-settings: "tnum";
+      font-size: 0.8rem; min-width: 80px; text-align: right; color: var(--dim); font-feature-settings: "tnum";
     }
     #airbrake-visualizer-container .ab-readout span {
-      color: var(--fg); font-weight: bold;
+      color: var(--fg); font-weight: 600;
     }
 
     /* Footer */
@@ -309,10 +315,25 @@
         <div id="airbrake-visualizer-container">
           <canvas id="airbrake-canvas"></canvas>
           <div class="ab-controls">
-            <label for="actuation-slider">Actuation</label>
-            <input type="range" id="actuation-slider" min="0" max="100" value="0">
-            <div class="ab-readout">
-              Angle: <span id="ab-angle-text">0.0°</span>
+            <div class="control-group">
+              <label for="actuation-slider">Actuation</label>
+              <input type="range" id="actuation-slider" min="0" max="100" value="0">
+              <div class="ab-readout"><span id="ab-disp-text">0.0 mm</span></div>
+            </div>
+            <div class="control-group">
+              <label for="dc-slider">Link DC</label>
+              <input type="range" id="dc-slider" min="20" max="60" step="0.5" value="34.7">
+              <div class="ab-readout"><span id="dc-text">34.7 mm</span></div>
+            </div>
+            <div class="control-group">
+              <label for="cb-slider">Link CB</label>
+              <input type="range" id="cb-slider" min="20" max="60" step="0.5" value="31.3">
+              <div class="ab-readout"><span id="cb-text">31.3 mm</span></div>
+            </div>
+            <div class="control-group">
+              <label for="ba-slider">Link BA</label>
+              <input type="range" id="ba-slider" min="20" max="100" step="0.5" value="55.9">
+              <div class="ab-readout"><span id="ba-text">55.9 mm</span></div>
             </div>
           </div>
         </div>
@@ -449,9 +470,16 @@
     (function(){
       const canvas = document.getElementById('airbrake-canvas');
       const slider = document.getElementById('actuation-slider');
-      const angleText = document.getElementById('ab-angle-text');
+      const dispText = document.getElementById('ab-disp-text');
       
-      if (!canvas || !slider || !angleText) return;
+      const dcSlider = document.getElementById('dc-slider');
+      const cbSlider = document.getElementById('cb-slider');
+      const baSlider = document.getElementById('ba-slider');
+      const dcText = document.getElementById('dc-text');
+      const cbText = document.getElementById('cb-text');
+      const baText = document.getElementById('ba-text');
+      
+      if (!canvas || !slider || !dcSlider) return;
 
       const ctx = canvas.getContext('2d');
       
@@ -462,16 +490,23 @@
       // CAD Geometry (in mm)
       const PIVOT_B = { x: 57.9, y: 36.3 };
       const SCREW_X = 10.0;
-      const LINKAGE_LEN_DC = 34.7;
-      const PIVOT_ARM_LEN_BC = 31.3;
-      const FLAP_LEN_BA = 55.9;
-      const FLAP_OFFSET_ANGLE = 3.14*0.6; // Radians
+      
+      const BASE_LINKAGE = 34.7;
+      const BASE_PIVOT = 31.3;
+      const BASE_FLAP = 55.9;
+
+      let linkageLen = BASE_LINKAGE; 
+      let pivotArmLen = BASE_PIVOT;
+      let flapLen = BASE_FLAP;
+
+      let flapOffsetAngle = 3.14*0.6; // Dynamic
       const NUT_Y_START = 65.7;      // Retracted Y position of nut
       const NUT_Y_END = 16;          // Extended Y position of nut
+      const FLAP_PLATE_LEN = 75.0;   // Length of the flap plate itself
 
       // Visualizer Display Settings
-      const SCALE = 4.5;               // Pixels per mm
-      const ORIGIN = { x: 50, y: 300 }; // Canvas pixel coords for CAD (0,0)
+      const SCALE = 3.2;               // Pixels per mm
+      const ORIGIN = { x: 80, y: 280 }; // Canvas pixel coords for CAD (0,0) - Adjusted Y origin
 
       // ══════════════════════════════════════════════
       // 2. KINEMATIC MODEL
@@ -491,12 +526,12 @@
         const dy = B.y - D.y;
         const dist = Math.sqrt(dx*dx + dy*dy);
 
-        if (dist > LINKAGE_LEN_DC + PIVOT_ARM_LEN_BC || dist < Math.abs(LINKAGE_LEN_DC - PIVOT_ARM_LEN_BC) || dist === 0) {
+        if (dist > linkageLen + pivotArmLen || dist < Math.abs(linkageLen - pivotArmLen) || dist === 0) {
           return null; // Impossible geometry
         }
 
-        const a = (LINKAGE_LEN_DC**2 - PIVOT_ARM_LEN_BC**2 + dist**2) / (2 * dist);
-        const h = Math.sqrt(Math.max(0, LINKAGE_LEN_DC**2 - a**2));
+        const a = (linkageLen**2 - pivotArmLen**2 + dist**2) / (2 * dist);
+        const h = Math.sqrt(Math.max(0, linkageLen**2 - a**2));
 
         const x2 = D.x + a * (B.x - D.x) / dist;
         const y2 = D.y + a * (B.y - D.y) / dist;
@@ -509,14 +544,14 @@
 
         // Calculate Point A (Flap Connection Point) via rigid body rotation
         const thetaBC = Math.atan2(C.y - B.y, C.x - B.x);
-        const thetaFlap = thetaBC + FLAP_OFFSET_ANGLE;
+        const thetaFlap = thetaBC + flapOffsetAngle;
         
         const A = {
-          x: B.x + FLAP_LEN_BA * Math.cos(thetaFlap),
-          y: B.y + FLAP_LEN_BA * Math.sin(thetaFlap)
+          x: B.x + flapLen * Math.cos(thetaFlap),
+          y: B.y + flapLen * Math.sin(thetaFlap)
         };
 
-        return { A, B, C, D, displacement, thetaFlap };
+        return { A, B, C, D, displacement, thetaFlap, thetaBC };
       }
 
       // ══════════════════════════════════════════════
@@ -533,18 +568,37 @@
         ctx.clearRect(0, 0, rect.width, rect.height);
         const accentColor = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#007aff';
 
+        // Update Parameters
+        linkageLen = parseFloat(dcSlider.value);
+        pivotArmLen = parseFloat(cbSlider.value);
+        flapLen = parseFloat(baSlider.value);
+
+        if(dcText) dcText.innerText = linkageLen.toFixed(1) + ' mm';
+        if(cbText) cbText.innerText = pivotArmLen.toFixed(1) + ' mm';
+        if(baText) baText.innerText = flapLen.toFixed(1) + ' mm';
+
+        // Calibrate Offset (Retracted State -> Vertical Flap)
+        // At t=0 (Retracted/Max Y), we want thetaFlap = PI (Vertical)
+        // thetaFlap = thetaBC + offset => offset = PI - thetaBC
+        const stateZero = calculateKinematics(0);
+        if (stateZero) {
+            flapOffsetAngle = Math.PI - stateZero.thetaBC;
+        }
+
         const state = calculateKinematics(slider.value);
         if (!state) {
-          angleText.parentElement.childNodes[0].textContent = 'Error:';
-          angleText.innerText = 'Unsolvable';
+          if(dispText) dispText.innerText = 'Error';
           return;
         }
 
-        const { A, B, C, D, displacement, thetaFlap } = state;
+        const { A, B, C, D, displacement, thetaFlap, thetaBC } = state;
+
+        // Calculate Flap Angle relative to Vertical (0 deg = Vertical)
+        // We need the currentFlapAngle for drawing the plate
+        const currentFlapAngle = thetaFlap - Math.PI/2; // Adjust for visual alignment if needed, or derive from delta
         
         // Update UI Readout
-        angleText.parentElement.childNodes[0].textContent = 'Displacement: ';
-        angleText.innerText = `${displacement.toFixed(1)} mm`;
+        if(dispText) dispText.innerText = `${displacement.toFixed(1)} mm`;
 
         // Map CAD coordinates to Canvas coordinates
         const toCanvas = (p) => ({ x: ORIGIN.x + p.x * SCALE, y: ORIGIN.y - p.y * SCALE });
@@ -558,27 +612,66 @@
         ctx.strokeStyle = 'rgba(0,0,0,0.1)'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
         ctx.beginPath(); ctx.moveTo(sScrewX, 0); ctx.lineTo(sScrewX, rect.height); ctx.stroke(); ctx.setLineDash([]);
 
+        // Draw Dashed Constraint Circles
+        ctx.strokeStyle = 'rgba(0,0,0,0.2)'; ctx.lineWidth = 1; ctx.setLineDash([5, 5]);
+        
+        // Circle around D (Radius DC)
+        ctx.beginPath(); ctx.arc(sD.x, sD.y, linkageLen * SCALE, 0, Math.PI * 2); ctx.stroke();
+
+        // Circle around B (Radius BC)
+        ctx.beginPath(); ctx.arc(sB.x, sB.y, pivotArmLen * SCALE, 0, Math.PI * 2); ctx.stroke();
+        
+        ctx.setLineDash([]);
+
+        // Common Line Style for Linkages
+        const LINK_WIDTH = 5;
+
         // Draw Linkage Arm (D to C)
-        ctx.strokeStyle = '#555'; ctx.lineWidth = 6;
+        ctx.strokeStyle = '#666'; ctx.lineWidth = LINK_WIDTH;
         ctx.beginPath(); ctx.moveTo(sD.x, sD.y); ctx.lineTo(sC.x, sC.y); ctx.stroke();
 
         // Draw Pivot Arm (B to C)
-        ctx.strokeStyle = accentColor; ctx.lineWidth = 8;
+        ctx.strokeStyle = '#007aff'; ctx.lineWidth = LINK_WIDTH;
         ctx.beginPath(); ctx.moveTo(sB.x, sB.y); ctx.lineTo(sC.x, sC.y); ctx.stroke();
 
-        // Draw Flap (from B to A)
-        ctx.strokeStyle = accentColor; ctx.lineWidth = 6;
+        // Draw Arm Extension (from B to A)
+        ctx.strokeStyle = '#ff9500'; ctx.lineWidth = LINK_WIDTH;
         ctx.beginPath(); ctx.moveTo(sB.x, sB.y); ctx.lineTo(sA.x, sA.y); ctx.stroke();
+
+        // Draw Flap Plate (Centered at A)
+        const halfFlap = (FLAP_PLATE_LEN / 2) * SCALE;
+        
+        // Flap Top
+        const fTx = sA.x + halfFlap * Math.cos(currentFlapAngle);
+        const fTy = sA.y - halfFlap * Math.sin(currentFlapAngle); // Subtract because Y grows down
+        // Flap Bottom
+        const fBx = sA.x - halfFlap * Math.cos(currentFlapAngle);
+        const fBy = sA.y + halfFlap * Math.sin(currentFlapAngle);
+
+        ctx.strokeStyle = '#333'; ctx.lineWidth = 10; ctx.lineCap = 'butt';
+        ctx.beginPath(); ctx.moveTo(fTx, fTy); ctx.lineTo(fBx, fBy); ctx.stroke();
 
         // Draw Joints (Pins)
         [sA, sB, sC, sD].forEach((p, i) => {
           ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2;
           ctx.beginPath(); ctx.arc(p.x, p.y, (i === 1) ? 6 : 4, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
         });
+
+        // Labels
+        ctx.fillStyle = '#666'; ctx.font = '12px monospace'; ctx.textAlign = 'left';
+        ctx.fillText("Pivot (B)", sB.x + 10, sB.y);
+        ctx.fillText("Nut (D)", sD.x + 10, sD.y);
+        ctx.fillText("Flap (A)", sA.x + 10, sA.y);
       }
       
+      // Sliders
       slider.addEventListener('input', draw);
+      dcSlider.addEventListener('input', draw);
+      cbSlider.addEventListener('input', draw);
+      baSlider.addEventListener('input', draw);
+
       window.addEventListener('resize', draw);
+
       draw();
 
     })();
