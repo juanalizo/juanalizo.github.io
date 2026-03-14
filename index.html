@@ -514,11 +514,13 @@
       color:var(--accent); opacity:.6;
     }
     .proj-overlay {
-      position:absolute; inset:0; z-index:3;
-      background:linear-gradient(to top,var(--bg) 0%,transparent 70%);
+      position:absolute; 
+      bottom:0; left:0; right:0; /* Anchor to the bottom */
+      background: rgba(0, 0, 0, 0.75); /* Translucent black */
       opacity:0; transition:opacity .35s;
       display:flex; align-items:flex-end; padding:1.3rem;
       opacity: 1; /* Make title and description always visible */
+      z-index:3;
     }
     .proj-cell:hover .proj-overlay { opacity:1; }
     .proj-name {
@@ -779,7 +781,7 @@
         <div class="exp-body">
           <div>
             <div class="exp-role">Integration Engineering Intern</div>
-            <p class="exp-desc">Directed waste system integration for Space Station infrastructure and designed life-support alignment tools.</p>
+            <p class="exp-desc">Directed waste system integration for next-generation Space Station and designed life-support alignment tools.</p>
           </div>
         </div>
       </div>
@@ -846,7 +848,7 @@
       <div class="proj-inner"></div>
       <span class="proj-num">04</span>
       <div class="proj-overlay">
-        <span class="proj-name">Ionization Chamber Manufacturing</span>        
+        <span class="proj-name">Ionization Chamber Mfg.</span>        
         <span class="proj-desc">Lathed and milled chamber for biomedical seizure sensors.</span>
       </div>
     </a>
@@ -862,8 +864,8 @@
       <div class="proj-inner"></div>      
       <span class="proj-num">06</span>
       <div class="proj-overlay">
-        <span class="proj-name">Not-So Classical Guitar</span>
-        <span class="proj-desc">Nylon-string guitar (with piezo pickups) made out of plywood on a CNC router.</span>
+        <span class="proj-name">Plywood Guitar</span>
+        <span class="proj-desc">Not-So-Classical Guitar. Made out of plywood on a CNC router.</span>
       </div>      
     </a>
     <a href="./project-cuatro.html" target="_blank" class="box c-p7 proj-cell reveal d2">
