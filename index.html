@@ -488,6 +488,7 @@
       position:relative; overflow:hidden;
       transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
     }
+    }    
     .proj-cell:hover { transform: translateY(-4px); box-shadow:0 20px 40px rgba(0,0,0,.5), 0 0 0 1px var(--accent); }
     
     .proj-inner {
@@ -517,6 +518,7 @@
       background:linear-gradient(to top,var(--bg) 0%,transparent 70%);
       opacity:0; transition:opacity .35s;
       display:flex; align-items:flex-end; padding:1.3rem;
+      opacity: 1; /* Make title and description always visible */
     }
     .proj-cell:hover .proj-overlay { opacity:1; }
     .proj-name {
@@ -525,6 +527,10 @@
       color:var(--fg); max-width:20ch;
     }
 
+
+
+    
+    .proj-desc { font-size:.8rem; color:var(--dim); line-height: 1.4; margin-top: 0.4rem; }
     /* ── ART ── */
     .art-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:3px; margin-top:1.2rem; flex:1; }
     .art-thumb {
@@ -767,20 +773,20 @@
 
       <div class="exp-item">
         <div class="exp-meta">
-          <span class="exp-co">Vast</span>
+          <span class="exp-co">VAST</span>
           <span class="exp-date">Sep–Nov 2025</span>
         </div>
         <div class="exp-body">
           <div>
             <div class="exp-role">Integration Engineering Intern</div>
-            <p class="exp-desc">Designed life-support alignment tools and directed waste system integration for commercial space station infrastructure.</p>
+            <p class="exp-desc">Directed waste system integration for Space Station infrastructure and designed life-support alignment tools.</p>
           </div>
         </div>
       </div>
 
       <div class="exp-item">
         <div class="exp-meta">
-          <span class="exp-co">GTRI</span>
+          <span class="exp-co">Georgia Tech Research Institute</span>
           <span class="exp-date">Jan–May 2025</span>
         </div>
         <div class="exp-body">
@@ -793,7 +799,7 @@
 
       <div class="exp-item">
         <div class="exp-meta">
-          <span class="exp-co">UGA Fablab</span>
+          <span class="exp-co">UGA Fablab and Machine Shop</span>
           <span class="exp-date">Mar 2023–Dec 2024</span>
         </div>
         <div class="exp-body">
@@ -810,11 +816,12 @@
       <span class="ptitle-right">2023 — Present</span>
     </div>
 
-    <a href="./project-airbrake.html" target="_blank" class="box c-p1 proj-cell reveal">
+    <a href="./project-airbrake2026.html" target="_blank" class="box c-p1 proj-cell reveal">
       <div class="proj-inner"></div>
       <span class="proj-num">01</span>
       <div class="proj-overlay">
-        <span class="proj-name">AIAA IREC 2025 Airbrake</span>
+        <span class="proj-name">IREC 2026 Airbrake</span> 
+        <span class="proj-desc">Active aerodynamic control system for sounding rocket.</span>
       </div>
     </a>
     <a href="./project-synth.html" target="_blank" class="box c-p2 proj-cell reveal d1">
@@ -822,52 +829,58 @@
       <span class="proj-num">02</span>
       <div class="eq-bars"><div class="eq-bar" style="--spd:.5s;--h:16px"></div><div class="eq-bar" style="--spd:.7s;--h:10px;animation-delay:.15s"></div><div class="eq-bar" style="--spd:.4s;--h:18px;animation-delay:.05s"></div><div class="eq-bar" style="--spd:.6s;--h:8px;animation-delay:.25s"></div><div class="eq-bar" style="--spd:.45s;--h:14px;animation-delay:.1s"></div></div>
       <div class="proj-overlay">
-        <span class="proj-name">ESP32 Polyphonic Synthesizer</span>
+        <span class="proj-name">Harmonizing Synthesizer</span>        
+        <span class="proj-desc">Automatic guitar-harmonizing synthesizer.</span>
       </div>
     </a>
-    <a href="./project-satellite.html" target="_blank" class="box c-p3 proj-cell reveal d2">
+    <a href="./project-memesat.html" target="_blank" class="box c-p3 proj-cell reveal d2">
       <div class="proj-inner"></div>
       <span class="proj-num">03</span>
       <div class="orbit-ring"></div>
       <div class="proj-overlay">
-        <span class="proj-name">M.E.M.E. Satellite Structures</span>
+        <span class="proj-name">MEMESAT-1 Satellite</span>        
+        <span class="proj-desc">Radio communication 2U cubesat.</span>
       </div>
     </a>
-    <a href="./project-haptics.html" target="_blank" class="box c-p4 proj-cell reveal d3">
+    <a href="./project-ionizationchamber.html" target="_blank" class="box c-p4 proj-cell reveal d3">
       <div class="proj-inner"></div>
       <span class="proj-num">04</span>
       <div class="proj-overlay">
-        <span class="proj-name">Haptic Glove Technology</span>
+        <span class="proj-name">Ionization Chamber Manufacturing</span>        
+        <span class="proj-desc">Lathed and milled chamber for biomedical seizure sensors.</span>
       </div>
     </a>
-    <a href="#" target="_blank" class="box c-p5 proj-cell reveal">
+    <a href="./project-airbrake2025.html" target="_blank" class="box c-p5 proj-cell reveal">
       <div class="proj-inner"></div>
-      <span class="proj-num">05</span>
+      <span class="proj-num">05</span>      
       <div class="proj-overlay">
-        <span class="proj-name">Project Five</span>
-      </div>
+        <span class="proj-name">IREC 2025 Airbrake</span>        
+        <span class="proj-desc">Active aerodynamic control system for precision apogee targeting.</span>
+      </div>      
     </a>
-    <a href="#" target="_blank" class="box c-p6 proj-cell reveal d1">
-      <div class="proj-inner"></div>
+    <a href="./project-guitar.html" target="_blank" class="box c-p6 proj-cell reveal d1">
+      <div class="proj-inner"></div>      
       <span class="proj-num">06</span>
       <div class="proj-overlay">
-        <span class="proj-name">Project Six</span>
-      </div>
+        <span class="proj-name">Not-So Classical Guitar</span>
+        <span class="proj-desc">Nylon-string guitar (with piezo pickups) made out of plywood on a CNC router.</span>
+      </div>      
     </a>
-    <a href="#" target="_blank" class="box c-p7 proj-cell reveal d2">
-      <div class="proj-inner"></div>
+    <a href="./project-cuatro.html" target="_blank" class="box c-p7 proj-cell reveal d2">
+      <div class="proj-inner"></div>      
       <span class="proj-num">07</span>
       <div class="proj-overlay">
-        <span class="proj-name">Project Seven</span>
+        <span class="proj-name">Lampa Nova</span>
+        <span class="proj-desc">Modern wooden lamp with plaster-casted base.</span>        
       </div>
     </a>
-    <a href="#" target="_blank" class="box c-p8 proj-cell reveal d3">
-      <div class="proj-inner"></div>
+    <a href="./project-3dpcuatro.html" target="_blank" class="box c-p8 proj-cell reveal d3">
+      <div class="proj-inner"></div>      
       <span class="proj-num">08</span>
       <div class="proj-overlay">
-        <span class="proj-name">Project Eight</span>
+        <span class="proj-name">3DP Printed Cuatro</span>
+        <span class="proj-desc">3D printed acoustic Venezuelan cuatro.</span>
       </div>
-    </a>
 
     <div class="box c-art reveal" id="art-anchor">
       <div class="lbl">Studio Art</div>
@@ -1346,4 +1359,5 @@
   })();
   </script>
 </body>
+
 </html>
