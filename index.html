@@ -485,7 +485,7 @@
       font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);
     }
     .proj-cell {
-      position:relative; overflow:hidden;
+      position:relative; overflow:hidden; background:var(--s1);
       transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
     }
     }    
@@ -518,21 +518,22 @@
       bottom:0; left:0; right:0; /* Anchor to the bottom */
       background: rgba(0, 0, 0, 0.75); /* Translucent black */
       opacity:0; transition:opacity .35s;
-      display:flex; align-items:flex-end; padding:1.3rem;
-      opacity: 1; /* Make title and description always visible */
+      display:block; padding:1.3rem;
       z-index:3;
+      bottom: 0px;
     }
     .proj-cell:hover .proj-overlay { opacity:1; }
     .proj-name {
       font-family:'Syne',sans-serif;
+      display:block;
+
       font-size:.95rem; font-weight:600; letter-spacing:-.01em; line-height:1.2;
       color:var(--fg); max-width:20ch;
     }
 
-
-
     
-    .proj-desc { font-size:.8rem; color:var(--dim); line-height: 1.4; margin-top: 0.4rem; }
+    .tag-row { display:flex; gap:.5rem; flex-wrap:wrap; margin-top:0.4rem;}
+    .proj-desc { font-size:.8rem; color:var(--dim); line-height: 1.4; margin-top: 0.4rem; display:block;}
     /* ── ART ── */
     .art-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:3px; margin-top:1.2rem; flex:1; }
     .art-thumb {
@@ -647,6 +648,7 @@
     .skill-tag:hover { border-color:var(--accent); color:var(--accent); transform:translateY(-2px); }
     .proj-cell:hover .proj-num { opacity:1; color:var(--fg); }
     .c-ticker:hover .ticker-track { animation-direction:reverse; }
+
     .eq-bars {
       position:absolute; bottom:1.5rem; left:1.4rem; z-index:2;
       display:flex; gap:3px; align-items:flex-end;
@@ -825,24 +827,28 @@
         <span class="proj-name">IREC 2026 Airbrake</span> 
         <span class="proj-desc">Active aerodynamic control system for sounding rocket.</span>
       </div>
+
+
     </a>
     <a href="./project-synth.html" target="_blank" class="box c-p2 proj-cell reveal d1">
       <div class="proj-inner"></div>
       <span class="proj-num">02</span>
-      <div class="eq-bars"><div class="eq-bar" style="--spd:.5s;--h:16px"></div><div class="eq-bar" style="--spd:.7s;--h:10px;animation-delay:.15s"></div><div class="eq-bar" style="--spd:.4s;--h:18px;animation-delay:.05s"></div><div class="eq-bar" style="--spd:.6s;--h:8px;animation-delay:.25s"></div><div class="eq-bar" style="--spd:.45s;--h:14px;animation-delay:.1s"></div></div>
+      
       <div class="proj-overlay">
         <span class="proj-name">Harmonizing Synthesizer</span>        
         <span class="proj-desc">Automatic guitar-harmonizing synthesizer.</span>
       </div>
+
     </a>
     <a href="./project-memesat.html" target="_blank" class="box c-p3 proj-cell reveal d2">
       <div class="proj-inner"></div>
       <span class="proj-num">03</span>
-      <div class="orbit-ring"></div>
+      
       <div class="proj-overlay">
         <span class="proj-name">MEMESAT-1 Satellite</span>        
         <span class="proj-desc">Radio communication 2U cubesat.</span>
       </div>
+
     </a>
     <a href="./project-ionizationchamber.html" target="_blank" class="box c-p4 proj-cell reveal d3">
       <div class="proj-inner"></div>
@@ -851,6 +857,7 @@
         <span class="proj-name">Ionization Chamber Mfg.</span>        
         <span class="proj-desc">Lathed and milled chamber for biomedical seizure sensors.</span>
       </div>
+
     </a>
     <a href="./project-airbrake2025.html" target="_blank" class="box c-p5 proj-cell reveal">
       <div class="proj-inner"></div>
@@ -858,7 +865,8 @@
       <div class="proj-overlay">
         <span class="proj-name">IREC 2025 Airbrake</span>        
         <span class="proj-desc">Active aerodynamic control system for precision apogee targeting.</span>
-      </div>      
+      </div>
+
     </a>
     <a href="./project-guitar.html" target="_blank" class="box c-p6 proj-cell reveal d1">
       <div class="proj-inner"></div>      
@@ -866,7 +874,8 @@
       <div class="proj-overlay">
         <span class="proj-name">Plywood Guitar</span>
         <span class="proj-desc">Not-So-Classical Guitar. Made out of plywood on a CNC router.</span>
-      </div>      
+      </div>
+
     </a>
     <a href="./project-cuatro.html" target="_blank" class="box c-p7 proj-cell reveal d2">
       <div class="proj-inner"></div>      
@@ -875,6 +884,7 @@
         <span class="proj-name">Lampa Nova</span>
         <span class="proj-desc">Modern wooden lamp with plaster-casted base.</span>        
       </div>
+
     </a>
     <a href="./project-3dpcuatro.html" target="_blank" class="box c-p8 proj-cell reveal d3">
       <div class="proj-inner"></div>      
