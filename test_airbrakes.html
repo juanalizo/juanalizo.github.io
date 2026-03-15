@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electromechanical Airbrake | Juan Carlos Alizo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #f0f4f8;
+      --s1:     #ffffff;
+      --s2:     #e2e8f0;
+      --s3:     #cbd5e1;
+      --fg:     #0f172a;
+      --dim:    rgba(15,23,42,0.6);
+      --line:   rgba(15,23,42,0.1);
+      --accent: #0A2463;
+      --red:    #A41623;
+      --gold:   #FFC300;
+    }
+    body {
+      background: var(--bg); color: var(--fg);
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+      line-height: 1.6; padding: 2rem;
+    }
+    .container { max-width: 1000px; margin: 0 auto; }
+
+    /* HEADER */
+    header { margin-bottom: 2rem; padding: 3rem 2rem; background: var(--accent); color: #fff; }
+    .nav-back { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--gold); text-decoration:none; display:inline-block; margin-bottom:1.5rem; }
+    .nav-back:hover { text-decoration:underline; }
+    h1 { font-family:'Syne',sans-serif; font-size:3.5rem; font-weight:800; line-height:1; margin-bottom:0.5rem; }
+    .subtitle { font-family:'DM Mono',monospace; color:rgba(255,255,255,0.7); font-size:0.9rem; }
+
+    /* HERO */
+    .hero-img { width:100%; aspect-ratio:21/9; object-fit:cover; background:var(--s2); margin-bottom:3rem; border:1px solid var(--line); display:block; }
+
+    /* STAT STRIP */
+    .stat-strip { display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--line); margin-bottom:3rem; }
+    .stat-cell { padding:1.25rem 1rem; border-right:1px solid var(--line); background:var(--s1); }
+    .stat-cell:last-child { border-right:none; }
+    .stat-val { font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:800; color:var(--accent); line-height:1; }
+    .stat-unit { font-size:1rem; font-weight:400; color:var(--dim); }
+    .stat-lbl { font-family:'DM Mono',monospace; font-size:0.6rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--dim); margin-top:0.3rem; }
+
+    /* CONTENT GRID */
+    .content-grid { display:grid; grid-template-columns:250px 1fr; gap:4rem; margin-bottom:4rem; }
+
+    /* SIDEBAR */
+    .meta-block { margin-bottom:2rem; }
+    .meta-lbl { font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.5rem; display:block; }
+    .meta-val { font-size:0.95rem; }
+    .tech-tag { display:inline-block; border:1px solid var(--line); font-family:'DM Mono',monospace; font-size:0.6rem; padding:0.2rem 0.6rem; margin:0.2rem 0.2rem 0 0; border-radius:4px; color:var(--dim); }
+    .collab-list { list-style:none; margin-top:0.5rem; }
+    .collab-item { display:flex; align-items:center; gap:0.8rem; margin-bottom:0.8rem; }
+    .collab-info a { text-decoration:none; color:var(--fg); }
+    .collab-info a:hover .collab-name { color:var(--accent); }
+    .collab-name { font-size:0.9rem; font-weight:700; display:block; transition:color 0.2s; }
+    .collab-role { font-size:0.75rem; color:var(--dim); display:block; }
+    .paper-link { display:inline-flex; align-items:center; gap:0.6rem; background:var(--s2); border:1px solid var(--line); padding:0.6rem 1rem; text-decoration:none; color:var(--fg); font-family:'DM Mono',monospace; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; transition:background .2s,border-color .2s,color .2s; }
+    .paper-link:hover { background:var(--accent); border-color:var(--accent); color:var(--bg); }
+
+    /* BODY TEXT */
+    .body-text h2 { font-family:'Syne',sans-serif; font-size:1.8rem; margin:2.5rem 0 1rem; color:var(--fg); }
+    .body-text h2:first-of-type { margin-top:0; }
+    .body-text p { margin-bottom:1.5rem; color:var(--dim); }
+
+    /* IMAGES */
+    .hero-img, .img-full { display:block; }
+    .img-full { width:100%; aspect-ratio:16/9; object-fit:cover; margin:2rem 0; border:1px solid var(--line); background:var(--s2); }
+    .gallery-grid { display:grid; gap:1rem; margin:2rem 0; }
+    .gallery-2-col { grid-template-columns:1fr 1fr; }
+    .gallery-3-col { grid-template-columns:1fr 1fr 1fr; }
+    .gallery-grid img { width:100%; aspect-ratio:4/3; object-fit:cover; border:1px solid var(--line); background:var(--s2); display:block; }
+
+    /* REQ TABLE */
+    .req-table { width:100%; border-collapse:collapse; margin:1rem 0 2rem; }
+    .req-table th { font-family:'DM Mono',monospace; font-size:0.6rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); text-align:left; padding:0.5rem 0.75rem; border-bottom:1px solid var(--line); }
+    .req-table td { font-size:0.9rem; padding:0.6rem 0.75rem; border-bottom:1px solid var(--line); color:var(--dim); }
+    .req-table td:first-child { color:var(--fg); font-weight:700; }
+    .req-pass { font-family:'DM Mono',monospace; font-size:0.65rem; color:#166534; font-weight:700; }
+
+    /* KINEMATIC VISUALIZER */
+    .viz-wrap { margin:2.5rem 0; border:1px solid var(--line); background:var(--s1); }
+    .viz-header { padding:0.9rem 1.25rem; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; }
+    .viz-title { font-family:'DM Mono',monospace; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--accent); }
+    .viz-badge { font-family:'DM Mono',monospace; font-size:0.6rem; text-transform:uppercase; letter-spacing:0.1em; background:var(--s2); border:1px solid var(--line); padding:0.2rem 0.6rem; color:var(--dim); }
+    #airbrake-canvas { display:block; width:100%; height:auto; aspect-ratio:1.8; background:var(--bg); }
+    .viz-controls { padding:1.25rem; border-top:1px solid var(--line); display:grid; grid-template-columns:repeat(2,1fr); gap:1rem 2rem; }
+    .ctrl-row { display:grid; grid-template-columns:120px 1fr 72px; align-items:center; gap:0.75rem; }
+    .ctrl-row label { font-family:'DM Mono',monospace; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); }
+    .ctrl-row input[type=range] { width:100%; cursor:pointer; accent-color:var(--accent); }
+    .ctrl-readout { font-family:'DM Mono',monospace; font-size:0.75rem; color:var(--dim); text-align:right; }
+    .ctrl-readout b { color:var(--fg); font-weight:700; }
+    .viz-readouts { padding:0 1.25rem 1.25rem; display:grid; grid-template-columns:repeat(4,1fr); gap:0.75rem; }
+    .readout-cell { background:var(--s2); padding:0.75rem; border:1px solid var(--line); }
+    .readout-lbl { font-family:'DM Mono',monospace; font-size:0.58rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--dim); margin-bottom:0.25rem; }
+    .readout-val { font-family:'DM Mono',monospace; font-size:0.85rem; font-weight:700; color:var(--fg); }
+    .readout-val.warn { color:#b45309; }
+    .readout-val.danger { color:var(--red); }
+    .readout-val.ok { color:#166534; }
+
+    /* FORCE PLOT */
+    .plot-title { font-family:'DM Mono',monospace; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--dim); margin-top:1.5rem; margin-bottom:0.4rem; }
+    #force-canvas { display:block; width:100%; height:auto; aspect-ratio:3.5; background:var(--s1); border:1px solid var(--line); }
+
+    /* CONTROLLER CARDS */
+    .ctrl-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin:1.5rem 0; }
+    .ctrl-card { background:var(--s1); border:1px solid var(--line); padding:1.25rem; position:relative; }
+    .ctrl-card.best { border-color:var(--accent); border-width:2px; }
+    .ctrl-card.best::before { content:'SELECTED'; position:absolute; top:-1px; right:-1px; font-family:'DM Mono',monospace; font-size:0.55rem; letter-spacing:0.12em; background:var(--accent); color:#fff; padding:3px 8px; }
+    .ctrl-name { font-family:'Syne',sans-serif; font-size:0.95rem; font-weight:700; margin-bottom:0.2rem; }
+    .ctrl-abbr { font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--dim); margin-bottom:1rem; }
+    .ctrl-metric-lbl { font-family:'DM Mono',monospace; font-size:0.58rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--dim); margin-bottom:0.3rem; }
+    .ctrl-bar-bg { height:3px; background:var(--s2); margin-bottom:0.3rem; }
+    .ctrl-bar { height:100%; transition:width 1.2s cubic-bezier(.4,0,.2,1); }
+    .ctrl-bar-val { font-family:'DM Mono',monospace; font-size:0.75rem; font-weight:700; margin-bottom:0.75rem; }
+
+    /* RMSE CHART */
+    #rmse-canvas { display:block; width:100%; height:auto; aspect-ratio:3; background:var(--s1); border:1px solid var(--line); margin:1.5rem 0 0.75rem; }
+    .chart-legend { display:flex; gap:1.5rem; flex-wrap:wrap; }
+    .legend-item { display:flex; align-items:center; gap:6px; font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--dim); }
+    .legend-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+    /* GEO STEPPER */
+    .step-pills { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1.5rem; }
+    .step-pill { font-family:'DM Mono',monospace; font-size:0.65rem; padding:0.35rem 0.9rem; border:1px solid var(--line); color:var(--dim); cursor:pointer; transition:all 0.2s; background:var(--s1); }
+    .step-pill:hover { border-color:var(--accent); color:var(--accent); }
+    .step-pill.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .geo-layout { display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:start; margin-top:1.5rem; }
+    #geo-canvas { display:block; width:100%; height:auto; aspect-ratio:1.3; border:1px solid var(--line); background:var(--s1); }
+    .geo-desc { font-size:0.9rem; color:var(--dim); line-height:1.8; margin-bottom:1rem; }
+    .math-block { font-family:'DM Mono',monospace; font-size:0.75rem; background:var(--s2); border-left:3px solid var(--accent); padding:1rem 1.25rem; line-height:2.2; color:var(--dim); }
+    .math-block .var { color:var(--accent); font-weight:700; }
+    .math-block .eq { color:var(--fg); }
+    .step-nav { display:flex; gap:0.75rem; margin-top:1rem; }
+    .step-nav-btn { font-family:'DM Mono',monospace; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.08em; padding:0.45rem 1.1rem; cursor:pointer; border:1px solid var(--line); background:transparent; color:var(--fg); transition:all .2s; }
+    .step-nav-btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .step-nav-btn:hover:not(.primary) { border-color:var(--accent); color:var(--accent); }
+
+    /* 3D VIEWER */
+    .viewer-container { margin:2.5rem 0; border:1px solid var(--line); }
+    .viewer-wrap { position:relative; width:100%; min-height:480px; }
+    #threejs-canvas { display:block; width:100%; height:100%; }
+    .viewer-ui { position:absolute; inset:0; pointer-events:none; padding:1.25rem; display:flex; flex-direction:column; justify-content:space-between; }
+    .viewer-top { display:flex; justify-content:space-between; align-items:flex-start; pointer-events:auto; }
+    .viewer-tag { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); opacity:0.7; }
+    .viewer-btns { display:flex; gap:0.5rem; }
+    .viewer-btn { font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; background:transparent; border:1px solid var(--line); color:var(--accent); padding:0.4rem 0.9rem; cursor:pointer; transition:all .2s; }
+    .viewer-btn:hover { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+    .viewer-bottom { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--dim); text-align:right; }
+    .viewer-hint { opacity:0; transition:opacity .4s; font-size:0.6rem; color:var(--accent); margin-top:0.3rem; }
+    .viewer-hint.vis { opacity:1; }
+
+    /* FOOTER */
+    footer { margin-top:6rem; padding-top:2rem; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
+    .next-proj { text-align:right; text-decoration:none; color:var(--fg); transition:color 0.2s; }
+    .next-proj:hover { color:var(--accent); }
+    .np-lbl { font-family:'DM Mono',monospace; font-size:0.6rem; color:var(--dim); display:block; }
+    .np-title { font-family:'Syne',sans-serif; font-size:1.2rem; font-weight:700; }
+
+    @media (max-width:768px) {
+      .content-grid { grid-template-columns:1fr; gap:2rem; }
+      h1 { font-size:2.5rem; }
+      body { padding:1.5rem; }
+      .stat-strip { grid-template-columns:1fr 1fr; }
+      .ctrl-grid { grid-template-columns:1fr 1fr; }
+      .viz-readouts { grid-template-columns:1fr 1fr; }
+      .geo-layout { grid-template-columns:1fr; }
+      .viz-controls { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <a href="index.html" class="nav-back">← RETURN TO BASE</a>
+    <h1>Electromechanical Airbrake</h1>
+    <div class="subtitle">AIAA IREC 2026 · ACTIVE AERODYNAMICS SYSTEM · SRAD</div>
+  </header>
+
+  <img src="airbrake_hero.jpg" alt="Airbrake System" class="hero-img" />
+
+  <div class="stat-strip">
+    <div class="stat-cell"><div class="stat-val">17<span class="stat-unit"> A</span></div><div class="stat-lbl">Peak Current Draw</div></div>
+    <div class="stat-cell"><div class="stat-val">19.0<span class="stat-unit"> m</span></div><div class="stat-lbl">EMPC Apogee RMSE</div></div>
+    <div class="stat-cell"><div class="stat-val">370k</div><div class="stat-lbl">Monte Carlo Runs</div></div>
+    <div class="stat-cell"><div class="stat-val">2.26<span class="stat-unit">×</span></div><div class="stat-lbl">Min Factor of Safety</div></div>
+  </div>
+
+  <div class="content-grid">
+    <aside>
+      <div class="meta-block"><span class="meta-lbl">Role</span><div class="meta-val">Lead Mechanical Engineer</div></div>
+      <div class="meta-block"><span class="meta-lbl">Timeline</span><div class="meta-val">Aug 2024 — Present</div></div>
+      <div class="meta-block">
+        <span class="meta-lbl">Tech Stack</span>
+        <div>
+          <span class="tech-tag">SolidWorks</span><span class="tech-tag">Ansys Fluent</span>
+          <span class="tech-tag">RocketPy</span><span class="tech-tag">Python</span>
+          <span class="tech-tag">STM32 / C++</span><span class="tech-tag">OpenVSP</span>
+          <span class="tech-tag">DFMA</span>
+        </div>
+      </div>
+      <div class="meta-block">
+        <span class="meta-lbl">Collaborators</span>
+        <ul class="collab-list">
+          <li class="collab-item"><div class="collab-info"><a href="#"><span class="collab-name">Nicholas Dagnino</span><span class="collab-role">Mechanical Engineering</span></a></div></li>
+          <li class="collab-item"><div class="collab-info"><a href="#"><span class="collab-name">Parsa Novin</span><span class="collab-role">Electrical Engineering</span></a></div></li>
+          <li class="collab-item"><div class="collab-info"><a href="#"><span class="collab-name">Austin Applestone</span><span class="collab-role">Mechanical Engineering</span></a></div></li>
+          <li class="collab-item"><div class="collab-info"><a href="#"><span class="collab-name">Brooklyn Schnupp</span><span class="collab-role">Mechanical Engineering (Grad)</span></a></div></li>
+        </ul>
+      </div>
+      <div class="meta-block"><span class="meta-lbl">Documentation</span><a href="#" target="_blank" class="paper-link"><span>📄</span><span>Read Technical Paper</span></a></div>
+      <div class="meta-block"><span class="meta-lbl">Links</span><a href="#" style="color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent);">View on GitHub</a></div>
+    </aside>
+
+    <article class="body-text">
+
+      <h2>Mission Profile</h2>
+      <p>For the 2026 International Rocket Engineering Competition (IREC), the University of Georgia Rocketry Team is targeting a precise apogee of 10,000 ft (3,048 m). Passive flight is highly susceptible to atmospheric variance; to guarantee accuracy, we engineered an active airbrake system to modulate drag in real-time and compete for the SRAD bonus category.</p>
+      <p>Without airbrakes, the rocket nominally overshoots to 3,505 m — giving the controller headroom to reduce altitude by increasing drag. Design constraints were strict: fit within 225 mm axial length in a 6-inch airframe, weigh under 3.2 kg, cost less than $400, and draw no more than 25 A.</p>
+
+      <table class="req-table">
+        <thead><tr><th>Requirement</th><th>Constraint</th><th>Achieved</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Tube ID clearance</td><td>≤ 151.8 mm</td><td>—</td><td class="req-pass">✓ PASS</td></tr>
+          <tr><td>Axial length</td><td>≤ 225 mm</td><td>—</td><td class="req-pass">✓ PASS</td></tr>
+          <tr><td>System mass</td><td>≤ 3.2 kg</td><td>—</td><td class="req-pass">✓ PASS</td></tr>
+          <tr><td>Peak current draw</td><td>≤ 25 A</td><td>17 A</td><td class="req-pass">✓ PASS</td></tr>
+          <tr><td>Budget</td><td>≤ $400</td><td>—</td><td class="req-pass">✓ PASS</td></tr>
+          <tr><td>Factor of safety</td><td>≥ 1.25</td><td>2.26×</td><td class="req-pass">✓ PASS</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Mechanical Architecture</h2>
+      <p>Three symmetric flaps offset at 120° each pivot between 0° and 80° from vertical. A NEO 550 BLDC motor drives a 1204 ball screw through a 4:1 gearbox, translating a custom CNC-machined 6061-T6 aluminum cuff linearly. That linear motion converts to radial flap deployment via a 7075-T6 double-linkage system.</p>
+      <p>7075-T6 aluminum for arms and linkages (high yield strength and fatigue resistance), 6061-T6 for the CNC cuff (machinability), and G10 fiberglass for ribs and bulkheads (±0.5 mm waterjet tolerance, radio-transparent for internal avionics).</p>
+
+      <div class="gallery-grid gallery-2-col">
+        <img src="airbrake_cad.jpg" alt="CAD overview" />
+        <img src="airbrake_proto.jpg" alt="Prototype assembly" />
+      </div>
+
+      <h2>Kinematic Simulation</h2>
+      <p>We built a Python optimizer that evaluates 1.5M+ pin-coordinate combinations using the circle-circle intersection model below. The visualizer runs the same math live — drag the stroke slider to deploy the flaps and watch forces update. Adjust link lengths to explore how geometry affects the torque curve.</p>
+
+      <div class="viz-wrap">
+        <div class="viz-header">
+          <span class="viz-title">Linkage Kinematic Model — Real-time</span>
+          <span class="viz-badge">Circle-Circle Intersection</span>
+        </div>
+        <canvas id="airbrake-canvas"></canvas>
+        <div class="viz-controls">
+          <div class="ctrl-row">
+            <label for="stroke-slider">Ball Screw Stroke</label>
+            <input type="range" id="stroke-slider" min="0" max="100" value="0" step="1">
+            <div class="ctrl-readout"><b id="stroke-val">0.0</b> mm</div>
+          </div>
+          <div class="ctrl-row">
+            <label for="dc-slider">Linkage D→C</label>
+            <input type="range" id="dc-slider" min="20" max="60" value="34.69" step="0.01">
+            <div class="ctrl-readout"><b id="dc-val">34.69</b> mm</div>
+          </div>
+          <div class="ctrl-row">
+            <label for="cb-slider">Arm B→C</label>
+            <input type="range" id="cb-slider" min="15" max="55" value="28.26" step="0.01">
+            <div class="ctrl-readout"><b id="cb-val">28.26</b> mm</div>
+          </div>
+          <div class="ctrl-row">
+            <label for="ba-slider">Arm B→A</label>
+            <input type="range" id="ba-slider" min="30" max="100" value="54.72" step="0.01">
+            <div class="ctrl-readout"><b id="ba-val">54.72</b> mm</div>
+          </div>
+        </div>
+        <div class="viz-readouts">
+          <div class="readout-cell"><div class="readout-lbl">Flap Angle β</div><div class="readout-val" id="ro-angle">0.0°</div></div>
+          <div class="readout-cell"><div class="readout-lbl">Drag Force</div><div class="readout-val" id="ro-drag">0.0 N</div></div>
+          <div class="readout-cell"><div class="readout-lbl">Axial Load</div><div class="readout-val" id="ro-axial">0.0 N</div></div>
+          <div class="readout-cell"><div class="readout-lbl">Current Draw</div><div class="readout-val" id="ro-current">0.0 A</div></div>
+        </div>
+      </div>
+
+      <p class="plot-title">Axial Load on Ball Screw Nut vs. Stroke (all 3 flaps)</p>
+      <canvas id="force-canvas"></canvas>
+
+      <h2>Analysis</h2>
+      <p>CFD in Ansys Fluent at Mach 0.7 and 80° deployment confirmed 320 N total drag across all three flaps (106 N per flap). Pressure drag dominates; the model intentionally omits the flap-to-airframe gap, conservatively overestimating drag to keep structural margins safe.</p>
+      <p>Static-structural FEA at worst-case loading (256 N perpendicular to flap face at Mach 0.981 post-burnout) confirmed peak Von Mises stress at pin C: 95 MPa vs. 215 MPa yield strength — factor of safety 2.26.</p>
+
+      <div class="gallery-grid gallery-3-col">
+        <img src="airbrake_cfd_mach.jpg" alt="CFD Mach contours" />
+        <img src="airbrake_cfd_pressure.jpg" alt="CFD static pressure" />
+        <img src="airbrake_fea.jpg" alt="FEA stress results" />
+      </div>
+
+      <h2>Control Strategy</h2>
+      <p>The STM32H5 microcontroller runs the control loop, modulating the NEO 550 ESC via PWM over a 2-wire magnetic link. Motor position is tracked through the 42-count/rev Hall encoder; absolute position is reset at pre-flight via EGSE umbilical.</p>
+      <p>Four controller architectures were tested in RocketPy with 370,000 Monte Carlo simulations each. The EMPC pre-computes optimal control laws offline, then evaluates them in microseconds — delivering the lowest RMSE and minimal bias across all environmental variability scenarios.</p>
+
+      <div class="ctrl-grid" id="ctrl-grid">
+        <div class="ctrl-card best">
+          <div class="ctrl-name">Explicit MPC</div><div class="ctrl-abbr">EMPC</div>
+          <div class="ctrl-metric-lbl">Mean Error</div>
+          <div class="ctrl-bar-bg"><div class="ctrl-bar" id="b-empc-bias" style="width:0%;background:#0A2463"></div></div>
+          <div class="ctrl-bar-val" style="color:#0A2463">−9.2 m</div>
+          <div class="ctrl-metric-lbl">RMSE</div>
+          <div class="ctrl-bar-bg"><div class="ctrl-bar" id="b-empc-rmse" style="width:0%;background:#0A2463"></div></div>
+          <div class="ctrl-bar-val" style="color:#166534">19.0 m ✓</div>
+        </div>
+        <div class="ctrl-card">
+          <div class="ctrl-name">Linear Quadratic Regulator</div><div class="ctrl-abbr">LQR</div>
+          <div class="ctrl-metric-lbl">Mean Error</div>
+          <div class="ctrl-bar-bg"><div class="ctrl-bar" id="b-lqr-bias" style="width:0%;background:#b45309"></div></div>
+          <div class="ctrl-bar-val" style="color:#b45309">+40.0 m</div>
+          <div class="ctrl-metric-lbl">RMSE</div>
+          <div class="ctrl-bar-bg"><div class="ctrl-bar" id="b-lqr-rmse" style="width:0%;background:#b45309"></div></div>
+          <div class="ctrl-bar-val" style="color:#b45309">45.0 m</div>
+        </div>
+        <div class="ctrl-card">
+          <div class="ctrl-name">Cascade Control</div><div class="ctrl-abbr">CASCADE</div>
+          <div class="ctrl-metric-lbl">Mean Error</div>
+          <div class="ctrl-bar-bg"><div class="ctrl-bar" id="b-cas-bias" style="width:0%;background:#7c3aed"></div></div>
+          <div class="ctrl-bar-val" style="color:#7c3aed">−49.0 m</div>
+          <div class="ctrl-metric-lbl">RMSE</div>
+          <div class="ctrl-bar-bg"><div class="ctrl-bar" id="b-cas-rmse" style="width:0%;background:#7c3aed"></div></div>
+          <div class="ctrl-bar-val" style="color:#7c3aed">76.1 m</div>
+        </div>
+        <div class="ctrl-card">
+          <div class="ctrl-name">PID</div><div class="ctrl-abbr">PID</div>
+          <div class="ctrl-metric-lbl">Mean Error</div>
+          <div class="ctrl-bar-bg"><div class="ctrl-bar" id="b-pid-bias" style="width:0%;background:#A41623"></div></div>
+          <div class="ctrl-bar-val" style="color:#A41623">−33.4 m</div>
+          <div class="ctrl-metric-lbl">RMSE</div>
+          <div class="ctrl-bar-bg"><div class="ctrl-bar" id="b-pid-rmse" style="width:0%;background:#A41623"></div></div>
+          <div class="ctrl-bar-val" style="color:#A41623">127.7 m</div>
+        </div>
+      </div>
+
+      <canvas id="rmse-canvas"></canvas>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#0A2463"></div>EMPC</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#b45309"></div>LQR</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>Cascade</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#A41623"></div>PID</div>
+        <div class="legend-item" style="margin-left:auto;font-size:0.6rem;">Bars show ±RMSE range · Target = 3,048 m</div>
+      </div>
+
+      <h2>Geometry Optimizer</h2>
+      <p>The optimizer iterates through all valid pin-coordinate combinations and applies a five-step kinematic pipeline at each step. Click through to see how the math resolves at each stage.</p>
+
+      <div class="step-pills" id="step-pills">
+        <div class="step-pill active" onclick="setGeoStep(0)">1. Circle Setup</div>
+        <div class="step-pill" onclick="setGeoStep(1)">2. Intersection</div>
+        <div class="step-pill" onclick="setGeoStep(2)">3. Arm Rotation</div>
+        <div class="step-pill" onclick="setGeoStep(3)">4. Force Calc</div>
+        <div class="step-pill" onclick="setGeoStep(4)">5. Optimal Result</div>
+      </div>
+      <div class="geo-layout">
+        <canvas id="geo-canvas"></canvas>
+        <div>
+          <h3 id="geo-title" style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:0.6rem;">Step 1: Define the Two Circles</h3>
+          <p class="geo-desc" id="geo-desc">The linkage and arm are modeled as two intersecting circles. Circle D is centered at the cuff pin with radius = linkage length D→C. Circle B is centered at the fixed pivot with radius = arm length B→C.</p>
+          <div class="math-block" id="geo-math">
+            <span class="var">(x − D<sub>x</sub>)² + (y − D<sub>y</sub>)²</span> <span class="eq">= DC²</span><br>
+            <span class="var">(x − B<sub>x</sub>)² + (y − B<sub>y</sub>)²</span> <span class="eq">= BC²</span>
+          </div>
+          <div class="step-nav">
+            <button class="step-nav-btn" onclick="prevGeoStep()">← Prev</button>
+            <button class="step-nav-btn primary" onclick="nextGeoStep()">Next →</button>
+          </div>
+        </div>
+      </div>
+
+      <h2>3D Model</h2>
+      <div class="viewer-container">
+        <div class="viewer-wrap" id="viewer-wrap">
+          <canvas id="threejs-canvas"></canvas>
+          <div class="viewer-ui">
+            <div class="viewer-top">
+              <span class="viewer-tag">3D Model — Airbrake Assembly</span>
+              <div class="viewer-btns"><button class="viewer-btn" id="wireframe-btn">Wireframe</button></div>
+            </div>
+            <div class="viewer-bottom"><div class="viewer-hint" id="vhint">Drag to rotate · Scroll to zoom</div></div>
+          </div>
+        </div>
+      </div>
+
+    </article>
+  </div>
+
+  <footer>
+    <div style="font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--dim);">© 2025 Juan Carlos Alizo</div>
+    <a href="project-synth.html" class="next-proj">
+      <span class="np-lbl">NEXT PROJECT</span>
+      <span class="np-title">ESP32 Synth →</span>
+    </a>
+  </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+// ─── THREE.JS STL VIEWER ──────────────────────────────────────────
+(function(){
+  const canvas=document.getElementById('threejs-canvas'), wrap=document.getElementById('viewer-wrap');
+  const wfBtn=document.getElementById('wireframe-btn'), vhint=document.getElementById('vhint');
+  if(!canvas||!wrap) return;
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.1;
+  const scene=new THREE.Scene();
+  scene.add(new THREE.GridHelper(12,24,0xcccccc,0xdddddd));
+  const camera=new THREE.PerspectiveCamera(45,1,0.001,10000);
+  camera.position.set(3,2,4);
+  const controls=new THREE.OrbitControls(camera,renderer.domElement);
+  controls.enableDamping=true; controls.dampingFactor=0.07; controls.autoRotate=true; controls.autoRotateSpeed=1.2;
+  scene.add(new THREE.AmbientLight(0xffffff,0.35));
+  const k=new THREE.DirectionalLight(0xffffff,1.5); k.position.set(5,8,5); scene.add(k);
+  const f=new THREE.DirectionalLight(0xFFC300,0.5); f.position.set(-5,3,-3); scene.add(f);
+  const r=new THREE.DirectionalLight(0xffffff,0.3); r.position.set(0,-4,-5); scene.add(r);
+  function resize(){ const w=wrap.clientWidth,h=Math.max(wrap.clientHeight,380); renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+  resize(); new ResizeObserver(resize).observe(wrap);
+  let mesh=null,isWF=false;
+  (function loop(){ requestAnimationFrame(loop); controls.update(); renderer.render(scene,camera); })();
+  function setupModel(geo){
+    geo.computeVertexNormals(); geo.center(); geo.computeBoundingBox();
+    const sz=new THREE.Vector3(); geo.boundingBox.getSize(sz);
+    const maxD=Math.max(sz.x,sz.y,sz.z),s=2.5/maxD;
+    if(mesh){ scene.remove(mesh); mesh.geometry.dispose(); mesh.material.dispose(); }
+    mesh=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:0x555566,metalness:.5,roughness:.45}));
+    mesh.scale.setScalar(s); scene.add(mesh);
+    const grid=scene.children.find(c=>c.isGridHelper); if(grid) grid.position.y=-(sz.y*s*.5)-.05;
+    const dist=maxD*s*1.6; camera.position.set(dist*.7,dist*.5,dist);
+    controls.target.set(0,0,0); controls.minDistance=dist*.15; controls.maxDistance=dist*10; controls.update();
+    if(vhint) vhint.classList.add('vis');
+    controls.addEventListener('start',()=>{ controls.autoRotate=false; },{once:true});
+  }
+  new THREE.STLLoader().load('airbrake_model.stl',setupModel,undefined,()=>{});
+  if(wfBtn) wfBtn.addEventListener('click',()=>{ if(!mesh)return; isWF=!isWF; mesh.material.wireframe=isWF; wfBtn.textContent=isWF?'Solid':'Wireframe'; });
+})();
+</script>
+
+<script>
+// ─── PHYSICS ──────────────────────────────────────────────────────
+// Fixed pivot B, screw axis X, and default link lengths from the paper
+const P = {
+  Bx:57.95, By:43.305, // fixed pivot (mm)
+  Dx:30.5,             // screw axis X (fixed)
+  Dy0:65.65,           // nut Y at retracted position
+  stroke:49.65,       // total travel (mm)
+  GR:4, lead:0.004, eff:0.9,
+  I_free:1.4, I_stall:100, T_stall:0.97
+};
+
+const flapOffsetAngle = 1.4378; // User-specified offset in radians (calculated from provided A, B, C)
+
+// CFD cubic fit from paper (lbf → N, β in degrees)
+function dragForce(beta_deg) {
+  const x=beta_deg;
+  return Math.max(0,(-0.0005*x*x*x + 0.0861*x*x - 0.5486*x + 1.2015)*4.4448);
+}
+
+// Circle-circle intersection: D is center of circle with radius LDC,
+// B is center of circle with radius LBC. Returns the intersection
+// point that is on the right side (higher x) — which is where C lives.
+function intersect(LDC,LBC,DyNow) {
+  const Bx=P.Bx,By=P.By,Dx=P.Dx,Dy=DyNow;
+  const dx=Bx-Dx, dy=By-Dy;
+  const dist=Math.sqrt(dx*dx+dy*dy);
+  if(dist>LDC+LBC||dist<Math.abs(LDC-LBC)||dist===0) return null;
+  // a = distance from D along D→B to the radical line
+  const a=(LDC*LDC-LBC*LBC+dist*dist)/(2*dist);
+  const h2=LDC*LDC-a*a; if(h2<0) return null;
+  const h=Math.sqrt(h2);
+  // Midpoint on D→B at distance a
+  const mx=Dx+a*(Bx-Dx)/dist, my=Dy+a*(By-Dy)/dist;
+  // Two intersection points, perpendicular to D→B
+  const c1={x:mx+h*(By-Dy)/dist, y:my-h*(Bx-Dx)/dist};
+  const c2={x:mx-h*(By-Dy)/dist, y:my+h*(Bx-Dx)/dist};
+  // C should be to the right of the screw axis (larger x)
+  return c1;
+}
+
+// Full kinematics for one stroke position
+function solve(strokeFrac, LDC, LBC, LBA) {
+  const DyNow=P.Dy0-strokeFrac*P.stroke;
+  // Reference: C at stroke=0
+  const C0=intersect(LDC,LBC,P.Dy0); if(!C0) return null;
+  const angBC0=Math.atan2(C0.y-P.By, C0.x-P.Bx);
+  // Current: C at this stroke
+  const C=intersect(LDC,LBC,DyNow); if(!C) return null;
+  const angBC=Math.atan2(C.y-P.By, C.x-P.Bx);
+  // How much has the arm rotated from start?
+  const dAngle=angBC-angBC0;
+  // The arm B→A has a fixed offset from the arm B→C
+  const armAngle = angBC + flapOffsetAngle;
+  // A is LBA along that direction from B
+  const Ax=P.Bx+LBA*Math.cos(armAngle);
+  const Ay=P.By+LBA*Math.sin(armAngle);
+  // β = how far flap has rotated from vertical
+  const beta=Math.abs(dAngle)*180/Math.PI;
+  // Forces
+  const FA=dragForce(beta);
+  const torque=FA*LBA;
+  const rdx=P.Dx-C.x, rdy=DyNow-C.y;
+  const rlen=Math.sqrt(rdx*rdx+rdy*rdy);
+  const ux=rdx/rlen, uy=rdy/rlen;
+  const lever=(C.x-P.Bx)*uy-(C.y-P.By)*ux;
+  const Frod=Math.abs(lever)>0.01?(torque/Math.abs(lever))*3:0;
+  const axial=Frod*Math.abs(uy);
+  const screwT=(axial*P.lead)/(2*Math.PI*P.eff);
+  const motorT=screwT/P.GR;
+  const amps=P.I_free+((P.I_stall-P.I_free)/P.T_stall)*motorT;
+  const rpm=11000*(1-motorT/P.T_stall);
+  return {Ax,Ay,C,DyNow,beta,armAngle,dAngle,FA,axial,amps,rpm,motorT};
+}
+
+function buildCurve(LDC,LBC,LBA){
+  const pts=[];
+  for(let i=0;i<=80;i++){
+    const k=solve(i/80,LDC,LBC,LBA);
+    if(k) pts.push({s:i/80*P.stroke, axial:k.axial});
+  }
+  return pts;
+}
+
+// ─── CANVAS HELPERS ────────────────────────────────────────────────
+function sizeCanvas(c){
+  const dpr=window.devicePixelRatio||1;
+  const r=c.getBoundingClientRect();
+  // Only resize if dimensions changed to avoid infinite loop
+  if(c.width!==Math.round(r.width*dpr)||c.height!==Math.round(r.height*dpr)){
+    c.width=Math.round(r.width*dpr);
+    c.height=Math.round(r.height*dpr);
+    const ctx=c.getContext('2d'); ctx.scale(dpr,dpr);
+  }
+  return {w:r.width, h:r.height};
+}
+
+function getCols(){
+  const cs=getComputedStyle(document.body);
+  return {
+    bg:cs.getPropertyValue('--bg').trim(), s1:cs.getPropertyValue('--s1').trim(),
+    s2:cs.getPropertyValue('--s2').trim(), fg:cs.getPropertyValue('--fg').trim(),
+    dim:cs.getPropertyValue('--dim').trim(), line:cs.getPropertyValue('--line').trim(),
+    accent:cs.getPropertyValue('--accent').trim(), red:cs.getPropertyValue('--red').trim()
+  };
+}
+
+// ─── KINEMATIC CANVAS ─────────────────────────────────────────────
+let LDC=34.69, LBC=28.26, LBA=54.72, strokeFrac=0;
+
+function drawMechanism(ctx, k, COL, wx, wy, sc, alpha){
+  if(alpha!==undefined) ctx.globalAlpha=alpha;
+  const B={x:wx(P.Bx), y:wy(P.By)};
+  const C={x:wx(k.C.x),y:wy(k.C.y)};
+  const D={x:wx(P.Dx), y:wy(k.DyNow)};
+  const A={x:wx(k.Ax), y:wy(k.Ay)};
+
+  ctx.lineCap='round'; ctx.lineJoin='round';
+
+  // D→C linkage
+  ctx.strokeStyle=COL.dim; ctx.lineWidth=4;
+  ctx.beginPath(); ctx.moveTo(D.x,D.y); ctx.lineTo(C.x,C.y); ctx.stroke();
+
+  // B→C arm segment
+  ctx.strokeStyle=COL.accent; ctx.lineWidth=4;
+  ctx.beginPath(); ctx.moveTo(B.x,B.y); ctx.lineTo(C.x,C.y); ctx.stroke();
+
+  // B→A arm extension (to flap attachment)
+  ctx.strokeStyle=COL.accent; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(B.x,B.y); ctx.lineTo(A.x,A.y); ctx.stroke();
+
+  // FLAP PLATE centered at A, perpendicular to the arm B→A
+  // Starts vertical (π/2) and rotates by the change in arm angle (dAngle)
+  const fDir = Math.PI/2 + k.dAngle;
+  const halfLen=37*sc;
+  const fTx=A.x+halfLen*Math.cos(fDir), fTy=A.y-halfLen*Math.sin(fDir);
+  const fBx=A.x-halfLen*Math.cos(fDir), fBy=A.y+halfLen*Math.sin(fDir);
+  ctx.strokeStyle=COL.red; ctx.lineWidth=7; ctx.lineCap='butt';
+  ctx.beginPath(); ctx.moveTo(fTx,fTy); ctx.lineTo(fBx,fBy); ctx.stroke();
+  ctx.lineCap='round';
+
+  // Nut cuff rect at D
+  ctx.fillStyle=COL.accent;
+  ctx.beginPath(); ctx.roundRect(D.x-6,D.y-4,12,7,2); ctx.fill();
+
+  // Pins A, B, C, D
+  [[A,'A',false],[B,'B',true],[C,'C',false],[D,'D',false]].forEach(([p,lbl,fixed])=>{
+    ctx.beginPath(); ctx.arc(p.x,p.y,fixed?6:4,0,Math.PI*2);
+    ctx.fillStyle=fixed?COL.accent:COL.s1; ctx.strokeStyle=COL.fg; ctx.lineWidth=1.5;
+    ctx.fill(); ctx.stroke();
+    ctx.fillStyle=COL.dim; ctx.font=`10px 'DM Mono',monospace`;
+    ctx.fillText(lbl, p.x+7, p.y+3);
+  });
+
+  ctx.globalAlpha=1;
+}
+
+function drawKinematic(){
+  const canvas=document.getElementById('airbrake-canvas'); if(!canvas) return;
+  const {w,h}=sizeCanvas(canvas);
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,w,h);
+  const COL=getCols();
+  ctx.fillStyle=COL.bg; ctx.fillRect(0,0,w,h);
+
+  // Coordinate mapping: world x 0..130, y 0..150 → canvas
+  const WORLD_W=130, WORLD_H=150, pad=28;
+  const sc=Math.min((w-pad*2)/WORLD_W,(h-pad*2)/WORLD_H);
+  const ox=pad+(w-pad*2-WORLD_W*sc)/2, oy=h-pad;
+  const wx=x=>ox+x*sc, wy=y=>oy-y*sc;
+
+  // Grid
+  ctx.strokeStyle=COL.line; ctx.lineWidth=0.5;
+  for(let gx=0;gx<=130;gx+=10){ ctx.beginPath();ctx.moveTo(wx(gx),wy(0));ctx.lineTo(wx(gx),wy(150));ctx.stroke(); }
+  for(let gy=0;gy<=150;gy+=10){ ctx.beginPath();ctx.moveTo(wx(0),wy(gy));ctx.lineTo(wx(130),wy(gy));ctx.stroke(); }
+
+  // Screw axis dashed line
+  ctx.strokeStyle=COL.dim; ctx.lineWidth=1; ctx.setLineDash([4,5]);
+  ctx.beginPath(); ctx.moveTo(wx(P.Dx),wy(0)); ctx.lineTo(wx(P.Dx),wy(145)); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle=COL.dim; ctx.font=`9px 'DM Mono',monospace`;
+  ctx.fillText('SCREW AXIS', wx(P.Dx)+3, wy(135));
+
+  // Ghost retracted position
+  const ghost=solve(0,LDC,LBC,LBA);
+  if(ghost) drawMechanism(ctx,ghost,COL,wx,wy,sc,0.14);
+
+  // Constraint circles (dashed)
+  const k=solve(strokeFrac,LDC,LBC,LBA);
+  if(!k){
+    ctx.fillStyle=COL.red; ctx.font=`11px 'DM Mono',monospace`; ctx.textAlign='center';
+    ctx.fillText('GEOMETRY ERROR — adjust link lengths', w/2, h/2);
+    ctx.textAlign='left'; updateReadouts(null); return;
+  }
+  ctx.strokeStyle=COL.accent+'40'; ctx.lineWidth=0.8; ctx.setLineDash([3,4]);
+  ctx.beginPath(); ctx.arc(wx(P.Bx),wy(P.By),LBC*sc,0,Math.PI*2); ctx.stroke();
+  ctx.strokeStyle=COL.red+'40';
+  ctx.beginPath(); ctx.arc(wx(P.Dx),wy(k.DyNow),LDC*sc,0,Math.PI*2); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Active mechanism
+  drawMechanism(ctx,k,COL,wx,wy,sc);
+
+  // Drag force arrow on flap
+  if(k.FA>2){
+    const Ax=wx(k.Ax), Ay=wy(k.Ay);
+    const fScale=Math.min(k.FA/120,1)*22*sc;
+    const ax=Ax-fScale*Math.cos(k.armAngle), ay=Ay+fScale*Math.sin(k.armAngle);
+    ctx.strokeStyle=COL.red+'80'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(Ax,Ay); ctx.stroke();
+    ctx.fillStyle=COL.red; ctx.font=`9px 'DM Mono',monospace`;
+    ctx.fillText(`${k.FA.toFixed(0)}N`, ax-22, ay-4);
+  }
+
+  // β arc label
+  if(k.beta>0.5){
+    const arcR=22*sc;
+    ctx.strokeStyle=COL.accent+'50'; ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.arc(wx(P.Bx),wy(P.By),arcR,-Math.PI/2,-(Math.PI/2+k.beta*Math.PI/180));
+    ctx.stroke();
+    ctx.fillStyle=COL.accent; ctx.font=`bold 10px 'DM Mono',monospace`;
+    ctx.fillText(`β=${k.beta.toFixed(1)}°`, wx(P.Bx)+arcR+4, wy(P.By)-6);
+  }
+
+  updateReadouts(k);
+  drawForcePlot(LDC,LBC,LBA,strokeFrac);
+}
+
+function updateReadouts(k){
+  const ro=(id,val,cls)=>{ const el=document.getElementById(id); if(!el) return; el.textContent=val; if(cls) el.className='readout-val '+cls; };
+  if(!k){ ro('ro-angle','—'); ro('ro-drag','—'); ro('ro-axial','—'); ro('ro-current','—'); return; }
+  ro('ro-angle',k.beta.toFixed(1)+'°');
+  ro('ro-drag',k.FA.toFixed(1)+' N');
+  ro('ro-axial',k.axial.toFixed(1)+' N');
+  ro('ro-current',k.amps.toFixed(1)+' A', k.amps>22?'danger':k.amps>16?'warn':'ok');
+}
+
+// ─── FORCE PLOT ───────────────────────────────────────────────────
+function drawForcePlot(LDC,LBC,LBA,nowFrac){
+  const canvas=document.getElementById('force-canvas'); if(!canvas) return;
+  const {w,h}=sizeCanvas(canvas);
+  const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,w,h);
+  const COL=getCols();
+  ctx.fillStyle=COL.s1; ctx.fillRect(0,0,w,h);
+  const curve=buildCurve(LDC,LBC,LBA); if(!curve.length) return;
+  const maxA=Math.max(...curve.map(p=>p.axial),1);
+  const pad={l:44,r:16,t:12,b:28};
+  const cw=w-pad.l-pad.r, ch=h-pad.t-pad.b;
+  // Grid lines
+  [0.25,0.5,0.75,1].forEach(f=>{
+    const y=pad.t+ch*(1-f);
+    ctx.strokeStyle=COL.s2; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(pad.l+cw,y); ctx.stroke();
+    ctx.fillStyle=COL.dim; ctx.font=`9px 'DM Mono',monospace`; ctx.textAlign='right';
+    ctx.fillText(Math.round(maxA*f)+'N', pad.l-5, y+3);
+  });
+  ctx.textAlign='left';
+  // Area fill
+  ctx.beginPath();
+  curve.forEach((pt,i)=>{
+    const x=pad.l+(pt.s/P.stroke)*cw, y=pad.t+ch*(1-pt.axial/maxA);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.lineTo(pad.l+cw,pad.t+ch); ctx.lineTo(pad.l,pad.t+ch); ctx.closePath();
+  ctx.fillStyle='rgba(10,36,99,0.08)'; ctx.fill();
+  // Line
+  ctx.beginPath();
+  curve.forEach((pt,i)=>{
+    const x=pad.l+(pt.s/P.stroke)*cw, y=pad.t+ch*(1-pt.axial/maxA);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle=COL.accent; ctx.lineWidth=1.5; ctx.stroke();
+  // Current position
+  const idx=Math.round(nowFrac*(curve.length-1));
+  if(curve[idx]){
+    const nx=pad.l+(curve[idx].s/P.stroke)*cw, ny=pad.t+ch*(1-curve[idx].axial/maxA);
+    ctx.strokeStyle=COL.red; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(nx,pad.t); ctx.lineTo(nx,pad.t+ch); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(nx,ny,4,0,Math.PI*2); ctx.fillStyle=COL.red; ctx.fill();
+  }
+  // X labels
+  ctx.fillStyle=COL.dim; ctx.font=`9px 'DM Mono',monospace`; ctx.textAlign='center';
+  [0,0.25,0.5,0.75,1].forEach(f=>ctx.fillText((f*P.stroke).toFixed(0)+'mm', pad.l+f*cw, h-7));
+  ctx.textAlign='left';
+}
+
+// ─── SLIDER WIRING ────────────────────────────────────────────────
+function readSliders(){
+  LDC=parseFloat(document.getElementById('dc-slider').value);
+  LBC=parseFloat(document.getElementById('cb-slider').value);
+  LBA=parseFloat(document.getElementById('ba-slider').value);
+  strokeFrac=parseFloat(document.getElementById('stroke-slider').value)/100;
+  document.getElementById('dc-val').textContent=LDC.toFixed(1);
+  document.getElementById('cb-val').textContent=LBC.toFixed(1);
+  document.getElementById('ba-val').textContent=LBA.toFixed(1);
+  document.getElementById('stroke-val').textContent=(strokeFrac*P.stroke).toFixed(1);
+}
+['stroke-slider','dc-slider','cb-slider','ba-slider'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('input',()=>{ readSliders(); drawKinematic(); });
+});
+
+// ─── RMSE CHART ───────────────────────────────────────────────────
+function drawRMSE(){
+  const canvas=document.getElementById('rmse-canvas'); if(!canvas) return;
+  const {w,h}=sizeCanvas(canvas);
+  const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,w,h);
+  const COL=getCols();
+  ctx.fillStyle=COL.s1; ctx.fillRect(0,0,w,h);
+  const ctrls=[
+    {name:'EMPC',    rmse:19.03,  bias:-9.19,  col:'#0A2463'},
+    {name:'LQR',     rmse:44.95,  bias:40.03,  col:'#b45309'},
+    {name:'Cascade', rmse:76.11,  bias:-49.02, col:'#7c3aed'},
+    {name:'PID',     rmse:127.70, bias:-33.41, col:'#A41623'},
+  ];
+  const span=180;
+  const pad={l:60,r:24,t:16,b:32};
+  const cw=w-pad.l-pad.r, ch=h-pad.t-pad.b;
+  const barH=Math.floor((ch-(ctrls.length+1)*8)/ctrls.length);
+  const barGap=(ch-ctrls.length*barH)/(ctrls.length+1);
+  const px=delta=>pad.l+(delta+span)/(span*2)*cw;
+
+  // Target line
+  ctx.strokeStyle='#166534'; ctx.lineWidth=1.5; ctx.setLineDash([5,4]);
+  ctx.beginPath(); ctx.moveTo(px(0),pad.t); ctx.lineTo(px(0),pad.t+ch); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#166534'; ctx.font=`bold 9px 'DM Mono',monospace`; ctx.textAlign='center';
+  ctx.fillText('10,000 ft',px(0),pad.t+10);
+
+  ctrls.forEach((c,i)=>{
+    const y=pad.t+barGap*(i+1)+barH*i;
+    const x1=px(c.bias-c.rmse), x2=px(c.bias+c.rmse), bx=px(c.bias);
+    // Range bar
+    ctx.fillStyle=c.col+'18';
+    ctx.beginPath(); ctx.roundRect(x1,y,x2-x1,barH,3); ctx.fill();
+    ctx.strokeStyle=c.col+'50'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.roundRect(x1,y,x2-x1,barH,3); ctx.stroke();
+    // Mean marker
+    ctx.fillStyle=c.col;
+    ctx.beginPath(); ctx.roundRect(bx-2,y+3,4,barH-6,2); ctx.fill();
+    // Label left
+    ctx.fillStyle=COL.dim; ctx.font=`10px 'DM Mono',monospace`; ctx.textAlign='right';
+    ctx.fillText(c.name, pad.l-6, y+barH/2+3);
+    // RMSE right
+    ctx.fillStyle=c.col; ctx.textAlign='left';
+    ctx.fillText(`±${c.rmse.toFixed(0)}m`, x2+5, y+barH/2+3);
+  });
+
+  // X axis
+  ctx.strokeStyle=COL.s2; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t+ch); ctx.lineTo(pad.l+cw,pad.t+ch); ctx.stroke();
+  [-150,-100,-50,0,50,100,150].forEach(d=>{
+    const x=px(d); if(x<pad.l||x>pad.l+cw) return;
+    ctx.fillStyle=COL.dim; ctx.font=`8px 'DM Mono',monospace`; ctx.textAlign='center';
+    ctx.fillText((d>0?'+':'')+d+'m', x, h-7);
+  });
+  ctx.textAlign='left';
+}
+
+// ─── CONTROLLER BAR ANIMATIONS ────────────────────────────────────
+function animateBars(){
+  const maxR=127.7, maxB=49.0;
+  [['b-empc-rmse',19.03/maxR],['b-lqr-rmse',44.95/maxR],['b-cas-rmse',76.11/maxR],['b-pid-rmse',127.70/maxR],
+   ['b-empc-bias',9.19/maxB], ['b-lqr-bias',40.03/maxB],['b-cas-bias',49.02/maxB],['b-pid-bias',33.41/maxB]]
+  .forEach(([id,frac],i)=>setTimeout(()=>{ const el=document.getElementById(id); if(el) el.style.width=(frac*100)+'%'; },200+i*80));
+}
+const ctrlObs=new IntersectionObserver(entries=>{ if(entries[0].isIntersecting){ animateBars(); ctrlObs.disconnect(); } },{threshold:0.3});
+const cg=document.getElementById('ctrl-grid'); if(cg) ctrlObs.observe(cg);
+
+// ─── GEOMETRY STEPPER ─────────────────────────────────────────────
+let geoStep=0, geoAnimFrac=0, geoAnimId=null;
+const GEO_STEPS=[
+  {title:'Step 1: Define the Two Circles',
+   desc:'The linkage and arm are modeled as two intersecting circles. Circle D (red) is centered at the cuff pin, radius = linkage length D→C. Circle B (blue) is centered at the fixed pivot, radius = arm length B→C.',
+   math:'<span class="var">(x − D<sub>x</sub>)² + (y − D<sub>y</sub>)²</span> <span class="eq">= DC²</span><br><span class="var">(x − B<sub>x</sub>)² + (y − B<sub>y</sub>)²</span> <span class="eq">= BC²</span>'},
+  {title:'Step 2: Circle-Circle Intersection',
+   desc:'Pin C is the intersection of the two circles. Compute the chord midpoint (a) and perpendicular height (h) from the radical axis to find C\'s global coordinates at each stroke position.',
+   math:'<span class="var">d</span> <span class="eq">= √((D<sub>x</sub>−B<sub>x</sub>)² + (D<sub>y</sub>−B<sub>y</sub>)²)</span><br><span class="var">a</span> <span class="eq">= (DC² − BC² + d²) / 2d</span><br><span class="var">h</span> <span class="eq">= √(DC² − a²)</span>'},
+  {title:'Step 3: Rigid Body Rotation',
+   desc:'The flap is centered at A, which is fixed to the arm. As C moves, the arm rotates about B, sweeping A in a circular arc. The flap starts vertical (π/2) and rotates by the same angle as the arm.',
+   math:'<span class="var">armAngle</span> <span class="eq">= π/2 + Δ(∠BC)</span><br><span class="var">A<sub>x</sub></span> <span class="eq">= B<sub>x</sub> + L<sub>BA</sub>·cos(armAngle)</span><br><span class="var">A<sub>y</sub></span> <span class="eq">= B<sub>y</sub> + L<sub>BA</sub>·sin(armAngle)</span>'},
+  {title:'Step 4: Quasi-Static Force Calculation',
+   desc:'At each stroke position, aerodynamic drag on the flap is evaluated from the CFD-derived cubic polynomial (R²=0.999), then resolved through the linkage to find the axial force on the ball-screw nut.',
+   math:'<span class="var">F<sub>A</sub>(β)</span> <span class="eq">= −0.0005β³ + 0.0861β² − 0.5486β + 1.2</span><br><span class="var">lever</span> <span class="eq">= (C<sub>x</sub>−B<sub>x</sub>)·u<sub>y</sub> − (C<sub>y</sub>−B<sub>y</sub>)·u<sub>x</sub></span><br><span class="var">F<sub>axial</sub></span> <span class="eq">= 3 · F<sub>rod</sub> · |u<sub>y</sub>|</span>'},
+  {title:'Step 5: Optimal Result',
+   desc:'After 1.5M+ evaluations, the optimizer selects the geometry that minimizes peak axial load while achieving 79–81° flap deployment. The optimized design draws only 17 A — 32% below the 25 A budget.',
+   math:'<span class="var">B</span> <span class="eq">= (57.9, 36.3) mm  ← fixed pivot</span><br><span class="var">D₀</span> <span class="eq">= (10.0, 65.7) mm  ← nut start</span><br><span class="var">stroke</span> <span class="eq">= 49.65 mm  →  β<sub>max</sub> ≈ 80°</span>'}
+];
+
+function drawGeoCanvas(step,frac){
+  const canvas=document.getElementById('geo-canvas'); if(!canvas) return;
+  const {w,h}=sizeCanvas(canvas);
+  const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,w,h);
+  const COL=getCols();
+  ctx.fillStyle=COL.s1; ctx.fillRect(0,0,w,h);
+
+  const WORLD_W=130,WORLD_H=140,pad=20;
+  const sc=Math.min((w-pad*2)/WORLD_W,(h-pad*2)/WORLD_H);
+  const ox=pad+(w-pad*2-WORLD_W*sc)/2, oy=h-pad;
+  const gx=x=>ox+x*sc, gy=y=>oy-y*sc;
+
+  // Grid
+  ctx.strokeStyle=COL.line; ctx.lineWidth=0.5;
+  for(let x=0;x<=130;x+=10){ctx.beginPath();ctx.moveTo(gx(x),gy(0));ctx.lineTo(gx(x),gy(140));ctx.stroke();}
+  for(let y=0;y<=140;y+=10){ctx.beginPath();ctx.moveTo(gx(0),gy(y));ctx.lineTo(gx(130),gy(y));ctx.stroke();}
+
+  const sf=(step>=2)?frac*0.9:0;
+  const k=solve(sf,LDC,LBC,LBA), k0=solve(0,LDC,LBC,LBA);
+  if(!k||!k0) return;
+
+  if(step<=1){
+    // Two circles
+    ctx.strokeStyle=COL.accent; ctx.lineWidth=1.2; ctx.setLineDash([4,5]);
+    ctx.beginPath(); ctx.arc(gx(P.Bx),gy(P.By),LBC*sc,0,Math.PI*2); ctx.stroke();
+    ctx.strokeStyle=COL.red;
+    ctx.beginPath(); ctx.arc(gx(P.Dx),gy(P.Dy0),LDC*sc,0,Math.PI*2); ctx.stroke();
+    ctx.setLineDash([]);
+    // Radius lines
+    ctx.strokeStyle=COL.accent; ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(gx(P.Bx),gy(P.By));ctx.lineTo(gx(k0.C.x),gy(k0.C.y));ctx.stroke();
+    ctx.strokeStyle=COL.red;
+    ctx.beginPath();ctx.moveTo(gx(P.Dx),gy(P.Dy0));ctx.lineTo(gx(k0.C.x),gy(k0.C.y));ctx.stroke();
+    // Radius labels
+    ctx.font=`9px 'DM Mono',monospace`;
+    ctx.fillStyle=COL.accent; ctx.textAlign='center';
+    ctx.fillText('BC='+LBC.toFixed(1), gx((P.Bx+k0.C.x)/2)-10, gy((P.By+k0.C.y)/2)+12);
+    ctx.fillStyle=COL.red;
+    ctx.fillText('DC='+LDC.toFixed(1), gx((P.Dx+k0.C.x)/2)+12, gy((P.Dy0+k0.C.y)/2)-6);
+    ctx.textAlign='left';
+    // C intersection (step 1)
+    if(step===1){
+      ctx.beginPath(); ctx.arc(gx(k0.C.x),gy(k0.C.y),7,0,Math.PI*2);
+      ctx.fillStyle='#166534'; ctx.fill();
+      ctx.fillStyle='#166534'; ctx.font=`bold 10px 'DM Mono',monospace`;
+      ctx.fillText('C intersection', gx(k0.C.x)+10, gy(k0.C.y)+3);
+    }
+    // B and D pins
+    [[P.Bx,P.By,'B',COL.accent],[P.Dx,P.Dy0,'D',COL.red]].forEach(([x,y,l,col])=>{
+      ctx.beginPath(); ctx.arc(gx(x),gy(y),5,0,Math.PI*2);
+      ctx.fillStyle=COL.s1; ctx.strokeStyle=col; ctx.lineWidth=2; ctx.fill(); ctx.stroke();
+      ctx.fillStyle=COL.dim; ctx.font=`10px 'DM Mono',monospace`;
+      ctx.fillText(l, gx(x)+7, gy(y)+3);
+    });
+  }
+
+  if(step>=2){
+    // Screw axis
+    ctx.strokeStyle=COL.dim; ctx.lineWidth=0.8; ctx.setLineDash([3,5]);
+    ctx.beginPath();ctx.moveTo(gx(P.Dx),gy(0));ctx.lineTo(gx(P.Dx),gy(140));ctx.stroke();
+    ctx.setLineDash([]);
+    // Constraint circles faint
+    ctx.strokeStyle=COL.accent+'30'; ctx.lineWidth=0.7; ctx.setLineDash([3,5]);
+    ctx.beginPath();ctx.arc(gx(P.Bx),gy(P.By),LBC*sc,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle=COL.red+'30';
+    ctx.beginPath();ctx.arc(gx(P.Dx),gy(k.DyNow),LDC*sc,0,Math.PI*2);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.lineCap='round';
+    // D→C linkage
+    ctx.strokeStyle=COL.dim; ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(gx(P.Dx),gy(k.DyNow));ctx.lineTo(gx(k.C.x),gy(k.C.y));ctx.stroke();
+    // B→C arm
+    ctx.strokeStyle=COL.accent; ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(gx(P.Bx),gy(P.By));ctx.lineTo(gx(k.C.x),gy(k.C.y));ctx.stroke();
+    // B→A extension
+    ctx.beginPath();ctx.moveTo(gx(P.Bx),gy(P.By));ctx.lineTo(gx(k.Ax),gy(k.Ay));ctx.stroke();
+    // Flap plate centered at A, perpendicular to arm
+    const fDir=k.armAngle+Math.PI/2, hLen=28*sc;
+    ctx.strokeStyle=COL.red; ctx.lineWidth=5; ctx.lineCap='butt';
+    ctx.beginPath();
+    ctx.moveTo(gx(k.Ax)+hLen*Math.cos(fDir), gy(k.Ay)-hLen*Math.sin(fDir));
+    ctx.lineTo(gx(k.Ax)-hLen*Math.cos(fDir), gy(k.Ay)+hLen*Math.sin(fDir));
+    ctx.stroke(); ctx.lineCap='round';
+    // Force arrow step 3
+    if(step===3&&k.FA>2){
+      const fs=Math.min(k.FA/120,1)*18*sc;
+      const ax=gx(k.Ax)-fs*Math.cos(k.armAngle), ay=gy(k.Ay)+fs*Math.sin(k.armAngle);
+      ctx.strokeStyle=COL.red+'70'; ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(gx(k.Ax),gy(k.Ay));ctx.stroke();
+      ctx.fillStyle=COL.red; ctx.font=`9px 'DM Mono',monospace`;
+      ctx.fillText(`${k.FA.toFixed(0)}N`,ax-20,ay-4);
+    }
+    // Nut cuff
+    ctx.fillStyle=COL.accent;
+    ctx.beginPath();ctx.roundRect(gx(P.Dx)-5,gy(k.DyNow)-3,10,6,2);ctx.fill();
+    // Pins
+    [[P.Bx,P.By,'B',true],[k.C.x,k.C.y,'C',false],[P.Dx,k.DyNow,'D',false],[k.Ax,k.Ay,'A',false]].forEach(([x,y,l,fx])=>{
+      ctx.beginPath();ctx.arc(gx(x),gy(y),fx?5:4,0,Math.PI*2);
+      ctx.fillStyle=fx?COL.accent:COL.s1; ctx.strokeStyle=COL.fg; ctx.lineWidth=1.5; ctx.fill();ctx.stroke();
+      ctx.fillStyle=COL.dim; ctx.font=`10px 'DM Mono',monospace`;ctx.textAlign='left';
+      ctx.fillText(l, gx(x)+6, gy(y)+3);
+    });
+    ctx.fillStyle=COL.accent; ctx.font=`bold 10px 'DM Mono',monospace`;
+    ctx.fillText(`β=${k.beta.toFixed(1)}°`, gx(P.Bx)+18, gy(P.By)-8);
+  }
+}
+
+function setGeoStep(step){
+  geoStep=step;
+  document.querySelectorAll('.step-pill').forEach((el,i)=>el.classList.toggle('active',i===step));
+  document.getElementById('geo-title').textContent=GEO_STEPS[step].title;
+  document.getElementById('geo-desc').textContent=GEO_STEPS[step].desc;
+  document.getElementById('geo-math').innerHTML=GEO_STEPS[step].math;
+  if(geoAnimId) cancelAnimationFrame(geoAnimId);
+  if(step>=2){ geoAnimFrac=0; (function anim(){ geoAnimFrac=Math.min(geoAnimFrac+0.007,1); drawGeoCanvas(geoStep,geoAnimFrac); if(geoAnimFrac<1) geoAnimId=requestAnimationFrame(anim); })(); }
+  else drawGeoCanvas(step,0);
+}
+function nextGeoStep(){ setGeoStep(Math.min(geoStep+1,4)); }
+function prevGeoStep(){ setGeoStep(Math.max(geoStep-1,0)); }
+
+// ─── INIT ─────────────────────────────────────────────────────────
+function drawAll(){
+  readSliders(); drawKinematic(); drawRMSE(); setGeoStep(geoStep);
+}
+window.addEventListener('load', drawAll);
+window.addEventListener('resize',()=>{ clearTimeout(window._rt); window._rt=setTimeout(drawAll,80); });
+</script>
+</body>
+</html>

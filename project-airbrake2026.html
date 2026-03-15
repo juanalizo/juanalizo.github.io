@@ -549,9 +549,9 @@
         const y2 = D.y + a * (B.y - D.y) / dist;
 
         // Calculate the other intersection point as requested
-        const C = {
-          x: x2 + h * (B.y - D.y) / dist,
-          y: y2 - h * (B.x - D.x) / dist
+        const C = { 
+          x: x2 - h * (B.y - D.y) / dist,
+          y: y2 + h * (B.x - D.x) / dist
         };
 
         const thetaBC = Math.atan2(C.y - B.y, C.x - B.x);
