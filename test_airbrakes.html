@@ -194,15 +194,15 @@
 
   <div class="content-grid">
     <aside>
-      <div class="meta-block"><span class="meta-lbl">Role</span><div class="meta-val">Lead Mechanical Engineer</div></div>
+      <div class="meta-block"><span class="meta-lbl">Role</span><div class="meta-val">Mechanical Engineer</div></div>
       <div class="meta-block"><span class="meta-lbl">Timeline</span><div class="meta-val">Aug 2024 — Present</div></div>
       <div class="meta-block">
-        <span class="meta-lbl">Tech Stack</span>
+        <span class="meta-lbl">Key Words</span>
         <div>
-          <span class="tech-tag">SolidWorks</span><span class="tech-tag">Ansys Fluent</span>
+          <span class="tech-tag">CAD</span><span class="tech-tag">Ansys Fluent</span>
           <span class="tech-tag">RocketPy</span><span class="tech-tag">Python</span>
-          <span class="tech-tag">STM32 / C++</span><span class="tech-tag">OpenVSP</span>
-          <span class="tech-tag">DFMA</span>
+          <span class="tech-tag">Optimization</span><span class="tech-tag">Electromechanical</span>
+          <span class="tech-tag">FEA</span>
         </div>
       </div>
       <div class="meta-block">
@@ -221,12 +221,13 @@
     <article class="body-text">
 
       <h2>Mission Profile</h2>
-      <p>For the 2026 International Rocket Engineering Competition (IREC), the University of Georgia Rocketry Team is targeting a precise apogee of 10,000 ft (3,048 m). Passive flight is highly susceptible to atmospheric variance; to guarantee accuracy, we engineered an active airbrake system to modulate drag in real-time and compete for the SRAD bonus category.</p>
-      <p>Without airbrakes, the rocket nominally overshoots to 3,505 m — giving the controller headroom to reduce altitude by increasing drag. Design constraints were strict: fit within 225 mm axial length in a 6-inch airframe, weigh under 3.2 kg, cost less than $400, and draw no more than 25 A.</p>
+      <p>The University of Georgia Rocketry team is participating in the 2026 International Rocket Engineering Competition (IREC). In high-power rocketry competitions, teams are scored on how precisely they can hit a target altitude (in our case, 10,000ft or 3,048m). Relying solely on motor selection and weight is risky since wind gusts, temperature gradients, and motor variance can easily push a rocket off course by hundreds of feet.</p>
+      <p>To solve this, our team developed an active airbrake system. The concept is simple: we launch the rocket with slightly more power than necessary, aiming for an overshoot. As the rocket ascends, onboard flight computers monitor velocity and altitude 40 times a second. If the rocket is predicted to fly too high, the system deploys three drag flaps from the airframe, braking the vehicle to hit the 10,000 ft target with pinpoint accuracy.</p>
 
       <table class="req-table">
         <thead><tr><th>Requirement</th><th>Constraint</th><th>Achieved</th><th>Status</th></tr></thead>
         <tbody>
+          <tr><td>Target Apogee</td><td>10,000 ft (3048 m)</td><td>—</td><td class="req-pass">PRIMARY</td></tr>
           <tr><td>Tube ID clearance</td><td>≤ 151.8 mm</td><td>—</td><td class="req-pass">✓ PASS</td></tr>
           <tr><td>Axial length</td><td>≤ 225 mm</td><td>—</td><td class="req-pass">✓ PASS</td></tr>
           <tr><td>System mass</td><td>≤ 3.2 kg</td><td>—</td><td class="req-pass">✓ PASS</td></tr>
@@ -245,13 +246,17 @@
         <img src="airbrake_proto.jpg" alt="Prototype assembly" />
       </div>
 
-      <h2>Kinematic Simulation</h2>
-      <p>We built a Python optimizer that evaluates 1.5M+ pin-coordinate combinations using the circle-circle intersection model below. The visualizer runs the same math live — drag the stroke slider to deploy the flaps and watch forces update. Adjust link lengths to explore how geometry affects the torque curve.</p>
+      <h2>Kinematic Simulation &amp; Geometry Optimization</h2>
+      <p>The efficiency of the deployment mechanism is defined by its geometry. The specific lengths of the driving linkages and the position of the pivot points dictate the mechanical advantage throughout the stroke. A poorly optimized geometry could result in torque spikes that stall the motor or drain the battery excessively under aerodynamic load.</p>
+      <p>We developed a custom Python-based optimization pipeline to iterate through over 1.5 million possible linkage configurations. The goal was to minimize the peak current draw while ensuring the flaps could fully deploy to 80° against high-speed drag forces. The interactive simulation below visualizes the kinematic relationships derived from that study, allowing you to adjust the linkage parameters and observe the resulting mechanical advantage and load distribution in real-time.</p>
 
       <div class="viz-wrap">
         <div class="viz-header">
           <span class="viz-title">Linkage Kinematic Model — Real-time</span>
-          <span class="viz-badge">Circle-Circle Intersection</span>
+          <div>
+            <button id="reset-geo-btn" class="viewer-btn" style="padding: 0.2rem 0.6rem; font-size: 0.6rem; margin-right: 0.5rem;">Reset</button>
+            <span class="viz-badge" style="vertical-align: middle;">Circle-Circle Intersection</span>
+          </div>
         </div>
         <canvas id="airbrake-canvas"></canvas>
         <div class="viz-controls">
@@ -275,6 +280,11 @@
             <input type="range" id="ba-slider" min="30" max="100" value="54.72" step="0.01">
             <div class="ctrl-readout"><b id="ba-val">54.72</b> mm</div>
           </div>
+          <div class="ctrl-row">
+            <label for="by-slider">Pivot B (Y)</label>
+            <input type="range" id="by-slider" min="35" max="55" value="43.305" step="0.005">
+            <div class="ctrl-readout"><b id="by-val">43.305</b> mm</div>
+          </div>
         </div>
         <div class="viz-readouts">
           <div class="readout-cell"><div class="readout-lbl">Flap Angle β</div><div class="readout-val" id="ro-angle">0.0°</div></div>
@@ -286,6 +296,29 @@
 
       <p class="plot-title">Axial Load on Ball Screw Nut vs. Stroke (all 3 flaps)</p>
       <canvas id="force-canvas"></canvas>
+
+      <h3 style="font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin-top:2.5rem;margin-bottom:0.8rem;">How the Optimizer Works</h3>
+      <p>The optimizer iterates through all valid pin-coordinate combinations and applies a kinematic-force pipeline at each step. Click through to see how the math resolves at each stage.</p>
+
+      <div class="step-pills" id="step-pills">
+        <div class="step-pill active" onclick="setGeoStep(0)">1. Circle Setup</div>
+        <div class="step-pill" onclick="setGeoStep(1)">2. Intersection</div>
+        <div class="step-pill" onclick="setGeoStep(2)">3. Arm Rotation</div>
+        <div class="step-pill" onclick="setGeoStep(3)">4. Force Calc</div>
+        <div class="step-pill" onclick="setGeoStep(4)">5. Optimal Result</div>
+      </div>
+      <div class="geo-layout">
+        <canvas id="geo-canvas"></canvas>
+        <div>
+          <h3 id="geo-title" style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:0.6rem;">Step 1: Define the Two Circles</h3>
+          <p class="geo-desc" id="geo-desc">The linkage and arm are modeled as two intersecting circles. Circle D is centered at the cuff pin with radius = linkage length D→C. Circle B is centered at the fixed pivot with radius = arm length B→C.</p>
+          <div class="math-block" id="geo-math">
+            <span class="var">(x − D<sub>x</sub>)² + (y − D<sub>y</sub>)²</span> <span class="eq">= DC²</span><br>
+            <span class="var">(x − B<sub>x</sub>)² + (y − B<sub>y</sub>)²</span> <span class="eq">= BC²</span>
+          </div>
+          <div class="step-nav"><button class="step-nav-btn" onclick="prevGeoStep()">← Prev</button><button class="step-nav-btn primary" onclick="nextGeoStep()">Next →</button></div>
+        </div>
+      </div>
 
       <h2>Analysis</h2>
       <p>CFD in Ansys Fluent at Mach 0.7 and 80° deployment confirmed 320 N total drag across all three flaps (106 N per flap). Pressure drag dominates; the model intentionally omits the flap-to-airframe gap, conservatively overestimating drag to keep structural margins safe.</p>
@@ -347,32 +380,6 @@
         <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>Cascade</div>
         <div class="legend-item"><div class="legend-dot" style="background:#A41623"></div>PID</div>
         <div class="legend-item" style="margin-left:auto;font-size:0.6rem;">Bars show ±RMSE range · Target = 3,048 m</div>
-      </div>
-
-      <h2>Geometry Optimizer</h2>
-      <p>The optimizer iterates through all valid pin-coordinate combinations and applies a five-step kinematic pipeline at each step. Click through to see how the math resolves at each stage.</p>
-
-      <div class="step-pills" id="step-pills">
-        <div class="step-pill active" onclick="setGeoStep(0)">1. Circle Setup</div>
-        <div class="step-pill" onclick="setGeoStep(1)">2. Intersection</div>
-        <div class="step-pill" onclick="setGeoStep(2)">3. Arm Rotation</div>
-        <div class="step-pill" onclick="setGeoStep(3)">4. Force Calc</div>
-        <div class="step-pill" onclick="setGeoStep(4)">5. Optimal Result</div>
-      </div>
-      <div class="geo-layout">
-        <canvas id="geo-canvas"></canvas>
-        <div>
-          <h3 id="geo-title" style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:0.6rem;">Step 1: Define the Two Circles</h3>
-          <p class="geo-desc" id="geo-desc">The linkage and arm are modeled as two intersecting circles. Circle D is centered at the cuff pin with radius = linkage length D→C. Circle B is centered at the fixed pivot with radius = arm length B→C.</p>
-          <div class="math-block" id="geo-math">
-            <span class="var">(x − D<sub>x</sub>)² + (y − D<sub>y</sub>)²</span> <span class="eq">= DC²</span><br>
-            <span class="var">(x − B<sub>x</sub>)² + (y − B<sub>y</sub>)²</span> <span class="eq">= BC²</span>
-          </div>
-          <div class="step-nav">
-            <button class="step-nav-btn" onclick="prevGeoStep()">← Prev</button>
-            <button class="step-nav-btn primary" onclick="nextGeoStep()">Next →</button>
-          </div>
-        </div>
       </div>
 
       <h2>3D Model</h2>
@@ -458,12 +465,10 @@ const P = {
   I_free:1.4, I_stall:100, T_stall:0.97
 };
 
-const flapOffsetAngle = 1.4378; // User-specified offset in radians (calculated from provided A, B, C)
-
-// CFD cubic fit from paper (lbf → N, β in degrees)
+// Drag force approximation (106 N peak)
 function dragForce(beta_deg) {
-  const x=beta_deg;
-  return Math.max(0,(-0.0005*x*x*x + 0.0861*x*x - 0.5486*x + 1.2015)*4.4448);
+  const rad = beta_deg * Math.PI / 180;
+  return 106 * Math.sin(rad) * Math.sin(rad);
 }
 
 // Circle-circle intersection: D is center of circle with radius LDC,
@@ -498,11 +503,19 @@ function solve(strokeFrac, LDC, LBC, LBA) {
   const angBC=Math.atan2(C.y-P.By, C.x-P.Bx);
   // How much has the arm rotated from start?
   const dAngle=angBC-angBC0;
-  // The arm B→A has a fixed offset from the arm B→C
-  const armAngle = angBC + flapOffsetAngle;
-  // A is LBA along that direction from B
-  const Ax=P.Bx+LBA*Math.cos(armAngle);
-  const Ay=P.By+LBA*Math.sin(armAngle);
+
+  // Define Rigid Body Geometry at Start (Stroke=0): Ax is constrained to 75.0
+  const Ax0 = 75.0;
+  const dx0 = Ax0 - P.Bx;
+  if (dx0*dx0 > LBA*LBA) return null; // Link too short to reach start X
+  const dy0 = -Math.sqrt(LBA*LBA - dx0*dx0); // A is below pivot (relative Y)
+  const angBA0 = Math.atan2(dy0, dx0);
+  
+  // Apply rotation to find current A
+  const armAngle = angBA0 + dAngle;
+  const Ax = P.Bx + LBA * Math.cos(armAngle);
+  const Ay = P.By + LBA * Math.sin(armAngle);
+
   // β = how far flap has rotated from vertical
   const beta=Math.abs(dAngle)*180/Math.PI;
   // Forces
@@ -739,16 +752,31 @@ function readSliders(){
   LDC=parseFloat(document.getElementById('dc-slider').value);
   LBC=parseFloat(document.getElementById('cb-slider').value);
   LBA=parseFloat(document.getElementById('ba-slider').value);
+  P.By = parseFloat(document.getElementById('by-slider').value);
   strokeFrac=parseFloat(document.getElementById('stroke-slider').value)/100;
-  document.getElementById('dc-val').textContent=LDC.toFixed(1);
-  document.getElementById('cb-val').textContent=LBC.toFixed(1);
-  document.getElementById('ba-val').textContent=LBA.toFixed(1);
+  document.getElementById('dc-val').textContent=LDC.toFixed(2);
+  document.getElementById('cb-val').textContent=LBC.toFixed(2);
+  document.getElementById('ba-val').textContent=LBA.toFixed(2);
+  document.getElementById('by-val').textContent=P.By.toFixed(3);
   document.getElementById('stroke-val').textContent=(strokeFrac*P.stroke).toFixed(1);
 }
-['stroke-slider','dc-slider','cb-slider','ba-slider'].forEach(id=>{
+['stroke-slider','dc-slider','cb-slider','ba-slider','by-slider'].forEach(id=>{
   const el=document.getElementById(id);
   if(el) el.addEventListener('input',()=>{ readSliders(); drawKinematic(); });
 });
+
+const resetBtn = document.getElementById('reset-geo-btn');
+if (resetBtn) {
+  resetBtn.addEventListener('click', () => {
+    document.getElementById('dc-slider').value = 34.69;
+    document.getElementById('cb-slider').value = 28.26;
+    document.getElementById('ba-slider').value = 54.72;
+    document.getElementById('by-slider').value = 43.305;
+    document.getElementById('stroke-slider').value = 0;
+    readSliders();
+    drawKinematic();
+  });
+}
 
 // ─── RMSE CHART ───────────────────────────────────────────────────
 function drawRMSE(){
@@ -830,8 +858,8 @@ const GEO_STEPS=[
    desc:'The flap is centered at A, which is fixed to the arm. As C moves, the arm rotates about B, sweeping A in a circular arc. The flap starts vertical (π/2) and rotates by the same angle as the arm.',
    math:'<span class="var">armAngle</span> <span class="eq">= π/2 + Δ(∠BC)</span><br><span class="var">A<sub>x</sub></span> <span class="eq">= B<sub>x</sub> + L<sub>BA</sub>·cos(armAngle)</span><br><span class="var">A<sub>y</sub></span> <span class="eq">= B<sub>y</sub> + L<sub>BA</sub>·sin(armAngle)</span>'},
   {title:'Step 4: Quasi-Static Force Calculation',
-   desc:'At each stroke position, aerodynamic drag on the flap is evaluated from the CFD-derived cubic polynomial (R²=0.999), then resolved through the linkage to find the axial force on the ball-screw nut.',
-   math:'<span class="var">F<sub>A</sub>(β)</span> <span class="eq">= −0.0005β³ + 0.0861β² − 0.5486β + 1.2</span><br><span class="var">lever</span> <span class="eq">= (C<sub>x</sub>−B<sub>x</sub>)·u<sub>y</sub> − (C<sub>y</sub>−B<sub>y</sub>)·u<sub>x</sub></span><br><span class="var">F<sub>axial</sub></span> <span class="eq">= 3 · F<sub>rod</sub> · |u<sub>y</sub>|</span>'},
+   desc:'At each stroke position, aerodynamic drag on the flap is evaluated using a sine-squared approximation, then resolved through the linkage to find the axial force on the ball-screw nut.',
+   math:'<span class="var">F<sub>A</sub>(β)</span> <span class="eq">= 106 · sin²(β)</span><br><span class="var">lever</span> <span class="eq">= (C<sub>x</sub>−B<sub>x</sub>)·u<sub>y</sub> − (C<sub>y</sub>−B<sub>y</sub>)·u<sub>x</sub></span><br><span class="var">F<sub>axial</sub></span> <span class="eq">= 3 · F<sub>rod</sub> · |u<sub>y</sub>|</span>'},
   {title:'Step 5: Optimal Result',
    desc:'After 1.5M+ evaluations, the optimizer selects the geometry that minimizes peak axial load while achieving 79–81° flap deployment. The optimized design draws only 17 A — 32% below the 25 A budget.',
    math:'<span class="var">B</span> <span class="eq">= (57.9, 36.3) mm  ← fixed pivot</span><br><span class="var">D₀</span> <span class="eq">= (10.0, 65.7) mm  ← nut start</span><br><span class="var">stroke</span> <span class="eq">= 49.65 mm  →  β<sub>max</sub> ≈ 80°</span>'}
