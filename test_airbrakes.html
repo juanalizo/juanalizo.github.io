@@ -624,23 +624,25 @@ function drawKinematic(){
   const COL=getCols();
   ctx.fillStyle=COL.bg; ctx.fillRect(0,0,w,h);
 
-  // Coordinate mapping: world x 0..130, y 0..150 → canvas
-  const WORLD_W=130, WORLD_H=150, pad=28;
+  // Coordinate mapping: world x 0..130, y -50..100 → canvas
+  const WORLD_W=130, WORLD_Y_MIN=-50, WORLD_Y_MAX=100, pad=28;
+  const WORLD_H = WORLD_Y_MAX - WORLD_Y_MIN;
   const sc=Math.min((w-pad*2)/WORLD_W,(h-pad*2)/WORLD_H);
-  const ox=pad+(w-pad*2-WORLD_W*sc)/2, oy=h-pad;
+  const ox=pad+(w-pad*2-WORLD_W*sc)/2;
+  const oy=pad + WORLD_Y_MAX * sc;
   const wx=x=>ox+x*sc, wy=y=>oy-y*sc;
 
   // Grid
   ctx.strokeStyle=COL.line; ctx.lineWidth=0.5;
-  for(let gx=0;gx<=130;gx+=10){ ctx.beginPath();ctx.moveTo(wx(gx),wy(0));ctx.lineTo(wx(gx),wy(150));ctx.stroke(); }
-  for(let gy=0;gy<=150;gy+=10){ ctx.beginPath();ctx.moveTo(wx(0),wy(gy));ctx.lineTo(wx(130),wy(gy));ctx.stroke(); }
+  for(let gx=0;gx<=WORLD_W;gx+=10){ ctx.beginPath();ctx.moveTo(wx(gx),wy(WORLD_Y_MIN));ctx.lineTo(wx(gx),wy(WORLD_Y_MAX));ctx.stroke(); }
+  for(let gy=WORLD_Y_MIN;gy<=WORLD_Y_MAX;gy+=10){ ctx.beginPath();ctx.moveTo(wx(0),wy(gy));ctx.lineTo(wx(WORLD_W),wy(gy));ctx.stroke(); }
 
   // Screw axis dashed line
   ctx.strokeStyle=COL.dim; ctx.lineWidth=1; ctx.setLineDash([4,5]);
-  ctx.beginPath(); ctx.moveTo(wx(P.Dx),wy(0)); ctx.lineTo(wx(P.Dx),wy(145)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(wx(P.Dx),wy(WORLD_Y_MIN)); ctx.lineTo(wx(P.Dx),wy(WORLD_Y_MAX)); ctx.stroke();
   ctx.setLineDash([]);
   ctx.fillStyle=COL.dim; ctx.font=`9px 'DM Mono',monospace`;
-  ctx.fillText('SCREW AXIS', wx(P.Dx)+3, wy(135));
+  ctx.fillText('SCREW AXIS', wx(P.Dx)+3, wy(WORLD_Y_MAX-15));
 
   // Ghost retracted position
   const ghost=solve(0,LDC,LBC,LBA);
@@ -941,8 +943,8 @@ function drawGeoCanvas(step,frac){
     ctx.beginPath();ctx.moveTo(gx(P.Bx),gy(P.By));ctx.lineTo(gx(k.C.x),gy(k.C.y));ctx.stroke();
     // B→A extension
     ctx.beginPath();ctx.moveTo(gx(P.Bx),gy(P.By));ctx.lineTo(gx(k.Ax),gy(k.Ay));ctx.stroke();
-    // Flap plate centered at A, perpendicular to arm
-    const fDir=k.armAngle+Math.PI/2, hLen=28*sc;
+    // Flap plate centered at A, starts vertical
+    const fDir=Math.PI/2 + k.dAngle, hLen=28*sc;
     ctx.strokeStyle=COL.red; ctx.lineWidth=5; ctx.lineCap='butt';
     ctx.beginPath();
     ctx.moveTo(gx(k.Ax)+hLen*Math.cos(fDir), gy(k.Ay)-hLen*Math.sin(fDir));
