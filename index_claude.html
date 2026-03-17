@@ -64,8 +64,7 @@
     #ab-track { position:absolute; left:6px; top:0; bottom:0; width:2px; background:var(--line); }
     #ab-thumb { position:absolute; left:0; top:0; width:14px; height:36px; transform:translateY(0); will-change:transform; }
     .ab-core { position:absolute; left:5px; top:0; width:4px; height:100%; background:var(--accent); border-radius:2px; z-index:2; }
-    .ab-flap { position:absolute; top:8px; width:3px; height:20px; background:var(--fg); border-radius:2px; z-index:1; transform-origin:top center; will-change:transform; }
-    .flap-left { left:5px; } .flap-right { right:5px; }
+
 
     /* ── CURSOR ── */
     #c-dot {
@@ -189,15 +188,6 @@
     .c-ptitle .lbl { margin:0; }
     .ptitle-right { font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--dim); }
 
-    /* Filter pills */
-    .proj-filters { display:flex; gap:.5rem; align-items:center; }
-    .pf-btn {
-      font-family:'DM Mono',monospace; font-size:.6rem; letter-spacing:.1em; text-transform:uppercase;
-      border:1px solid rgba(255,255,255,.2); color:rgba(255,255,255,.6);
-      padding:.25rem .7rem; border-radius:999px; background:transparent;
-      transition:background .2s,color .2s,border-color .2s;
-    }
-    .pf-btn.active, .pf-btn:hover { background:var(--accent); color:#000; border-color:var(--accent); }
 
     /* Project grid container (replaces individual span-3 cells) */
     .proj-grid-wrap { grid-column:span 12; }
@@ -338,13 +328,7 @@
     .sb-key.black:active { background:#333; }
 
     /* ── PLAYFUL EXTRAS ── */
-    .eq-bars { position:absolute; bottom:1.5rem; left:1rem; z-index:3; display:flex; gap:3px; align-items:flex-end; opacity:0; transition:opacity .3s; }
-    .proj-card:hover .eq-bars { opacity:1; }
-    .eq-bar { width:3px; background:var(--accent); border-radius:2px; animation:eq var(--spd,.6s) ease-in-out infinite alternate; }
-    @keyframes eq { from{height:4px;}to{height:var(--h,14px);} }
-    .orbit-ring { position:absolute; top:35%; left:50%; z-index:3; width:60px; height:60px; margin:-30px 0 0 -30px; border:1px dashed rgba(255,255,255,.3); border-radius:50%; opacity:0; transition:opacity .3s,border-color .3s; animation:spin 8s linear infinite; }
-    .proj-card:hover .orbit-ring { opacity:1; border-color:var(--accent); }
-    @keyframes spin { to{transform:rotate(360deg);} }
+
 
     /* ── RESPONSIVE ── */
     @media (max-width:1024px) {
@@ -376,8 +360,7 @@
     <div id="ab-track"></div>
     <div id="ab-thumb">
       <div class="ab-core"></div>
-      <div class="ab-flap flap-left"></div>
-      <div class="ab-flap flap-right"></div>
+
     </div>
   </div>
 
@@ -507,16 +490,8 @@
 
     <!-- PROJECT SECTION HEADER -->
     <div class="box c-ptitle" id="proj-anchor">
-      <div style="display:flex;align-items:center;gap:1.5rem;">
-        <div class="lbl" style="margin:0;">Selected Projects</div>
-        <div class="proj-filters">
-          <button class="pf-btn active" data-filter="all">All</button>
-          <button class="pf-btn" data-filter="aerospace">Aerospace</button>
-          <button class="pf-btn" data-filter="electronics">Electronics</button>
-          <button class="pf-btn" data-filter="making">Making</button>
-        </div>
-      </div>
-      <span class="ptitle-right" id="proj-count">8 projects · 2023 — Present</span>
+      <div class="lbl" style="margin:0;">Selected Projects</div>
+      <span class="ptitle-right">8 projects · 2023 — Present</span>
     </div>
 
     <!-- PROJECT GRID -->
@@ -527,15 +502,15 @@
           <div class="proj-thumb">
             <div class="proj-thumb-img" style="background:url('airbrake2026.jpg') center/cover, linear-gradient(135deg,#0d120d,#1c2e1c);"></div>
             <span class="proj-num">01</span>
-            <span class="proj-cat">Aerospace</span>
+            <span class="proj-cat">2026</span>
           </div>
           <div class="proj-info">
             <span class="proj-name">IREC 2026 Airbrake</span>
-            <span class="proj-desc">Active aerodynamic control system for a sounding rocket. Precision apogee targeting via motor-actuated drag flaps.</span>
+            <span class="proj-desc">Active aerodynamic control system for a sounding rocket. Precision apogee targeting via servo-actuated drag flaps.</span>
             <div class="proj-tags">
-              <span class="proj-tag">Competition Rocketry</span>
-              <span class="proj-tag">Electromechanical</span>
-              <span class="proj-tag">Optimization</span>
+              <span class="proj-tag">SolidWorks</span>
+              <span class="proj-tag">Servo Actuation</span>
+              <span class="proj-tag">Rocketry</span>
             </div>
             <span class="proj-arrow">↗</span>
           </div>
@@ -545,22 +520,16 @@
           <div class="proj-thumb">
             <div class="proj-thumb-img" style="background:url('synth.jpg') center/cover, linear-gradient(135deg,#0e0e14,#1a1a2e);"></div>
             <span class="proj-num">02</span>
-            <span class="proj-cat">Electronics</span>
-            <div class="eq-bars">
-              <div class="eq-bar" style="--spd:.5s;--h:16px"></div>
-              <div class="eq-bar" style="--spd:.7s;--h:10px;animation-delay:.15s"></div>
-              <div class="eq-bar" style="--spd:.4s;--h:18px;animation-delay:.05s"></div>
-              <div class="eq-bar" style="--spd:.6s;--h:8px;animation-delay:.25s"></div>
-              <div class="eq-bar" style="--spd:.45s;--h:14px;animation-delay:.1s"></div>
-            </div>
+            <span class="proj-cat">2025</span>
+
           </div>
           <div class="proj-info">
             <span class="proj-name">Harmonizing Synthesizer</span>
-            <span class="proj-desc">Music synthesizer that listens to live guitar and generates real-time harmonies using FFT and analog Schmitt trigger circuits.</span>
+            <span class="proj-desc">ESP32 synth that listens to live guitar and generates real-time harmonies using FFT and analog Schmitt trigger circuits.</span>
             <div class="proj-tags">
-              <span class="proj-tag">Music</span>
-              <span class="proj-tag">Product Design</span>
-              <span class="proj-tag">Electronics</span>
+              <span class="proj-tag">ESP32</span>
+              <span class="proj-tag">FFT</span>
+              <span class="proj-tag">Analog Circuits</span>
             </div>
             <span class="proj-arrow">↗</span>
           </div>
@@ -570,16 +539,15 @@
           <div class="proj-thumb">
             <div class="proj-thumb-img" style="background:url('satellite.jpg') center/cover, linear-gradient(135deg,#120d0d,#221515);"></div>
             <span class="proj-num">03</span>
-            <span class="proj-cat">Aerospace</span>
-            <div class="orbit-ring"></div>
+            <span class="proj-cat">2024</span>
           </div>
           <div class="proj-info">
             <span class="proj-name">MEMESAT-1 Satellite</span>
             <span class="proj-desc">2U CubeSat for radio communication. Mechanical lead — NX/Teamcenter assemblies, FEA, and structural integration.</span>
             <div class="proj-tags">
-              <span class="proj-tag">Space</span>
-              <span class="proj-tag">FEA / ANSYS Mechanical</span>
-              <span class="proj-tag">CAD</span>
+              <span class="proj-tag">NX / Teamcenter</span>
+              <span class="proj-tag">FEA</span>
+              <span class="proj-tag">CubeSat</span>
             </div>
             <span class="proj-arrow">↗</span>
           </div>
@@ -589,13 +557,13 @@
           <div class="proj-thumb">
             <div class="proj-thumb-img" style="background:url('chamber.jpg') center/cover, linear-gradient(135deg,#0d0d0d,#1a1818);"></div>
             <span class="proj-num">04</span>
-            <span class="proj-cat">Making</span>
+            <span class="proj-cat">2024</span>
           </div>
           <div class="proj-info">
             <span class="proj-name">Ionization Chamber Mfg.</span>
             <span class="proj-desc">Lathed and milled precision chamber for biomedical seizure sensors. High-tolerance machining on manual lathe and mill.</span>
             <div class="proj-tags">
-              <span class="proj-tag">CNC Mill / Lathe</span>
+              <span class="proj-tag">CNC Lathe</span>
               <span class="proj-tag">GD&T</span>
               <span class="proj-tag">Biomedical</span>
             </div>
@@ -607,15 +575,15 @@
           <div class="proj-thumb">
             <div class="proj-thumb-img" style="background:url('airbrake2025.jpg') center/cover, linear-gradient(135deg,#0d120d,#1a221a);"></div>
             <span class="proj-num">05</span>
-            <span class="proj-cat">Aerospace</span>
+            <span class="proj-cat">2025</span>
           </div>
           <div class="proj-info">
             <span class="proj-name">IREC 2025 Airbrake</span>
             <span class="proj-desc">First-generation active aerodynamic control system. Competition debut at AIAA IREC 2025 — precision apogee targeting.</span>
             <div class="proj-tags">
-              <span class="proj-tag">Competition Rocketry</span>
-              <span class="proj-tag">DFM</span>
-              <span class="proj-tag">CAD</span>
+              <span class="proj-tag">AIAA IREC</span>
+              <span class="proj-tag">SolidWorks</span>
+              <span class="proj-tag">Competition</span>
             </div>
             <span class="proj-arrow">↗</span>
           </div>
@@ -625,7 +593,7 @@
           <div class="proj-thumb">
             <div class="proj-thumb-img" style="background:url('guitar.jpg') center/cover, linear-gradient(135deg,#130f0a,#25190e);"></div>
             <span class="proj-num">06</span>
-            <span class="proj-cat">Making</span>
+            <span class="proj-cat">2023</span>
           </div>
           <div class="proj-info">
             <span class="proj-name">Plywood Guitar</span>
@@ -633,7 +601,7 @@
             <div class="proj-tags">
               <span class="proj-tag">CNC Router</span>
               <span class="proj-tag">DFM</span>
-              <span class="proj-tag">Music</span>
+              <span class="proj-tag">Acoustics</span>
             </div>
             <span class="proj-arrow">↗</span>
           </div>
@@ -643,7 +611,7 @@
           <div class="proj-thumb">
             <div class="proj-thumb-img" style="background:url('lamp.jpg') center/cover, linear-gradient(135deg,#100e0a,#1e1a12);"></div>
             <span class="proj-num">07</span>
-            <span class="proj-cat">Making</span>
+            <span class="proj-cat">2024</span>
           </div>
           <div class="proj-info">
             <span class="proj-name">Lampa Nova</span>
@@ -651,7 +619,7 @@
             <div class="proj-tags">
               <span class="proj-tag">Wood / Plaster</span>
               <span class="proj-tag">Product Design</span>
-              <span class="proj-tag">Mold</span>
+              <span class="proj-tag">Handmade</span>
             </div>
             <span class="proj-arrow">↗</span>
           </div>
@@ -661,15 +629,15 @@
           <div class="proj-thumb">
             <div class="proj-thumb-img" style="background:url('cuatro.jpg') center/cover, linear-gradient(135deg,#0e0a12,#1a1420);"></div>
             <span class="proj-num">08</span>
-            <span class="proj-cat">Making</span>
+            <span class="proj-cat">2023</span>
           </div>
           <div class="proj-info">
             <span class="proj-name">3DP Printed Cuatro</span>
             <span class="proj-desc">Fully 3D-printed acoustic Venezuelan cuatro. Parametric body design optimized for printability and tonal resonance.</span>
             <div class="proj-tags">
-              <span class="proj-tag">3D Print</span>
-              <span class="proj-tag">Music</span>
-              <span class="proj-tag">DFM</span>
+              <span class="proj-tag">FDM / 3D Print</span>
+              <span class="proj-tag">Acoustics</span>
+              <span class="proj-tag">Venezuela</span>
             </div>
             <span class="proj-arrow">↗</span>
           </div>
@@ -761,8 +729,7 @@
 
   // ════ AIRBRAKE SCROLLBAR ════
   // Event-driven (not rAF) so it never drifts when page is idle
-  const abThumb=document.getElementById('ab-thumb'), flapL=document.querySelector('.flap-left'), flapR=document.querySelector('.flap-right');
-  let flapAngle=0, flapRafId=null, lastScrollY=window.scrollY;
+  const abThumb=document.getElementById('ab-thumb');
 
   function positionThumb() {
     const max=document.documentElement.scrollHeight-window.innerHeight;
@@ -771,50 +738,8 @@
     abThumb.style.transform=`translateY(${Math.round(pct*(window.innerHeight-76))}px)`;
   }
 
-  function decayFlaps() {
-    flapAngle *= 0.82;
-    flapL.style.transform=`rotate(${flapAngle}deg)`;
-    flapR.style.transform=`rotate(${-flapAngle}deg)`;
-    if (flapAngle > 0.5) {
-      flapRafId = requestAnimationFrame(decayFlaps);
-    } else {
-      flapL.style.transform='rotate(0deg)';
-      flapR.style.transform='rotate(0deg)';
-      flapRafId = null;
-    }
-  }
-
-  window.addEventListener('scroll', ()=>{
-    const dy = Math.abs(window.scrollY - lastScrollY);
-    lastScrollY = window.scrollY;
-    positionThumb();
-    // Only kick off flap animation if actually moving
-    flapAngle = Math.min(60, flapAngle + dy * 0.8);
-    if (!flapRafId) flapRafId = requestAnimationFrame(decayFlaps);
-  }, {passive: true});
-
-  // Set initial position without rAF loop
+  window.addEventListener('scroll', positionThumb, {passive: true});
   positionThumb();
-
-  // ════ PROJECT FILTERS ════
-  const filterBtns = document.querySelectorAll('.pf-btn');
-  const projCards  = document.querySelectorAll('.proj-card');
-  const projCount  = document.getElementById('proj-count');
-
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const filter = btn.dataset.filter;
-      let visible = 0;
-      projCards.forEach(card => {
-        const match = filter === 'all' || card.dataset.category === filter;
-        card.classList.toggle('hidden', !match);
-        if (match) visible++;
-      });
-      projCount.textContent = `${visible} project${visible!==1?'s':''} · 2023 — Present`;
-    });
-  });
 
   // ════ SCROLL REVEAL ════
   const io=new IntersectionObserver(es=>{ es.forEach(e=>{ if(!e.isIntersecting)return; e.target.classList.add('vis'); io.unobserve(e.target); }); },{threshold:.1});
