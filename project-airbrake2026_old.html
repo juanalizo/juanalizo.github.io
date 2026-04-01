@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Detail | Juan Carlos Alizo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    /* ── CORE STYLES (Shared with Home) ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #f0f4f8;
+      --s1:     #ffffff;
+      --s2:     #e2e8f0;
+      --s3:     #cbd5e1;
+      --fg:     #0f172a;
+      --dim:    rgba(15, 23, 42, 0.6);
+      --line:   rgba(15, 23, 42, 0.1);
+      --accent: #0A2463; /* Venezuelan Blue */
+      --red:    #A41623; /* Venezuelan Red */
+      --blue:   #0A2463; /* Venezuelan Blue */
+    }
+    body {
+      background: var(--bg); color: var(--fg);
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+      line-height: 1.6; padding: 2rem;
+    }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 1000px; margin: 0 auto; }
+    
+    /* Header */
+    header { 
+      margin-bottom: 2rem; 
+      padding: 3rem 2rem; 
+      background: var(--blue);
+      color: #fff;
+    }
+    .nav-back { 
+      font-family: 'DM Mono', monospace; font-size: 0.7rem; color: #FFC300; 
+      text-decoration: none; display: inline-block; margin-bottom: 1.5rem;
+    }
+    h1 { font-family: 'Syne', sans-serif; font-size: 3.5rem; font-weight: 800; line-height: 1; margin-bottom: 0.5rem; }
+    .subtitle { 
+      font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.7); 
+      font-size: 0.9rem; 
+    }
+
+    /* Grid Content */
+    .content-grid { display: grid; grid-template-columns: 250px 1fr; gap: 4rem; margin-bottom: 4rem; }
+    
+    /* Sidebar (Metadata) */
+    .meta-block { margin-bottom: 2rem; }
+    .meta-lbl { 
+      font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--accent); 
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; display: block;
+    }
+    .meta-val { font-size: 0.95rem; }
+    .tech-tag {
+      display: inline-block; border: 1px solid var(--line); 
+      font-family: 'DM Mono', monospace; font-size: 0.6rem; padding: 0.2rem 0.6rem;
+      margin: 0.2rem 0.2rem 0 0; border-radius: 4px; color: var(--dim);
+    }
+
+    .collab-list { list-style: none; margin-top: 0.5rem; }
+    .collab-item { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem; }
+    .collab-info a { text-decoration: none; color: var(--fg); }
+    .collab-info a:hover .collab-name { color: var(--accent); }
+    .collab-name { font-size: 0.9rem; font-weight: 700; display: block; transition: color 0.2s; }
+    .collab-role { font-size: 0.75rem; color: var(--dim); display: block; }
+
+    .paper-link {
+        display: inline-flex; align-items: center; gap: 0.6rem;
+        background: var(--s2); border: 1px solid var(--line);
+        padding: 0.6rem 1rem;
+        text-decoration: none;
+        color: var(--fg);
+        font-family: 'DM Mono', monospace;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        transition: background .2s, border-color .2s, color .2s;
+    }
+    .paper-link:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+
+    /* Main Body */
+    .body-text h2 { 
+      font-family: 'Syne', sans-serif; font-size: 1.8rem; margin: 2.5rem 0 1rem; 
+      color: var(--fg);
+    }
+    .body-text h2:first-of-type { margin-top: 0; }
+    .body-text p { margin-bottom: 1.5rem; color: var(--dim); }
+    
+    /* Visuals */
+    .hero-img { 
+      width: 100%; aspect-ratio: 21/9; object-fit: cover; 
+      background: var(--s2); margin-bottom: 3rem; border: 1px solid var(--line); 
+    }
+    .img-full {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      margin: 2rem 0;
+      border: 1px solid var(--line); background: var(--s2);
+    }
+    .gallery-grid { display: grid; gap: 1rem; margin: 2rem 0; }
+    .gallery-2-col { grid-template-columns: 1fr 1fr; }
+    .gallery-3-col { grid-template-columns: 1fr 1fr 1fr; }
+    .gallery-grid img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border: 1px solid var(--line); background: var(--s2); }
+
+    /* 3D Viewer */
+    .viewer-container { margin: 2.5rem 0; border: 1px solid var(--line); }
+    .viewer-wrap { position:relative; width:100%; height:100%; min-height:500px; }
+    #threejs-canvas { display:block; width:100%; height:100%; }
+    .viewer-ui {
+      position:absolute; inset:0; pointer-events:none;
+      padding:1.4rem; display:flex; flex-direction:column; justify-content:space-between;
+    }
+    .viewer-top { display:flex; justify-content:space-between; align-items:flex-start; pointer-events:auto; }
+    .viewer-tag {
+      font-family:'DM Mono',monospace; font-size:.62rem;
+      letter-spacing:.14em; text-transform:uppercase; color:var(--accent); opacity:.7;
+    }
+    .viewer-btns { display:flex; gap:.5rem; }
+    .viewer-btn {
+      font-family:'DM Mono',monospace; font-size:.65rem; letter-spacing:.1em; text-transform:uppercase;
+      background:transparent; border:1px solid var(--line); color:var(--accent);
+      padding:.4rem .9rem; transition:background .2s, color .2s, border-color .2s; cursor: pointer;
+    }
+    .viewer-btn:hover { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+    .viewer-bottom {
+      font-family:'DM Mono',monospace; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase;
+      color:var(--dim); line-height:1.8; text-align: right;
+    }
+    .viewer-hint { opacity:0; transition:opacity .4s; font-size:.6rem; color:var(--accent); margin-top:.3rem; }
+    .viewer-hint.vis { opacity:1; }
+
+    /* Kinematic Canvas */
+    #airbrake-visualizer-container {
+      position: relative;
+      width: 100%;
+      margin: 2rem 0;
+      font-family: 'DM Mono', monospace; 
+      background: var(--s2); 
+      border: 1px solid var(--line);
+      padding: 1.5rem;
+      border-radius: 4px;
+      color: var(--fg);
+    }
+
+    #airbrake-visualizer-container canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: radial-gradient(circle at center, rgba(0,0,0,0.03) 0%, transparent 70%);
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--line);
+      aspect-ratio: 1.6;
+    }
+
+    #airbrake-visualizer-container .ab-controls {
+      display: grid; grid-template-columns: auto 1fr auto; gap: 1rem 1.5rem;
+      align-items: center;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--line);
+    }
+    
+    #airbrake-visualizer-container .control-group {
+      display: contents; /* Allows grid items to align with parent grid */
+    }
+
+    #airbrake-visualizer-container label {
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent);
+    }
+
+    #airbrake-visualizer-container input[type=range] {
+      width: 100%; cursor: pointer; accent-color: var(--accent);
+    }
+
+    #airbrake-visualizer-container .ab-readout {
+      font-size: 0.8rem; min-width: 80px; text-align: right; color: var(--dim); font-feature-settings: "tnum";
+    }
+    #airbrake-visualizer-container .ab-readout span {
+      color: var(--fg); font-weight: 600;
+    }
+
+    /* Footer */
+    footer { 
+      margin-top: 6rem; padding-top: 2rem; border-top: 1px solid var(--line);
+      display: flex; justify-content: space-between;
+    }
+    .next-proj { 
+      text-align: right; text-decoration: none; color: var(--fg);
+      transition: color 0.2s;
+    }
+    .next-proj:hover { color: var(--accent); }
+    .np-lbl { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--dim); display: block; }
+    .np-title { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700; }
+
+    @media (max-width: 768px) {
+      .content-grid { grid-template-columns: 1fr; gap: 2rem; }
+      h1 { font-size: 2.5rem; }
+      body { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <a href="index.html" class="nav-back">← RETURN TO BASE</a>
+      <h1>Electromechanical Airbrake</h1>
+      <div class="subtitle">AIAA IREC 2025 · ACTIVE AERODYNAMICS SYSTEM</div>
+    </header>
+
+    <img src="airbrake_hero.jpg" alt="Airbrake System" class="hero-img" />
+
+    <div class="content-grid">
+      
+      <!-- Left Sidebar -->
+      <aside>
+        <div class="meta-block">
+          <span class="meta-lbl">Role</span>
+          <div class="meta-val">Lead Mechanical Engineer</div>
+        </div>
+        
+        <div class="meta-block">
+          <span class="meta-lbl">Timeline</span>
+          <div class="meta-val">Aug 2024 — Present</div>
+        </div>
+
+        <div class="meta-block">
+          <span class="meta-lbl">Tech Stack</span>
+          <div>
+            <span class="tech-tag">SolidWorks</span>
+            <span class="tech-tag">Ansys Fluent</span>
+            <span class="tech-tag">RocketPy</span>
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">STM32 / C++</span>
+            <span class="tech-tag">DFMA</span>
+          </div>
+        </div>
+
+        <div class="meta-block">
+          <span class="meta-lbl">Collaborators</span>
+          <ul class="collab-list">
+            <li class="collab-item">
+              <div class="collab-info">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <span class="collab-name">Nicholas Dagnino</span>
+                  <span class="collab-role">Mechanical Engineering</span>
+                </a>
+              </div>
+            </li>
+            <li class="collab-item">
+              <div class="collab-info">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <span class="collab-name">Parsa Novin</span>
+                  <span class="collab-role">Electrical Engineering</span>
+                </a>
+              </div>
+            </li>
+            <li class="collab-item">
+              <div class="collab-info">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <span class="collab-name">Austin Applestone</span>
+                  <span class="collab-role">Mechanical Engineering</span>
+                </a>
+              </div>
+            </li>
+            <li class="collab-item">
+              <div class="collab-info">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <span class="collab-name">Brooklyn Schnupp</span>
+                  <span class="collab-role">Mechanical Engineering</span>
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="meta-block">
+          <span class="meta-lbl">Documentation</span>
+          <a href="#" target="_blank" class="paper-link"><span>📄</span> <span>Read Technical Paper</span></a>
+        </div>
+
+        <div class="meta-block">
+          <span class="meta-lbl">Links</span>
+          <a href="#" style="color:var(--accent); text-decoration:none; border-bottom:1px solid var(--accent);">View on GitHub</a>
+        </div>
+      </aside>
+
+      <!-- Right Column -->
+      <article class="body-text">
+        <h2>Mission Profile</h2>
+        <p>
+          For the 2026 International Rocket Engineering Competition (IREC), the University of Georgia Rocketry Team is targeting a precise apogee of 10,000 ft (3048 m). Passive flight is highly susceptible to atmospheric variance; to guarantee accuracy, we engineered an active airbrake system to modulate drag in real-time.
+        </p>
+        <p>
+          The design constraints were strict: the mechanism had to fit within a 225 mm axial length inside a 6-inch airframe, weigh under 3.2 kg, cost less than $400, and draw no more than 25 A of current to preserve battery life for avionics.
+        </p>
+
+        <img src="airbrake_sketch.jpg" alt="Initial sketch of the airbrake mechanism" class="img-full" />
+
+        <h2>Mechanical Architecture</h2>
+        <p>
+          The solution is a three-flap system driven by a single NEO 550 BLDC motor through a 4:1 gearbox. The motor rotates a central 1204 ball screw, driving a custom CNC-machined 6061-T6 aluminum cuff linearly. This linear motion is converted into radial flap deployment via a double-linkage system.
+        </p>
+        <p>
+          Material Selection: We selected 7075-T6 aluminum for the arms and linkages due to its high strength-to-weight ratio and fatigue resistance. The internal ribs and bulkheads are waterjet-cut from G10 fiberglass, ensuring alignment tolerance within ±0.5 mm while maintaining radio transparency for internal avionics.
+        </p>
+
+        <div class="gallery-grid gallery-2-col">
+          <img src="airbrake_cad.jpg" alt="CAD View" />
+          <img src="airbrake_proto.jpg" alt="Prototype Assembly" />
+        </div>
+
+        <h2>Analysis & Optimization</h2>
+        <p>
+          Kinematics: We developed a custom kinematic-force optimization model in Python to minimize current draw. By iterating through thousands of linkage geometries, we optimized the torque curve to ensure the motor operates efficiently even under worst-case aerodynamic loads (Mach 0.981).
+        </p>
+        
+        <div id="airbrake-visualizer-container">
+          <canvas id="airbrake-canvas"></canvas>
+          <div class="ab-controls">
+            <div class="control-group">
+              <label for="actuation-slider">Actuation</label>
+              <input type="range" id="actuation-slider" min="0" max="100" value="0">
+              <div class="ab-readout"><span id="ab-disp-text">0.0 mm</span></div>
+            </div>
+            <div class="control-group">
+              <label for="dc-slider">Link DC</label>
+              <input type="range" id="dc-slider" min="20" max="60" step="0.5" value="34.7">
+              <div class="ab-readout"><span id="dc-text">34.7 mm</span></div>
+            </div>
+            <div class="control-group">
+              <label for="cb-slider">Link CB</label>
+              <input type="range" id="cb-slider" min="20" max="60" step="0.5" value="31.3">
+              <div class="ab-readout"><span id="cb-text">31.3 mm</span></div>
+            </div>
+            <div class="control-group">
+              <label for="ba-slider">Link BA</label>
+              <input type="range" id="ba-slider" min="20" max="100" step="0.5" value="55.9">
+              <div class="ab-readout"><span id="ba-text">55.9 mm</span></div>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          CFD & FEA: Computational Fluid Dynamics (Ansys Fluent) at Mach 0.7 and 80° deployment verified a total drag force of 320 N. Structural Finite Element Analysis confirmed that critical stress points in the linkage pins remained well below yield strength (FS > 2.25).
+        </p>
+
+        <div class="gallery-grid gallery-3-col">
+          <img src="airbrake_detail1.jpg" alt="Detail view 1" />
+          <img src="airbrake_detail2.jpg" alt="Detail view 2" />
+          <img src="airbrake_detail3.jpg" alt="Detail view 3" />
+        </div>
+
+        <h2>Control Strategy</h2>
+        <p>
+          The system is controlled by an STM32H5 microcontroller. We validated control algorithms using RocketPy, running over 370,000 Monte Carlo flight simulations. 
+        </p>
+        <p>
+          While PID and LQR controllers were tested, an Explicit Model Predictive Controller (EMPC) yielded the lowest Root Mean Square Error (RMSE) for apogee targeting, demonstrating superior robustness against wind gusts and motor performance variance.
+        </p>
+
+        <div class="viewer-container">
+          <div class="viewer-wrap" id="viewer-wrap">
+              <canvas id="threejs-canvas"></canvas>
+              <div class="viewer-ui">
+                  <div class="viewer-top">
+                      <span class="viewer-tag">3D Model — Airbrake Assembly</span>
+                      <div class="viewer-btns">
+                          <button class="viewer-btn" id="wireframe-btn">Wireframe</button>
+                      </div>
+                  </div>
+                  <div class="viewer-bottom">
+                      <div class="viewer-hint" id="vhint">Drag to rotate · Scroll to zoom</div>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <footer>
+      <div style="font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--dim);">
+        © 2025 Juan Carlos Alizo
+      </div>
+      <a href="project-synth.html" class="next-proj">
+        <span class="np-lbl">NEXT PROJECT</span>
+        <span class="np-title">ESP32 Synth →</span>
+      </a>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script>
+    // ════════════════════════════════
+    //  THREE.JS STL VIEWER
+    // ════════════════════════════════
+    (function(){
+      const canvas    = document.getElementById('threejs-canvas');
+      const wrap      = document.getElementById('viewer-wrap');
+      const wfBtn     = document.getElementById('wireframe-btn');
+      const vhint     = document.getElementById('vhint');
+
+      if (!canvas || !wrap) return;
+
+      const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.1;
+
+      const scene = new THREE.Scene();
+      const grid  = new THREE.GridHelper(12,24,0xcccccc,0xdddddd);
+      scene.add(grid);
+
+      const camera = new THREE.PerspectiveCamera(45,1,0.001,10000);
+      camera.position.set(3,2,4);
+
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping   = true;
+      controls.dampingFactor   = 0.07;
+      controls.autoRotate      = true;
+      controls.autoRotateSpeed = 1.2;
+
+      scene.add(new THREE.AmbientLight(0xffffff,0.35));
+      const key=new THREE.DirectionalLight(0xffffff,1.5); key.position.set(5,8,5); scene.add(key);
+      const fill=new THREE.DirectionalLight(0xFFC300,0.5); fill.position.set(-5,3,-3); scene.add(fill);
+      const rim=new THREE.DirectionalLight(0xffffff,0.3);  rim.position.set(0,-4,-5);  scene.add(rim);
+
+      function resize(){
+        const w=wrap.clientWidth, h=Math.max(wrap.clientHeight,380);
+        renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
+      }
+      resize(); new ResizeObserver(resize).observe(wrap);
+
+      let mesh=null, isWF=false;
+      (function animate(){ requestAnimationFrame(animate); controls.update(); renderer.render(scene,camera); })();
+
+      function setupModel(geo) {
+          geo.computeVertexNormals(); geo.center(); geo.computeBoundingBox();
+          const sz=new THREE.Vector3(); geo.boundingBox.getSize(sz);
+          const maxD=Math.max(sz.x,sz.y,sz.z), s=2.5/maxD;
+          if(mesh){ scene.remove(mesh); mesh.geometry.dispose(); mesh.material.dispose(); }
+          mesh=new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color:0x666666,metalness:.5,roughness:.5}));
+          mesh.scale.setScalar(s); scene.add(mesh);
+          grid.position.y=-(sz.y*s*.5)-.05;
+          const dist=maxD*s*1.6;
+          camera.position.set(dist*.7,dist*.5,dist);
+          controls.target.set(0,0,0); controls.minDistance=dist*.15; controls.maxDistance=dist*10; controls.update();
+          if(vhint) vhint.classList.add('vis');
+          controls.addEventListener('start',()=>{ controls.autoRotate=false; },{once:true});
+      }
+
+      function loadAndSetupSTL(url){
+        const loader = new THREE.STLLoader();
+        loader.load(url, setupModel, undefined, (error) => {
+          console.error('An error happened while loading the STL file.', error);
+        });
+      }
+
+      loadAndSetupSTL('airbrake_model.stl');
+
+      if(wfBtn) wfBtn.addEventListener('click',()=>{
+        if(!mesh)return; isWF=!isWF; mesh.material.wireframe=isWF; wfBtn.textContent=isWF?'Solid':'Wireframe';
+      });
+    })();
+  </script>
+  <script>
+    // ════════════════════════════════
+    //  KINEMATIC VISUALIZER
+    // ════════════════════════════════
+    (function(){
+      const canvas = document.getElementById('airbrake-canvas');
+      const slider = document.getElementById('actuation-slider');
+      const dispText = document.getElementById('ab-disp-text');
+      
+      const dcSlider = document.getElementById('dc-slider');
+      const cbSlider = document.getElementById('cb-slider');
+      const baSlider = document.getElementById('ba-slider');
+      const dcText = document.getElementById('dc-text');
+      const cbText = document.getElementById('cb-text');
+      const baText = document.getElementById('ba-text');
+      
+      if (!canvas || !slider || !dcSlider) return;
+
+      const ctx = canvas.getContext('2d');
+      
+      // ══════════════════════════════════════════════
+      // 1. CONFIGURATION
+      // ══════════════════════════════════════════════
+      
+      // CAD Geometry (in mm)
+      const PIVOT_B = { x: 57.9, y: 36.3 };
+      const SCREW_X = 10.0;
+      
+      const BASE_LINKAGE = 34.7;
+      const BASE_PIVOT = 31.3;
+      const BASE_FLAP = 55.9;
+
+      let linkageLen = BASE_LINKAGE; 
+      let pivotArmLen = BASE_PIVOT;
+      let flapLen = BASE_FLAP;
+
+      const flapOffsetAngle = 2;  // User-specified offset in radians
+
+      const NUT_Y_START = 65.7;      // Retracted Y position of nut
+      const NUT_Y_END = 16;          // Extended Y position of nut
+      const FLAP_PLATE_LEN = 75.0;   // Length of the flap plate itself
+
+      // Visualizer Display Settings
+      const SCALE = 3.2;               // Pixels per mm
+      const ORIGIN = { x: 80, y: 280 }; // Canvas pixel coords for CAD (0,0) - Adjusted Y origin
+
+      // ══════════════════════════════════════════════
+      // 2. KINEMATIC MODEL
+      // ══════════════════════════════════════════════
+
+      function calculateCoreKinematics(sliderValue) {
+        // Calculate Point D (Cuff-linkage Pin) based on slider
+        const t = sliderValue / 100;
+        const Dy = NUT_Y_START + t * (NUT_Y_END - NUT_Y_START);
+        const D = { x: SCREW_X, y: Dy };
+        const displacement = Math.abs(NUT_Y_START - Dy);
+
+        // Calculate Point C via circle-circle intersection
+        const B = PIVOT_B;
+        
+        const dx = B.x - D.x;
+        const dy = B.y - D.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+
+        if (dist > linkageLen + pivotArmLen || dist < Math.abs(linkageLen - pivotArmLen) || dist === 0) {
+          return null; // Impossible geometry
+        }
+
+        const a = (linkageLen**2 - pivotArmLen**2 + dist**2) / (2 * dist);
+        const h = Math.sqrt(Math.max(0, linkageLen**2 - a**2));
+
+        const x2 = D.x + a * (B.x - D.x) / dist;
+        const y2 = D.y + a * (B.y - D.y) / dist;
+
+        // Calculate the other intersection point as requested
+        const C = { 
+          x: x2 - h * (B.y - D.y) / dist,
+          y: y2 + h * (B.x - D.x) / dist
+        };
+
+        const thetaBC = Math.atan2(C.y - B.y, C.x - B.x);
+
+        return { B, C, D, displacement, thetaBC };
+      }
+
+      // ══════════════════════════════════════════════
+      // 3. CANVAS RENDERER
+      // ══════════════════════════════════════════════
+
+      function draw() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+        
+        ctx.clearRect(0, 0, rect.width, rect.height);
+        const theme = {
+          accent: getComputedStyle(document.body).getPropertyValue('--accent').trim(),
+          red: getComputedStyle(document.body).getPropertyValue('--red').trim(),
+          fg: getComputedStyle(document.body).getPropertyValue('--fg').trim(),
+          bg: getComputedStyle(document.body).getPropertyValue('--bg').trim(),
+          dim: getComputedStyle(document.body).getPropertyValue('--dim').trim(),
+          line: getComputedStyle(document.body).getPropertyValue('--line').trim()
+        };
+
+        // Update Parameters
+        linkageLen = parseFloat(dcSlider.value);
+        pivotArmLen = parseFloat(cbSlider.value);
+        flapLen = parseFloat(baSlider.value);
+
+        if(dcText) dcText.innerText = linkageLen.toFixed(1) + ' mm';
+        if(cbText) cbText.innerText = pivotArmLen.toFixed(1) + ' mm';
+        if(baText) baText.innerText = flapLen.toFixed(1) + ' mm';
+
+        // --- KINEMATIC CALIBRATION & CALCULATION ---
+
+        // 1. First, calculate the geometry at the start (slider=0) to get a reference angle.
+        // This allows us to calibrate the visual rotation so the flap starts perfectly vertical.
+        const coreStateZero = calculateCoreKinematics(0);
+        if (!coreStateZero) {
+          if(dispText) dispText.innerText = 'Error';
+          return;
+        }
+        const thetaFlap_initial = coreStateZero.thetaBC + flapOffsetAngle;
+
+        // 2. Now, calculate the core geometry for the current slider position.
+        const coreState = calculateCoreKinematics(slider.value);
+        if (!coreState) {
+          if(dispText) dispText.innerText = 'Error';
+          return;
+        }
+        const { B, C, D, displacement, thetaBC } = coreState;
+
+        // 3. Calculate the full state for the current position using the fixed offset.
+        const thetaFlap = thetaBC + flapOffsetAngle;
+        const A = {
+          x: B.x + flapLen * Math.cos(thetaFlap),
+          y: B.y + flapLen * Math.sin(thetaFlap)
+        };
+        
+        // --- DRAWING & UI UPDATES ---
+
+        // Update UI Readout
+        if(dispText) dispText.innerText = `${displacement.toFixed(1)} mm`;
+
+        // Map CAD coordinates to Canvas coordinates
+        const toCanvas = (p) => ({ x: ORIGIN.x + p.x * SCALE, y: ORIGIN.y - p.y * SCALE });
+        const sA = toCanvas(A), sB = toCanvas(B), sC = toCanvas(C), sD = toCanvas(D);
+        const sScrewX = ORIGIN.x + SCREW_X * SCALE;
+
+        // 4. Calculate the calibrated angle for drawing the flap plate.
+        // The final angle is the desired start angle (vertical = PI/2) plus the change
+        // in the arm's angle from its initial position. This ensures the flap starts
+        // vertically and rotates correctly according to the kinematics.
+        const currentFlapAngle = (Math.PI / 2) + (thetaFlap - thetaFlap_initial);
+
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        // Draw Reference (Screw Axis)
+        ctx.strokeStyle = theme.line; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.moveTo(sScrewX, 0); ctx.lineTo(sScrewX, rect.height); ctx.stroke(); ctx.setLineDash([]);
+
+        // Draw Dashed Constraint Circles
+        ctx.strokeStyle = theme.dim; ctx.lineWidth = 1; ctx.setLineDash([5, 5]);
+        
+        // Circle around D (Radius DC)
+        ctx.beginPath(); ctx.arc(sD.x, sD.y, linkageLen * SCALE, 0, Math.PI * 2); ctx.stroke();
+
+        // Circle around B (Radius BC)
+        ctx.beginPath(); ctx.arc(sB.x, sB.y, pivotArmLen * SCALE, 0, Math.PI * 2); ctx.stroke();
+        
+        ctx.setLineDash([]);
+
+        // Common Line Style for Linkages
+        const LINK_WIDTH = 5;
+
+        // Draw Linkage Arm (D to C)
+        ctx.strokeStyle = theme.dim; ctx.lineWidth = LINK_WIDTH;
+        ctx.beginPath(); ctx.moveTo(sD.x, sD.y); ctx.lineTo(sC.x, sC.y); ctx.stroke();
+
+        // Draw Pivot Arm (B to C)
+        ctx.strokeStyle = theme.accent; ctx.lineWidth = LINK_WIDTH;
+        ctx.beginPath(); ctx.moveTo(sB.x, sB.y); ctx.lineTo(sC.x, sC.y); ctx.stroke();
+
+        // Draw Arm Extension (from B to A)
+        ctx.strokeStyle = theme.red; ctx.lineWidth = LINK_WIDTH;
+        ctx.beginPath(); ctx.moveTo(sB.x, sB.y); ctx.lineTo(sA.x, sA.y); ctx.stroke();
+
+        // Draw Flap Plate (Centered at A)
+        const halfFlap = (FLAP_PLATE_LEN / 2) * SCALE;
+        
+        // Flap Top
+        const fTx = sA.x + halfFlap * Math.cos(currentFlapAngle);
+        const fTy = sA.y - halfFlap * Math.sin(currentFlapAngle); // Subtract because Y grows down
+        // Flap Bottom
+        const fBx = sA.x - halfFlap * Math.cos(currentFlapAngle);
+        const fBy = sA.y + halfFlap * Math.sin(currentFlapAngle);
+
+        ctx.strokeStyle = theme.fg; ctx.lineWidth = 10; ctx.lineCap = 'butt';
+        ctx.beginPath(); ctx.moveTo(fTx, fTy); ctx.lineTo(fBx, fBy); ctx.stroke();
+
+        // Draw Joints (Pins)
+        [sA, sB, sC, sD].forEach((p, i) => { // Invert colors for dark mode
+          ctx.fillStyle = theme.bg; ctx.strokeStyle = theme.fg; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.arc(p.x, p.y, (i === 1) ? 6 : 4, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        });
+
+        // Labels
+        ctx.fillStyle = theme.dim; ctx.font = '12px monospace'; ctx.textAlign = 'left';
+        ctx.fillText("Pivot (B)", sB.x + 10, sB.y);
+        ctx.fillText("Nut (D)", sD.x + 10, sD.y);
+        ctx.fillText("Flap (A)", sA.x + 10, sA.y);
+      }
+      
+      // Sliders
+      slider.addEventListener('input', draw);
+      dcSlider.addEventListener('input', draw);
+      cbSlider.addEventListener('input', draw);
+      baSlider.addEventListener('input', draw);
+
+      window.addEventListener('resize', draw);
+
+      draw();
+
+    })();
+  </script>
+</body>
+</html>
