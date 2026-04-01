@@ -469,15 +469,15 @@
     <aside>
       <div class="meta-pair">
         <div class="meta-block"><span class="meta-lbl">Role</span><div class="meta-val">Mechanical Engineer</div></div>
-        <div class="meta-block"><span class="meta-lbl">Timeline</span><div class="meta-val">Aug 2024 — Present</div></div>
+        <div class="meta-block"><span class="meta-lbl">Timeline</span><div class="meta-val">Jan 2026 — Present</div></div>
       </div>
       <div class="meta-block">
         <span class="meta-lbl">Key Words</span>
         <div class="tech-tags">
-          <span class="tech-tag">CAD</span><span class="tech-tag">Ansys Fluent</span>
-          <span class="tech-tag">RocketPy</span><span class="tech-tag">Python</span>
+          <span class="tech-tag">CAD</span><span class="tech-tag">Manufacturing</span>
+          <span class="tech-tag">Research</span><span class="tech-tag">Python</span>
           <span class="tech-tag">Optimization</span><span class="tech-tag">Electromechanical</span>
-          <span class="tech-tag">FEA</span>
+          <span class="tech-tag">FEA</span><span class="tech-tag">RocketPy</span>
         </div>
       </div>
       <div class="meta-block">
@@ -1199,20 +1199,6 @@ function setGeoStep(step){
   document.getElementById('geo-math').innerHTML=GEO_STEPS[step].math;
   if(geoAnimId) cancelAnimationFrame(geoAnimId);
   if(step>=2){ geoAnimFrac=0; (function anim(){ geoAnimFrac=Math.min(geoAnimFrac+0.007,1); drawGeoCanvas(geoStep,geoAnimFrac); if(geoAnimFrac<1) geoAnimId=requestAnimationFrame(anim); })(); }
-  else drawGeoCanvas(step,0);
-}
-function nextGeoStep(){ setGeoStep(Math.min(geoStep+1,4)); }
-function prevGeoStep(){ setGeoStep(Math.max(geoStep-1,0)); }
-
-// ─── INIT ─────────────────────────────────────────────────────────
-function drawAll(){
-  readSliders(); drawKinematic(); drawRMSE(); setGeoStep(geoStep);
-}
-window.addEventListener('load', drawAll);
-window.addEventListener('resize',()=>{ clearTimeout(window._rt); window._rt=setTimeout(drawAll,80); });
-</script>
-</body>
-</html>ep>=2){ geoAnimFrac=0; (function anim(){ geoAnimFrac=Math.min(geoAnimFrac+0.007,1); drawGeoCanvas(geoStep,geoAnimFrac); if(geoAnimFrac<1) geoAnimId=requestAnimationFrame(anim); })(); }
   else drawGeoCanvas(step,0);
 }
 function nextGeoStep(){ setGeoStep(Math.min(geoStep+1,4)); }
