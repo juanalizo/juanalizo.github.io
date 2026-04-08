@@ -21,15 +21,20 @@
       --red:    #A41623;
       --gold:   #FFC300;
     }
+    img, canvas {
+      max-width: 100%;
+    }
+
     body {
       background: var(--bg); color: var(--fg);
       font-family: 'Atkinson Hyperlegible', sans-serif;
       line-height: 1.6;
       padding: 1rem;
+      overflow-x: hidden;
     }
     @media (min-width: 600px) { body { padding: 2rem; } }
     /* WIDENED CONTAINER */
-    .container { max-width: 1200px; margin: 0 auto; width: 100%; }
+    .container { max-width: 1200px; margin: 0 auto; width: 100%;}
 
     /* ── HEADER ── */
     header {
@@ -70,23 +75,12 @@
 
     /* Mobile-specific adjustments for uniformity */
     @media (max-width: 599px) {
-      /* Align all major section boundaries to the container edges */
-      .hero-section-wrap, .stat-strip, .content-grid {
-        margin-left: 0; margin-right: 0;
-      }
-
-      /* Consistently indent all text elements to match the header's text (1.25rem) */
-      .hero-section-wrap p,
-      .content-grid aside,
-      .content-grid article.body-text {
+      .hero-section-wrap p {
         padding-left: 1.25rem;
         padding-right: 1.25rem;
       }
-
-      /* Remove full-width overrides for elements within body-text on mobile */
-      .body-text .img-full, .body-text .gallery-grid, .body-text .viewer-container,
-      .body-text .viz-wrap, .body-text .manufacturing-grid, .body-text .table-scroll {
-        margin-left: 0; margin-right: 0; width: 100%;
+      .content-grid {
+        gap: 0;
       }
     }
 
