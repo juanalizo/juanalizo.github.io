@@ -68,6 +68,13 @@
     }
     @media (min-width: 600px) { .hero-img { margin-bottom: 3rem; } }
 
+    /* Mobile-specific adjustments for uniformity */
+    @media (max-width: 599px) {
+      .hero-section-wrap,
+      .stat-strip,
+      .content-grid { padding-left: 1.25rem; padding-right: 1.25rem; }
+    }
+
     /* ── STAT STRIP ── */
     .stat-strip {
       display:grid;
@@ -227,7 +234,7 @@
     }
     /* Make images in the Mechanical Architecture 2-column grid taller */
     .gallery-2-col .manufacturing-item img {
-      aspect-ratio: 1 / 1;
+       aspect-ratio: 1 / 1;
       aspect-ratio: 3 / 4;
     }
     
@@ -492,7 +499,7 @@
     <div class="subtitle">AIAA IREC 2026 · ACTIVE AERODYNAMICS SYSTEM · Student Research And Development (SRAD)</div>
   </header>
 
-  <div style="margin-bottom: 1.5rem;">
+  <div class="hero-section-wrap" style="margin-bottom: 1.5rem;">
     <img src="images/airbrake_hero.jpg" alt="Airbrake System" class="hero-img" style="margin-bottom: 0.75rem;" />
     <p style="font-size: 0.85rem; color: var(--dim); text-align: center; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em;">Final integrated electromechanical airbrake being assembled for first test flight.</p>
   </div>
@@ -759,7 +766,7 @@
       <p>Bringing the system to life presented several mechanical integration challenges that required iterative problem-solving:</p>
       <ul class="challenges-list">
           <li><strong>Ballscrew Nut Flip:</strong> The ballscrew that was purchased had the nut installed in the wrong orientation. Due to how the screw integrated into our design, the nut had to have a specific orientation. To solve this, we 3d printed a shaft that would seamlessly integrate with the ballscrew, allowing us to "unscrew" the nut onto the shaft without loosing the balls in it. Then, we simply re-screwed the nut back on in the correct orientation.</li>
-          <li><strong>Ballscrew Constraint:</strong> We realized that the ballscrew was not fully constrained in one of the axial directions. This was easily solved by flipping the copper bushing that attached to it, as well as adding a c-clip. Reorienting the bushing slightly affected the nut's maximum travel, but we considered it negligible.</li>
+          <li><strong>Ballscrew Constraint:</strong> We realized that the ballscrew was not fully constrained in one of the axial directions. This was easily solved by flipping the copper bushing that attached to it, as well as adding a c-clip. Reorienting the bushing slightly affected the nut's maximum travel, but it was negligible.</li>
           <li><strong>Extra Compression:</strong> We noticed that it was easier to turn the ballscrew when the system was not fully torqued. The reason for this was that the ballscrew was being overcompressed, making it more difficult to actuate. To solve this, we added 1mm of length to our spacers via a washer, which decreased the compression and eased actuation.</li>
           <li><strong>Gear Bore Size:</strong> One of the gear bores was too small for our motor's shaft. This was resolved by enlarging the hole in the lathe. Unluckily, we did not have a boring bar small enough for it, so we grinded an endmill and used it as a boring bar. This resulted in a final hole size within 0.02mm (< 0.001 in) of tolerance.</li>
           <li><strong>Axial Positioning:</strong> Since we added extra length to the spacers, we had to adjust the axial position of the mechanism to accommodate the changes and match with the airframe's slots. We sanded the tube in which the airbrake was mounted to account for this.</li>

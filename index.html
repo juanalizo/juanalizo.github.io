@@ -65,6 +65,7 @@
     #ab-thumb { position:absolute; left:0; top:0; width:14px; height:36px; transform:translateY(0); will-change:transform; }
     .ab-core { position:absolute; left:5px; top:0; width:4px; height:100%; background:var(--accent); border-radius:2px; z-index:2; }
 
+    .ticker-track { will-change: transform; }
 
     /* ── CURSOR ── */
     #c-dot {
@@ -84,6 +85,12 @@
     }
     body.ch #c-ring { width:48px; height:48px; opacity:1; border-color:var(--accent); transform:translate(-50%,-50%) rotate(45deg); }
     a,button { cursor:none; }
+
+    /* Hide custom cursor on touch devices */
+    @media (pointer: coarse) {
+      #c-dot, #c-ring { display: none !important; }
+      body, a, button { cursor: auto !important; }
+    }
 
     /* ── GRID ── */
     .grid { display:grid; grid-template-columns:repeat(12,1fr); gap:3px; max-width:1560px; margin:0 auto; position:relative; z-index:2; }
@@ -203,6 +210,7 @@
       background:var(--s1);
       display:flex; flex-direction:column;
       transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, opacity .4s ease;
+      will-change: transform, opacity;
       text-decoration:none; color:inherit;
     }
     .proj-card.hidden { opacity:0; pointer-events:none; position:absolute; }
@@ -415,21 +423,6 @@
     }
     .art-thumb:hover::after { opacity:1; }
 
-    /* ══ DIMENSION CALLOUTS ══ */
-    #dim-overlay {
-      position:absolute; inset:0; pointer-events:none; z-index:5;
-      opacity:0; transition:opacity .5s ease;
-    }
-    #dim-overlay.vis { opacity:1; }
-    #dim-overlay svg { width:100%; height:100%; overflow:visible; }
-
-    /* Dim line style (applied via SVG attrs but also here for reference) */
-    .dim-line { stroke:rgba(255,195,0,.6); stroke-width:1; }
-    .dim-end  { stroke:rgba(255,195,0,.6); stroke-width:1; }
-    .dim-text {
-      font-family:'DM Mono',monospace; font-size:10px; fill:rgba(255,195,0,.85);
-      letter-spacing:.08em;
-    }
 
     /* ══ FEATURED PROJECT RIBBON + PULSE ══ */
     .proj-card.featured { --pulse-color: rgba(255,195,0,0.55); }
@@ -518,6 +511,7 @@
           <span class="tag">AIAA IREC</span>
           <span class="tag">Design</span>
           <span class="tag">Manufacturing</span>
+          <a href="https://www.linkedin.com/in/juanalizo777/" target="_blank" class="tag mag" style="text-decoration:none; color:inherit;">LinkedIn ↗</a>
         </div>
       </div>
       <div class="info-photo">
@@ -551,7 +545,6 @@
     <div class="box c-viewer" style="padding:0;" id="viewer-cell">
       <div class="viewer-wrap" id="viewer-wrap">
         <canvas id="threejs-canvas"></canvas>
-        <div id="dim-overlay"><svg id="dim-svg" viewBox="0 0 100 100" preserveAspectRatio="none"></svg></div>
         <div class="viewer-ui">
           <div class="viewer-top">
             <span class="viewer-tag">3D Model — Airbrake</span>
@@ -787,7 +780,7 @@
         <span class="skill-tag">DFM</span>
         <span class="skill-tag">Python</span>
       </div>
-      <a href="https://www.alizo.xyz/resume" class="cta-btn filled" target="_blank"><span>Download Resume PDF</span></a>
+      <a href="resume_juanalizo.pdf" class="cta-btn filled" target="_blank"><span>Download Resume PDF</span></a>
     </div>
 
     <!-- FOOTER -->
@@ -796,7 +789,7 @@
         <button id="audio-egg" class="audio-egg-btn" aria-label="Play synth">♪</button>
       </span>
       <div class="ft-r">
-        <a href="https://instagram.com/alizo.art" target="_blank">@alizo.art</a>
+        <a href="https://www.linkedin.com/in/juanalizo777/" target="_blank" class="scramble-link mag">LinkedIn</a>
         <a href="/cdn-cgi/l/email-protection#c5afa6a4f6fcfdf4fc85b0a2a4eba0a1b0"><span class="__cf_email__" data-cfemail="553f3634666c6d646c152032347b303120">[email&#160;protected]</span></a>
       </div>
     </div>
@@ -853,35 +846,46 @@
   // ════ AIRBRAKE SCROLLBAR ════
   // Event-driven (not rAF) so it never drifts when page is idle
   const abThumb=document.getElementById('ab-thumb');
+  let isScrolling = false;
 
   function positionThumb() {
     const max=document.documentElement.scrollHeight-window.innerHeight;
     if (max <= 0) return;
     const pct=Math.max(0,Math.min(1,window.scrollY/max));
     abThumb.style.transform=`translateY(${Math.round(pct*(window.innerHeight-76))}px)`;
+    isScrolling = false;
   }
 
-  window.addEventListener('scroll', positionThumb, {passive: true});
-  positionThumb();
+  window.addEventListener('scroll', () => {
+    if (!isScrolling) {
+      window.requestAnimationFrame(positionThumb);
+      isScrolling = true;
+    }
+  }, {passive: true});
 
   // ════ SCROLL REVEAL ════
   const io=new IntersectionObserver(es=>{ es.forEach(e=>{ if(!e.isIntersecting)return; e.target.classList.add('vis'); io.unobserve(e.target); }); },{threshold:.1});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-  // ════ LOGO SCRAMBLE ════
+  // ════ TEXT SCRAMBLE ════
   const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#%';
+  function initScramble(el) {
+    const original = el.textContent;
+    let timer = null;
+    el.addEventListener('mouseenter', () => {
+      let iter = 0; clearInterval(timer);
+      timer = setInterval(() => {
+        el.textContent = original.split('').map((c, i) => i < iter ? original[i] : chars[Math.floor(Math.random() * chars.length)]).join('');
+        iter += 0.35; if (iter >= original.length) { el.textContent = original; clearInterval(timer); }
+      }, 40);
+    });
+  }
   const logo=document.getElementById('nav-logo');
-  let scrambleTimer=null;
-  logo.addEventListener('mouseenter',()=>{
-    let iter=0; clearInterval(scrambleTimer);
-    scrambleTimer=setInterval(()=>{
-      logo.textContent='Alizo'.split('').map((c,i)=>i<iter?'Alizo'[i]:chars[Math.floor(Math.random()*chars.length)]).join('');
-      iter+=.35; if(iter>='Alizo'.length){ logo.textContent='Alizo'; clearInterval(scrambleTimer); }
-    },40);
-  });
+  if(logo) initScramble(logo);
+  document.querySelectorAll('.scramble-link').forEach(initScramble);
 
-  // ════ MAGNETIC CTAs ════
-  document.querySelectorAll('.cta-btn').forEach(btn=>{
+  // ════ MAGNETIC ELEMENTS ════
+  document.querySelectorAll('.cta-btn, .mag').forEach(btn=>{
     btn.addEventListener('mousemove',e=>{ const r=btn.getBoundingClientRect(); btn.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.2}px,${(e.clientY-r.top-r.height/2)*.3}px)`; });
     btn.addEventListener('mouseleave',()=>{ btn.style.transform=''; });
   });
@@ -963,7 +967,19 @@
     resize(); new ResizeObserver(resize).observe(wrap);
 
     let mesh=null,isWF=false;
-    (function animate(){ requestAnimationFrame(animate); controls.update(); renderer.render(scene,camera); })();
+    let isVisible = false;
+
+    const viewerObs = new IntersectionObserver(entries => {
+      isVisible = entries[0].isIntersecting;
+    }, { threshold: 0.1 });
+    viewerObs.observe(wrap);
+
+    (function animate(){
+      requestAnimationFrame(animate);
+      if (!isVisible) return;
+      controls.update();
+      renderer.render(scene,camera);
+    })();
 
     function setupModel(geo){
       geo.computeVertexNormals(); geo.center(); geo.computeBoundingBox();
@@ -978,134 +994,6 @@
       controls.target.set(0,0,0); controls.minDistance=dist*.15; controls.maxDistance=dist*10; controls.update();
       vhint.classList.add('vis');
       controls.addEventListener('start',()=>{ controls.autoRotate=false; },{once:true});
-
-      // Dimension callouts — shown after a short delay so model settles
-      setTimeout(()=>drawDimCallouts(sz, s), 800);
-    }
-
-    // Project 3D bounding-box corners to 2D screen coords
-    function projectPoint(v3, w, h) {
-      const v = v3.clone().project(camera);
-      return { x: (v.x * 0.5 + 0.5) * w, y: (-v.y * 0.5 + 0.5) * h };
-    }
-
-    function drawDimCallouts(sz, s) {
-      const overlay = document.getElementById('dim-overlay');
-      const svg = document.getElementById('dim-svg');
-      const W = wrap.clientWidth, H = Math.max(wrap.clientHeight, 380);
-      svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-      svg.innerHTML = '';
-
-      // Actual scaled dims
-      const W3 = sz.x * s, H3 = sz.y * s, D3 = sz.z * s;
-      // Format: show to 2 decimal places with units label
-      const fmt = v => v.toFixed(2) + ' u';
-
-      // Helper: draw one callout (two end ticks + horizontal/vertical line + label)
-      function addDim(x1,y1, x2,y2, label, side) {
-        const ns = 'http://www.w3.org/2000/svg';
-        const g = document.createElementNS(ns,'g');
-
-        // offset the line away from the model
-        const off = side==='h' ? 18 : 18;
-        const ox = side==='h' ? 0 : -off;
-        const oy = side==='h' ? off : 0;
-
-        // leader lines from model edge to dimension line
-        function leader(ax,ay,bx,by) {
-          const l = document.createElementNS(ns,'line');
-          l.setAttribute('x1',ax); l.setAttribute('y1',ay);
-          l.setAttribute('x2',bx); l.setAttribute('y2',by);
-          l.setAttribute('stroke','rgba(255,195,0,0.35)'); l.setAttribute('stroke-width','0.8');
-          l.setAttribute('stroke-dasharray','3,3');
-          g.appendChild(l);
-        }
-        leader(x1,y1, x1+ox, y1+oy);
-        leader(x2,y2, x2+ox, y2+oy);
-
-        // Dimension line
-        const dl = document.createElementNS(ns,'line');
-        dl.setAttribute('x1',x1+ox); dl.setAttribute('y1',y1+oy);
-        dl.setAttribute('x2',x2+ox); dl.setAttribute('y2',y2+oy);
-        dl.setAttribute('stroke','rgba(255,195,0,0.7)'); dl.setAttribute('stroke-width','1');
-        g.appendChild(dl);
-
-        // Arrowheads (tiny)
-        function arrow(tipX,tipY,dx,dy){
-          const len=6, hw=2.5;
-          const nx=-dx,ny=-dy; // normal reversed for inward-pointing
-          const p = document.createElementNS(ns,'polygon');
-          const pts = [
-            [tipX,tipY],
-            [tipX+nx*len-ny*hw, tipY+ny*len+nx*hw],
-            [tipX+nx*len+ny*hw, tipY+ny*len-nx*hw]
-          ];
-          p.setAttribute('points', pts.map(pt=>pt.join(',')).join(' '));
-          p.setAttribute('fill','rgba(255,195,0,0.7)');
-          g.appendChild(p);
-        }
-        if(side==='h'){
-          const d = (x2-x1); const mag=Math.abs(d)||1;
-          arrow(x1+ox,y1+oy,  (x2-x1)/mag,0);
-          arrow(x2+ox,y2+oy, -(x2-x1)/mag,0);
-        } else {
-          const d = (y2-y1); const mag=Math.abs(d)||1;
-          arrow(x1+ox,y1+oy, 0, (y2-y1)/mag);
-          arrow(x2+ox,y2+oy, 0,-(y2-y1)/mag);
-        }
-
-        // Label
-        const t = document.createElementNS(ns,'text');
-        const mx=(x1+x2)/2+ox+( side==='h'?0:-28 );
-        const my=(y1+y2)/2+oy+( side==='h'?12:0 );
-        t.setAttribute('x', mx); t.setAttribute('y', my);
-        t.setAttribute('text-anchor','middle');
-        t.setAttribute('font-family',"'DM Mono',monospace");
-        t.setAttribute('font-size','9');
-        t.setAttribute('fill','rgba(255,195,0,0.85)');
-        t.setAttribute('letter-spacing','0.08em');
-        t.textContent = label;
-        g.appendChild(t);
-
-        svg.appendChild(g);
-      }
-
-      // Project the 8 corners of the bounding box to find screen positions
-      const hW=W3/2, hH=H3/2, hD=D3/2;
-      // Width annotation: bottom-left-front to bottom-right-front
-      const BLF = projectPoint(new THREE.Vector3(-hW,-hH, hD), W, H);
-      const BRF = projectPoint(new THREE.Vector3( hW,-hH, hD), W, H);
-      // Height annotation: bottom-right-front to top-right-front
-      const TRF = projectPoint(new THREE.Vector3( hW, hH, hD), W, H);
-      // Depth annotation: bottom-right-front to bottom-right-back
-      const BRB = projectPoint(new THREE.Vector3( hW,-hH,-hD), W, H);
-
-      addDim(BLF.x,BLF.y, BRF.x,BRF.y, 'W: '+fmt(W3), 'h');
-      addDim(BRF.x,BRF.y, TRF.x,TRF.y, 'H: '+fmt(H3), 'v');
-      addDim(BRF.x,BRF.y, BRB.x,BRB.y, 'D: '+fmt(D3), 'v');
-
-      overlay.classList.add('vis');
-
-      // Redraw on camera change so callouts stay attached
-      controls.addEventListener('change', ()=>{
-        overlay.classList.remove('vis');
-      });
-      // Fade back in after panning stops
-      let redrawTimer;
-      controls.addEventListener('change', ()=>{
-        clearTimeout(redrawTimer);
-        redrawTimer = setTimeout(()=>{
-          svg.innerHTML='';
-          const BLF2=projectPoint(new THREE.Vector3(-hW,-hH, hD),W,H);
-          const BRF2=projectPoint(new THREE.Vector3( hW,-hH, hD),W,H);
-          const TRF2=projectPoint(new THREE.Vector3( hW, hH, hD),W,H);
-          const BRB2=projectPoint(new THREE.Vector3( hW,-hH,-hD),W,H);
-          addDim(BLF2.x,BLF2.y,BRF2.x,BRF2.y,'W: '+fmt(W3),'h');
-          addDim(BRF2.x,BRF2.y,TRF2.x,TRF2.y,'H: '+fmt(H3),'v');
-          addDim(BRF2.x,BRF2.y,BRB2.x,BRB2.y,'D: '+fmt(D3),'v');
-          overlay.classList.add('vis');
-        }, 400);
-      });
     }
 
 
