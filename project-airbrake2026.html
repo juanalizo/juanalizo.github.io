@@ -70,9 +70,31 @@
 
     /* Mobile-specific adjustments for uniformity */
     @media (max-width: 599px) {
-      .hero-section-wrap,
-      .stat-strip,
-      .content-grid { margin-left: 1.25rem; margin-right: 1.25rem; }
+      /* Align all major section boundaries to the container edges */
+      .hero-section-wrap, .stat-strip, .content-grid {
+        margin-left: 0; margin-right: 0;
+      }
+
+      /* Consistently indent all text elements to match the header's text (1.25rem) */
+      .hero-section-wrap p,
+      .content-grid aside,
+      .content-grid article.body-text {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+      }
+
+      /* Pull visual "blocks" out to the full container width using negative margins.
+         This makes images, grids, and interactive wraps exactly as wide as the header background. */
+      .body-text .img-full,
+      .body-text .gallery-grid,
+      .body-text .viewer-container,
+      .body-text .viz-wrap,
+      .body-text .manufacturing-grid,
+      .body-text .table-scroll {
+        margin-left: -1.25rem;
+        margin-right: -1.25rem;
+        width: calc(100% + 2.5rem);
+      }
     }
 
     /* ── STAT STRIP ── */
