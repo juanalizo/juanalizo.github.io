@@ -23,6 +23,7 @@
     }
     img, canvas {
       max-width: 100%;
+      height: auto;
     }
 
     body {
@@ -34,7 +35,7 @@
     }
     @media (min-width: 600px) { body { padding: 2rem; } }
     /* WIDENED CONTAINER */
-    .container { max-width: 1200px; margin: 0 auto; width: 100%;}
+    .container { max-width: 1200px; margin: 0 auto; width: 100%; overflow-x: hidden;}
     
     /* PAGE WRAP */
     .page-wrap {
@@ -78,16 +79,6 @@
     }
     @media (min-width: 600px) { .hero-img { margin-bottom: 3rem; } }
 
-    /* Mobile-specific adjustments for uniformity */
-    @media (max-width: 599px) {
-      .hero-section-wrap p {
-        padding-left: 1.25rem;
-        padding-right: 1.25rem;
-      }
-      .content-grid {
-        gap: 0;
-      }
-    }
 
     /* ── STAT STRIP ── */
     .stat-strip {
@@ -279,8 +270,17 @@
     }
 
     /* ── REQ TABLE ── */
-    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1rem 0 2rem; }
-    .req-table { width:100%; border-collapse:collapse; min-width: 480px; }
+    .table-scroll { 
+      overflow-x: auto; 
+      -webkit-overflow-scrolling: touch; 
+      margin: 1rem 0 2rem;
+      width: 100%; 
+      display: block;
+    }
+    .req-table { 
+      width: 100%; 
+      min-width: 480px; /* This is fine as long as table-scroll works */
+    }
     .req-table th {
       font-family:'DM Mono',monospace; font-size:0.6rem;
       text-transform:uppercase; letter-spacing:0.1em;
@@ -503,6 +503,27 @@
       font-family:'Syne',sans-serif;
       font-size: clamp(1rem, 3vw, 1.2rem);
       font-weight:700; margin-top:2rem; margin-bottom:0.8rem;
+    }
+
+    /* --- MOBILE OVERFLOW FIXES --- */
+    @media (max-width: 480px) {
+      /* Stacks the kinematic sliders so they don't push the width */
+      .ctrl-row { 
+        grid-template-columns: 1fr; 
+        gap: 0.2rem;
+      }
+      .ctrl-readout {
+        text-align: left;
+      }
+      /* Prevents math equations from being too wide */
+      .math-block {
+        word-break: break-all;
+        white-space: normal;
+      }
+      /* Ensures the 3D viewer doesn't force a width */
+      .viewer-wrap {
+        min-height: 250px;
+      }
     }
   </style>
 </head>
