@@ -31,11 +31,21 @@
       font-family: 'Atkinson Hyperlegible', sans-serif;
       line-height: 1.6;
       padding: 1rem;
+      /* Add these two lines */
+      max-width: 100vw;
       overflow-x: hidden;
     }
+
     @media (min-width: 600px) { body { padding: 2rem; } }
     /* WIDENED CONTAINER */
-    .container { max-width: 1200px; margin: 0 auto; width: 100%; overflow-x: hidden;}
+    .container { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      width: 100%;
+      /* Force it to be a box that doesn't grow wider than the screen */
+      display: block;
+      box-sizing: border-box;
+    }
     
     /* PAGE WRAP */
     .page-wrap {
@@ -272,14 +282,13 @@
     /* ── REQ TABLE ── */
     .table-scroll { 
       overflow-x: auto; 
-      -webkit-overflow-scrolling: touch; 
-      margin: 1rem 0 2rem;
-      width: 100%; 
       display: block;
+      width: 100%; /* Force it to stay inside the container */
+      -webkit-overflow-scrolling: touch; 
     }
     .req-table { 
       width: 100%; 
-      min-width: 480px; /* This is fine as long as table-scroll works */
+      min-width: 450px; /* This will now scroll safely inside the wrapper */
     }
     .req-table th {
       font-family:'DM Mono',monospace; font-size:0.6rem;
@@ -320,6 +329,12 @@
       aspect-ratio: 1.4;
       background:var(--bg);
     }
+
+    #airbrake-canvas, #force-canvas, #threejs-canvas {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+
     @media (min-width: 600px) { #airbrake-canvas { aspect-ratio: 1.8; } }
     .viz-controls {
       padding:1rem; border-top:1px solid var(--line);
@@ -330,10 +345,12 @@
       .viz-controls { grid-template-columns: repeat(2,1fr); gap: 1rem 2rem; padding: 1.25rem; }
     }
     .ctrl-row {
-      display:grid; grid-template-columns: 1fr;
+      display: grid;
+      grid-template-columns: 1fr; /* Stack by default on mobile */
       gap: 0.3rem;
+      width: 100%;
     }
-    @media (min-width: 400px) {
+    @media (min-width: 500px) {
       .ctrl-row { grid-template-columns: 110px 1fr 64px; align-items: center; gap: 0.6rem; }
     }
     .ctrl-row label {
