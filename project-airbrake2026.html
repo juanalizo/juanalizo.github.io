@@ -542,6 +542,36 @@
         min-height: 250px;
       }
     }
+
+    /* --- IPHONE OVERFLOW OVERRIDE --- */
+    @media (max-width: 480px) {
+      /* 1. Force the container to never exceed the screen width */
+      .container {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+        padding: 0 10px; /* Reduces side padding to save space */
+      }
+
+      /* 2. Force all canvases and images to be fluid */
+      canvas, img, .viewer-wrap, .viz-wrap {
+        max-width: 100% !important;
+        width: 100% !important;
+        height: auto !important;
+        box-sizing: border-box !important;
+      }
+
+      /* 3. Fix the 'Stat Strip' - 4 columns is too much for an iPhone */
+      .stat-strip {
+        grid-template-columns: 1fr 1fr !important; /* Forces 2x2 grid */
+      }
+
+      /* 4. The Sidebar - Ensure it doesn't push width */
+      aside {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+    }
   </style>
 </head>
 <body>
