@@ -21,7 +21,7 @@
 
     :root {
       --bg: #000000;
-      --s1: #373737;
+      --s1: #000000;
       /* Main block color other than the background*/
       --s2: #52525b;
       --s3: #71717a;
@@ -45,8 +45,7 @@
       font-family: 'Atkinson Hyperlegible', sans-serif;
       line-height: 1.6;
       padding: 1rem;
-      /* Add these two lines */
-      max-width: 100vw;
+      max-width: 100%;
       overflow-x: hidden;
     }
 
@@ -229,6 +228,10 @@
       grid-template-columns: 1fr;
       gap: 2rem;
       margin-bottom: 3rem;
+    }
+
+    .content-grid>* {
+      min-width: 0;
     }
 
     @media (min-width: 768px) {
@@ -1172,10 +1175,10 @@
 
       /* 1. Force the container to never exceed the screen width */
       .container {
-        width: 100vw !important;
-        max-width: 100vw !important;
+        width: 100% !important;
+        max-width: 100% !important;
         overflow-x: hidden !important;
-        padding: 0 10px;
+        padding: 0;
         /* Reduces side padding to save space */
       }
 
@@ -1217,11 +1220,11 @@
       </header>
 
       <div class="hero-section-wrap" style="margin-bottom: 1.5rem;">
-        <img src="images/airbrake/airbrake_hero.jpg" alt="Airbrake System" class="hero-img"
+        <img src="images/airbrake/competition.jpg" alt="Airbrake System" class="hero-img"
           style="margin-bottom: 0.75rem;" />
         <p
           style="font-size: 0.85rem; color: var(--dim); text-align: center; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em;">
-          Final integrated electromechanical airbrake being assembled for first test flight.</p>
+          Airbrake mechanism during IREC 2026 judging.</p>
       </div>
 
       <div class="stat-strip">
@@ -1318,7 +1321,7 @@
               <thead>
                 <tr>
                   <th>Requirement</th>
-                  <th>Constraint</th>
+                  <th>Goal</th>
                   <th>Achieved</th>
                   <th>Status</th>
                 </tr>
@@ -1361,9 +1364,9 @@
                   <td class="req-pass">PASS</td>
                 </tr>
                 <tr>
-                  <td>Factor of safety</td>
-                  <td>≥ 1.25</td>
-                  <td>2.26×</td>
+                  <td>Full actuation time</td>
+                  <td>≤ 0.5 s</td>
+                  <td>0.1 s</td>
                   <td class="req-pass">PASS</td>
                 </tr>
               </tbody>
@@ -1671,6 +1674,11 @@
             while maintaining significant safety margins. This project serves as a cornerstone for UGA Rocketry’s
             mission to achieve consistent apogee accuracy and pushes the boundaries of student-led aerospace
             engineering. I am very proud of this project and how it helped the team achieve podium at IREC.</p>
+
+          <div class="manufacturing-item" style="margin-top: 2.5rem;">
+            <img src="images/airbrake/airbrake_hero.jpg" alt="Final Airbrake Assembly">
+            <p>Final integrated airbrake being assembled for first test flight.</p>
+          </div>
 
         </article>
       </div>
