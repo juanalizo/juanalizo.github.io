@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manufacturing Projects | Juan Carlos Alizo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #000000;
+            --s1: #000000;
+            --s2: #52525b;
+            --s3: #71717a;
+            --fg: #f4f4f5;
+            --dim: #d4d4d8;
+            --line: #52525b;
+            --accent: #fbbf24;
+            --red: #f87171;
+            --gold: #fbbf24;
+        }
+
+        img,
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--fg);
+            font-family: 'Atkinson Hyperlegible', sans-serif;
+            line-height: 1.6;
+            padding: 1rem;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        @media (min-width: 600px) {
+            body {
+                padding: 2rem;
+            }
+        }
+
+        /* WIDENED CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            display: block;
+            box-sizing: border-box;
+        }
+
+        /* PAGE WRAP */
+        .page-wrap {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        /* ── HEADER ── */
+        header {
+            margin-bottom: 1.5rem;
+            padding: 1.75rem 1.25rem;
+            background: var(--s1);
+            color: var(--fg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (min-width: 600px) {
+            header {
+                padding: 3rem 2rem;
+                margin-bottom: 2rem;
+            }
+        }
+
+        .nav-back {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--gold);
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .nav-back:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.75rem, 7vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.05;
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+        }
+
+        .subtitle {
+            font-family: 'DM Mono', monospace;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: clamp(0.6rem, 2.5vw, 0.9rem);
+            line-height: 1.5;
+        }
+
+        /* ── CONTENT GRID ── */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .content-grid>* {
+            min-width: 0;
+        }
+
+        @media (min-width: 768px) {
+            .content-grid {
+                grid-template-columns: 250px 1fr;
+                gap: 4rem;
+                margin-bottom: 4rem;
+            }
+        }
+
+        /* ── SIDEBAR ── */
+        aside {
+            order: 2;
+        }
+
+        @media (min-width: 768px) {
+            aside {
+                order: 0;
+            }
+        }
+
+        .meta-block {
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .meta-block {
+                margin-bottom: 2rem;
+            }
+        }
+
+        .meta-lbl {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .meta-val {
+            font-size: 0.95rem;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+
+        .tech-tag {
+            display: inline-block;
+            border: 1px solid var(--line);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.6rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            color: var(--dim);
+        }
+
+        .meta-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .meta-pair {
+                display: block;
+            }
+
+            .meta-pair .meta-block {
+                margin-bottom: 2rem;
+            }
+        }
+
+        /* ── BODY TEXT ── */
+        .body-text h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            margin: 2rem 0 0.9rem;
+            color: var(--fg);
+        }
+
+        .body-text h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .body-text p {
+            margin-bottom: 1.5rem;
+            color: var(--dim);
+        }
+
+        /* ── MANUFACTURING GRID & CHALLENGES ── */
+        .manufacturing-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        @media (min-width: 500px) {
+            .manufacturing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 900px) {
+            .manufacturing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .manufacturing-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .manufacturing-item img {
+            width: 100%;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: var(--s2);
+            border: 1px solid var(--line);
+        }
+
+        .manufacturing-item p {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: var(--dim);
+            text-align: center;
+            margin-top: 0.75rem;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        @media (min-width: 600px) {
+            footer {
+                margin-top: 6rem;
+            }
+        }
+
+        .next-proj {
+            text-align: right;
+            text-decoration: none;
+            color: var(--fg);
+            transition: color 0.2s;
+        }
+
+        .next-proj:hover {
+            color: var(--accent);
+        }
+
+        .np-lbl {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--dim);
+            display: block;
+        }
+
+        .np-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* --- IPHONE OVERFLOW OVERRIDE --- */
+        @media (max-width: 480px) {
+            .container {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+                padding: 0;
+            }
+
+            img {
+                max-width: 100% !important;
+                width: 100% !important;
+                height: auto !important;
+                box-sizing: border-box !important;
+            }
+
+            aside {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrap">
+        <div class="container">
+
+            <header>
+                <a href="index.html" class="nav-back">← RETURN TO BASE</a>
+                <h1>Manufacturing Projects</h1>
+                <div class="subtitle">CUSTOM MACHINING · 3D PRINTING · HARDWARE FABRICATION</div>
+            </header>
+
+            <div class="content-grid">
+                <aside>
+                    <div class="meta-pair">
+                        <div class="meta-block">
+                            <span class="meta-lbl">Role</span>
+                            <div class="meta-val">Manufacturing Technician</div>
+                        </div>
+                        <div class="meta-block">
+                            <span class="meta-lbl">Timeline</span>
+                            <div class="meta-val">Mar 2023 — Dec 2024</div>
+                        </div>
+                    </div>
+                    <div class="meta-block">
+                        <span class="meta-lbl">Techniques</span>
+                        <div class="tech-tags">
+                            <span class="tech-tag">CNC Milling</span><span class="tech-tag">Lathe</span>
+                            <span class="tech-tag">CAM Setup</span><span class="tech-tag">Additive Manufacturing</span>
+                            <span class="tech-tag">FDM Printing</span><span class="tech-tag">Assembly</span>
+                            <span class="tech-tag">Tolerance Checks</span><span class="tech-tag">Waterjet</span>
+                        </div>
+                    </div>
+                </aside>
+
+                <article class="body-text">
+                    <p>I have been working at the UGA Machine Shop and Fablab since my freshman year, gaining hands-on 
+                        experience in both subtractive and additive manufacturing processes.
+                        Starting as the person in charge of maintaining and repairing the 3d printers, I have expanded my skillset to include 
+                        a wide range of other manufacturing techniques. Currently, I serve as the sole student machinist at the machine shop,
+                        owning the manufacture of every piece that goes through the CNC mill.</p>
+
+                    <h2>Pedalbox for UGA Motorsports</h2>
+                    <div class="manufacturing-grid">
+                        <div class="manufacturing-item">
+                            <img src="images/manufacturing/pedal_a.jpeg" alt="Clean metal block with drilled holes">
+                            <p>These holes had to go all the way through a lot of material. Due to the complex geometry later on,
+                                I decided to drill them at the beggining.
+                            </p>
+                        </div>
+                        <div class="manufacturing-item">
+                            <img src="images/manufacturing/pedal_c.jpeg" alt="Manual Lathe Turning">
+                            <p>I cut the profile of the part with an endmill to about half of its thickness. The remainer was cut later.</p>
+                        </div>
+                        <div class="manufacturing-item">
+                            <img src="images/manufacturing/pedal_e.jpeg" alt="Remainder cut with roughing endmill">
+                            <p>Part was flipped and the remaining material was removed with a roughing end mill.</p>
+                        </div>
+                        <div class="manufacturing-item">
+                            <img src="images/manufacturing/pedal_j.jpeg" alt="Dimensional accuracy flex">
+                            <p>Nonchalant flex.</p>
+                        </div>
+                        <div class="manufacturing-item">
+                            <img src="images/manufacturing/pedal_i.jpeg" alt="Final part">
+                            <p>Final part fresh off the mill.</p>
+                        </div>
+                        <div class="manufacturing-item">
+                            <img src="images/manufacturing/pedal_h.jpeg" alt="Complex side">
+                            <p>This side had some weird features that required surfacing and a narrow slot.</p>
+                        </div>
+                    </div>
+
+
+                    <h2>Ionization Chamber for PHD Student</h2>
+                    <div class="manufacturing-grid">
+                        <div class="manufacturing-item">
+                            <img src="images/manufacturing/ionization_a.jpeg" alt="Two ionization chambers">
+                            <p>Outer shape was cut on the lathe, with inner features done on a CNC mill.</p>
+                        </div>
+                        <div class="manufacturing-item">
+                            <img src="images/manufacturing/ionization_c.jpeg" alt="Completed Assembly">
+                            <p>Careful attention was put to ensure the inner chamber would remain watertight when the special sensor is installed. </p>
+                        </div>
+                    </div>
+
+                    <h2>Miscellaneous Projects</h2>
+                     <div class="manufacturing-grid">
+                        <div class="manufacturing-item">
+                            <img src="images/manufacturing/lathe_a.jpeg" alt="Cutting a rod with the lathe">
+                            <p>Cutting a rod with the lathe to function as a spacer. This was a simple part, but it was important to ensure the cut was clean and precise.
+                            </p>
+                        </div>
+                        <div class="manufacturing-item">
+                            <img src="images/manufacturing/ballista_a.jpeg" alt="Ballista assembly">
+                            <p>Project for a class. We had to make a disc-launcher, and my team chose to use a *very dangerous* truck leaf spring.</p>
+                        </div>
+                        <div class="manufacturing-item">
+                            <img src="images/manufacturing/adapter_a.jpeg" alt="Print Volume Adapter">
+                            <p>Designed and machined this teflon print volume adapter for a lab. They worked with novel SLA resins that are difficult to make in large amounts, so they wanted to be able to print with less.</p>
+                        </div>
+                        <div class="manufacturing-item">
+                            <img src="images/manufacturing/toolholder_a.jpeg" alt="Resin printer toolholder">
+                            <p>Toolholder for the resin printer.</p>
+                        </div>
+                        <div class="manufacturing-item">
+                            <img src="images/manufacturing/hastings_b.jpeg" alt="Hastings adapter">
+                            <p>Machined this hastings adapter for a capstone project. Had to use a very small endmill to achieve the gap between the teeth and the wall.</p>
+                        </div>
+                        <div class="manufacturing-item">
+                            <img src="images/manufacturing/ballista_b.jpeg" alt="Waterjet part for the ballista">
+                            <p>Random part that I waterjet for the ballista.</p>
+                        </div>
+                    </div>
+
+                </article>
+            </div>
+
+            <footer>
+                <div style="font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--dim);">© 2026 Juan Carlos Alizo
+                </div>
+                <a href="airbrake.html" class="next-proj">
+                    <span class="np-lbl">RETURN TO</span>
+                    <span class="np-title">Airbrake Mechanism →</span>
+                </a>
+            </footer>
+
+        </div>
+    </div>
+</body>
+
+</html>
