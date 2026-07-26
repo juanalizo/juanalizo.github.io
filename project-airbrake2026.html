@@ -20,16 +20,17 @@
     }
 
     :root {
-      --bg: #f0f4f8;
-      --s1: #ffffff;
-      --s2: #e2e8f0;
-      --s3: #cbd5e1;
-      --fg: #0f172a;
-      --dim: rgba(15, 23, 42, 0.6);
-      --line: rgba(15, 23, 42, 0.1);
-      --accent: #0A2463;
-      --red: #A41623;
-      --gold: #FFC300;
+      --bg: #000000;
+      --s1: #373737;
+      /* Main block color other than the background*/
+      --s2: #52525b;
+      --s3: #71717a;
+      --fg: #f4f4f5;
+      --dim: #d4d4d8;
+      --line: #52525b;
+      --accent: #fbbf24;
+      --red: #f87171;
+      --gold: #fbbf24;
     }
 
     img,
@@ -75,8 +76,10 @@
     header {
       margin-bottom: 1.5rem;
       padding: 1.75rem 1.25rem;
-      background: var(--accent);
-      color: #fff;
+      background: var(--s1);
+      color: var(--fg);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     @media (min-width: 600px) {
@@ -139,6 +142,9 @@
       grid-template-columns: 1fr 1fr;
       border: 1px solid var(--line);
       margin-bottom: 1.5rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     @media (min-width: 500px) {
@@ -322,7 +328,7 @@
       display: inline-flex;
       align-items: center;
       gap: 0.6rem;
-      background: var(--s2);
+      background: var(--s1);
       border: 1px solid var(--line);
       padding: 0.6rem 1rem;
       text-decoration: none;
@@ -332,6 +338,7 @@
       text-transform: uppercase;
       letter-spacing: 0.08em;
       transition: background .2s, border-color .2s, color .2s;
+      border-radius: 8px;
     }
 
     .paper-link:hover {
@@ -433,6 +440,7 @@
       border: 1px solid var(--line);
       background: var(--s2);
       display: block;
+      border-radius: 8px;
     }
 
     /* ── MANUFACTURING GRID & CHALLENGES (NEW) ── */
@@ -549,7 +557,7 @@
     .req-pass {
       font-family: 'DM Mono', monospace;
       font-size: 0.65rem;
-      color: #166534;
+      color: #4ade80;
       font-weight: 700;
     }
 
@@ -558,6 +566,9 @@
       margin: 2rem 0;
       border: 1px solid var(--line);
       background: var(--s1);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     @media (min-width: 600px) {
@@ -699,6 +710,7 @@
       background: var(--s2);
       padding: 0.6rem 0.75rem;
       border: 1px solid var(--line);
+      border-radius: 8px;
     }
 
     @media (min-width: 600px) {
@@ -724,7 +736,7 @@
     }
 
     .readout-val.warn {
-      color: #b45309;
+      color: #fb923c;
     }
 
     .readout-val.danger {
@@ -732,7 +744,7 @@
     }
 
     .readout-val.ok {
-      color: #166534;
+      color: #4ade80;
     }
 
     /* ── FORCE PLOT ── */
@@ -753,6 +765,8 @@
       aspect-ratio: 2.5;
       background: var(--s1);
       border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     @media (min-width: 600px) {
@@ -781,6 +795,8 @@
       border: 1px solid var(--line);
       padding: 1rem;
       position: relative;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     @media (min-width: 600px) {
@@ -803,8 +819,10 @@
       font-size: 0.5rem;
       letter-spacing: 0.1em;
       background: var(--accent);
-      color: #fff;
+      color: #27272a;
       padding: 3px 6px;
+      border-radius: 0 12px 0 6px;
+      font-weight: bold;
     }
 
     .ctrl-name {
@@ -918,12 +936,13 @@
     .math-block {
       font-family: 'DM Mono', monospace;
       font-size: 0.72rem;
-      background: var(--s2);
+      background: var(--s1);
       border-left: 3px solid var(--accent);
       padding: 0.85rem 1rem;
       line-height: 2.2;
       color: var(--dim);
       overflow-x: auto;
+      border-radius: 0 8px 8px 0;
     }
 
     .math-block .var {
@@ -957,7 +976,8 @@
     .step-nav-btn.primary {
       background: var(--accent);
       border-color: var(--accent);
-      color: #fff;
+      color: #27272a;
+      font-weight: bold;
     }
 
     .step-nav-btn:hover:not(.primary) {
@@ -969,6 +989,9 @@
     .viewer-container {
       margin: 2rem 0;
       border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     @media (min-width: 600px) {
@@ -1031,19 +1054,20 @@
       font-size: 0.62rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      background: rgba(255, 255, 255, 0.85);
+      background: var(--s2);
       border: 1px solid var(--line);
       color: var(--accent);
       padding: 0.35rem 0.75rem;
       cursor: pointer;
       transition: all .2s;
-      backdrop-filter: blur(4px);
+      border-radius: 6px;
     }
 
     .viewer-btn:hover {
       background: var(--accent);
-      color: var(--bg);
+      color: #27272a;
       border-color: var(--accent);
+      font-weight: bold;
     }
 
     .viewer-bottom {
@@ -1202,20 +1226,20 @@
 
       <div class="stat-strip">
         <div class="stat-cell">
-          <div class="stat-val">17<span class="stat-unit"> A</span></div>
-          <div class="stat-lbl">Peak Current Draw</div>
+          <div class="stat-val">5th<span class="stat-unit"> </span></div>
+          <div class="stat-lbl">out of 143 international teams</div>
         </div>
         <div class="stat-cell">
-          <div class="stat-val">19.0<span class="stat-unit"> m</span></div>
-          <div class="stat-lbl">EMPC Apogee RMSE</div>
+          <div class="stat-val">2nd<span class="stat-unit"> </span></div>
+          <div class="stat-lbl">AIAA Regional Conference Team Paper</div>
         </div>
         <div class="stat-cell">
-          <div class="stat-val">370k</div>
-          <div class="stat-lbl">Monte Carlo Runs</div>
+          <div class="stat-val">10,201<span class="stat-unit"> ft</span></div>
+          <div class="stat-lbl">Final Rocket Apogee (within 2% of goal)</div>
         </div>
         <div class="stat-cell">
-          <div class="stat-val">2.26<span class="stat-unit">×</span></div>
-          <div class="stat-lbl">Min Factor of Safety</div>
+          <div class="stat-val">2,000<span class="stat-unit"> ft</span></div>
+          <div class="stat-lbl">burned off from the simulations</div>
         </div>
       </div>
 
@@ -1274,16 +1298,20 @@
         <article class="body-text">
 
           <h2>Mission Profile</h2>
-          <p>The University of Georgia Rocketry team is participating in the 2026 International Rocket Engineering
-            Competition (IREC). In high-power rocketry competitions, teams are scored on how precisely they can hit a
-            target altitude (in our case, 10,000ft or 3,048m). Relying solely on motor selection and weight is risky
-            since wind gusts, temperature gradients, and motor variance can easily push a rocket off course by hundreds
-            of feet.</p>
+          <p>The University of Georgia Rocketry team developed our newest rocket, "Magnolia", in the 2025-2026 school
+            year.
+            We participated in the 2026 International Rocket Engineering Competition (IREC), securing 2nd place (out of
+            79)
+            in the 10K COTS category at IREC. Across all categories, we ranked 5th overall out of 143 international
+            teams.
+            In the competition, teams are scored on how precisely they can hit a
+            target altitude (in our case, 10,000ft or 3,048m).</p>
+          <p>Relying solely on motor selection and weight is risky since wind gusts, temperature gradients, and motor
+            variance can easily push a rocket off course by hundreds of feet.</p>
           <p>To solve this, our team developed an active airbrake system. The concept is simple: we launch the rocket
             with slightly more power than necessary, aiming for an overshoot. As the rocket ascends, onboard flight
             computers monitor velocity and altitude 40 times a second. If the rocket is predicted to fly too high, the
-            system deploys three drag flaps from the airframe, braking the vehicle to hit the 10,000 ft target with
-            pinpoint accuracy.</p>
+            system deploys three drag flaps from the airframe, braking the vehicle to hit the 10,000 ft target.</p>
 
           <div class="table-scroll">
             <table class="req-table">
@@ -1299,44 +1327,44 @@
                 <tr>
                   <td>Target Apogee</td>
                   <td>10,000 ft (3048 m)</td>
-                  <td>—</td>
+                  <td>10,201 ft (3109 m)</td>
                   <td class="req-pass">PRIMARY</td>
                 </tr>
                 <tr>
                   <td>Tube ID clearance</td>
                   <td>≤ 151.8 mm</td>
                   <td>—</td>
-                  <td class="req-pass">✓ PASS</td>
+                  <td class="req-pass">PASS</td>
                 </tr>
                 <tr>
                   <td>Axial length</td>
                   <td>≤ 225 mm</td>
                   <td>—</td>
-                  <td class="req-pass">✓ PASS</td>
+                  <td class="req-pass">PASS</td>
                 </tr>
                 <tr>
                   <td>System mass</td>
-                  <td>≤ 3.2 kg</td>
-                  <td>—</td>
-                  <td class="req-pass">✓ PASS</td>
+                  <td>≤ 3.20 kg</td>
+                  <td>2.67 kg</td>
+                  <td class="req-pass">PASS</td>
                 </tr>
                 <tr>
                   <td>Peak current draw</td>
                   <td>≤ 25 A</td>
                   <td>17 A</td>
-                  <td class="req-pass">✓ PASS</td>
+                  <td class="req-pass">PASS</td>
                 </tr>
                 <tr>
                   <td>Budget</td>
-                  <td>≤ $400</td>
-                  <td>—</td>
-                  <td class="req-pass">✓ PASS</td>
+                  <td>≤ $475</td>
+                  <td>$439</td>
+                  <td class="req-pass">PASS</td>
                 </tr>
                 <tr>
                   <td>Factor of safety</td>
                   <td>≥ 1.25</td>
                   <td>2.26×</td>
-                  <td class="req-pass">✓ PASS</td>
+                  <td class="req-pass">PASS</td>
                 </tr>
               </tbody>
             </table>
@@ -1514,56 +1542,56 @@
               <div class="ctrl-abbr">EMPC</div>
               <div class="ctrl-metric-lbl">Mean Error</div>
               <div class="ctrl-bar-bg">
-                <div class="ctrl-bar" id="b-empc-bias" style="width:0%;background:#0A2463"></div>
+                <div class="ctrl-bar" id="b-empc-bias" style="width:0%;background:var(--accent)"></div>
               </div>
-              <div class="ctrl-bar-val" style="color:#0A2463">−9.2 m</div>
+              <div class="ctrl-bar-val" style="color:var(--accent)">−9.2 m</div>
               <div class="ctrl-metric-lbl">RMSE</div>
               <div class="ctrl-bar-bg">
-                <div class="ctrl-bar" id="b-empc-rmse" style="width:0%;background:#0A2463"></div>
+                <div class="ctrl-bar" id="b-empc-rmse" style="width:0%;background:var(--accent)"></div>
               </div>
-              <div class="ctrl-bar-val" style="color:#166534">19.0 m ✓</div>
+              <div class="ctrl-bar-val" style="color:#4ade80">19.0 m ✓</div>
             </div>
             <div class="ctrl-card">
               <div class="ctrl-name">Linear Quadratic Regulator</div>
               <div class="ctrl-abbr">LQR</div>
               <div class="ctrl-metric-lbl">Mean Error</div>
               <div class="ctrl-bar-bg">
-                <div class="ctrl-bar" id="b-lqr-bias" style="width:0%;background:#b45309"></div>
+                <div class="ctrl-bar" id="b-lqr-bias" style="width:0%;background:#fb923c"></div>
               </div>
-              <div class="ctrl-bar-val" style="color:#b45309">+40.0 m</div>
+              <div class="ctrl-bar-val" style="color:#fb923c">+40.0 m</div>
               <div class="ctrl-metric-lbl">RMSE</div>
               <div class="ctrl-bar-bg">
-                <div class="ctrl-bar" id="b-lqr-rmse" style="width:0%;background:#b45309"></div>
+                <div class="ctrl-bar" id="b-lqr-rmse" style="width:0%;background:#fb923c"></div>
               </div>
-              <div class="ctrl-bar-val" style="color:#b45309">45.0 m</div>
+              <div class="ctrl-bar-val" style="color:#fb923c">45.0 m</div>
             </div>
             <div class="ctrl-card">
               <div class="ctrl-name">Cascade Control</div>
               <div class="ctrl-abbr">CASCADE</div>
               <div class="ctrl-metric-lbl">Mean Error</div>
               <div class="ctrl-bar-bg">
-                <div class="ctrl-bar" id="b-cas-bias" style="width:0%;background:#7c3aed"></div>
+                <div class="ctrl-bar" id="b-cas-bias" style="width:0%;background:#a78bfa"></div>
               </div>
-              <div class="ctrl-bar-val" style="color:#7c3aed">−49.0 m</div>
+              <div class="ctrl-bar-val" style="color:#a78bfa">−49.0 m</div>
               <div class="ctrl-metric-lbl">RMSE</div>
               <div class="ctrl-bar-bg">
-                <div class="ctrl-bar" id="b-cas-rmse" style="width:0%;background:#7c3aed"></div>
+                <div class="ctrl-bar" id="b-cas-rmse" style="width:0%;background:#a78bfa"></div>
               </div>
-              <div class="ctrl-bar-val" style="color:#7c3aed">76.1 m</div>
+              <div class="ctrl-bar-val" style="color:#a78bfa">76.1 m</div>
             </div>
             <div class="ctrl-card">
               <div class="ctrl-name">PID</div>
               <div class="ctrl-abbr">PID</div>
               <div class="ctrl-metric-lbl">Mean Error</div>
               <div class="ctrl-bar-bg">
-                <div class="ctrl-bar" id="b-pid-bias" style="width:0%;background:#A41623"></div>
+                <div class="ctrl-bar" id="b-pid-bias" style="width:0%;background:var(--red)"></div>
               </div>
-              <div class="ctrl-bar-val" style="color:#A41623">−33.4 m</div>
+              <div class="ctrl-bar-val" style="color:var(--red)">−33.4 m</div>
               <div class="ctrl-metric-lbl">RMSE</div>
               <div class="ctrl-bar-bg">
-                <div class="ctrl-bar" id="b-pid-rmse" style="width:0%;background:#A41623"></div>
+                <div class="ctrl-bar" id="b-pid-rmse" style="width:0%;background:var(--red)"></div>
               </div>
-              <div class="ctrl-bar-val" style="color:#A41623">127.7 m</div>
+              <div class="ctrl-bar-val" style="color:var(--red)">127.7 m</div>
             </div>
           </div>
 
@@ -1642,7 +1670,7 @@
             simulation and optimization, the team achieved a robust solution that meets all competition requirements
             while maintaining significant safety margins. This project serves as a cornerstone for UGA Rocketry’s
             mission to achieve consistent apogee accuracy and pushes the boundaries of student-led aerospace
-            engineering.</p>
+            engineering. I am very proud of this project and how it helped the team achieve podium at IREC.</p>
 
         </article>
       </div>
@@ -1939,7 +1967,7 @@
         i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       });
       ctx.lineTo(pad.l + cw, pad.t + ch); ctx.lineTo(pad.l, pad.t + ch); ctx.closePath();
-      ctx.fillStyle = 'rgba(10,36,99,0.08)'; ctx.fill();
+      ctx.fillStyle = 'rgba(251,191,36,0.1)'; ctx.fill();
       ctx.beginPath();
       curve.forEach((pt, i) => {
         const x = pad.l + (pt.s / P.stroke) * cw, y = pad.t + ch * (1 - pt.axial / maxA);
@@ -2068,8 +2096,8 @@
         ctx.textAlign = 'left';
         if (step === 1) {
           ctx.beginPath(); ctx.arc(gx(k0.C.x), gy(k0.C.y), 7, 0, Math.PI * 2);
-          ctx.fillStyle = '#166534'; ctx.fill();
-          ctx.fillStyle = '#166534'; ctx.font = `bold 10px 'DM Mono',monospace`;
+          ctx.fillStyle = '#4ade80'; ctx.fill();
+          ctx.fillStyle = '#4ade80'; ctx.font = `bold 10px 'DM Mono',monospace`;
           ctx.fillText('C intersection', gx(k0.C.x) + 10, gy(k0.C.y) + 3);
         }
         [[P.Bx, P.By, 'B', COL.accent], [P.Dx, P.Dy0, 'D', COL.red]].forEach(([x, y, l, col]) => {

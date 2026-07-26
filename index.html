@@ -69,18 +69,7 @@
       transition: background .4s, color .4s;
     }
 
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: -1;
-      background-image:
-        linear-gradient(to right, var(--faint) 1px, transparent 1px),
-        linear-gradient(to bottom, var(--faint) 1px, transparent 1px);
-      background-size: 3rem 3rem;
-      mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
-    }
+
 
     /* ── AIRBRAKE SCROLLBAR ── */
     #airbrake-scrollbar {
@@ -1517,8 +1506,8 @@
     <div class="box c-hero reveal" id="about-anchor">
       <p class="hero-eyebrow">Mechanical Engineering · UGA '27</p>
       <h1 class="hero-name">Juan Carlos<br>Alizo</h1>
-      <p class="hero-desc">Designing at the intersection of rigorous mechanical engineering and thoughtful product
-        design.</p>
+      <p class="hero-desc">Mechanical Engineering student at the University of Georgia with a passion for design and
+        manufacturing. I enjoy solving hard technical problems and making cool stuff.</p>
       <a href="./project-airbrake2026.html" target="_blank" class="hero-nudge">Start with the Airbrake project <span
           class="nudge-arrow">↗</span></a>
       <div class="sticker" style="top:2rem;right:2rem;">Available '27 ✦</div>
@@ -1528,8 +1517,6 @@
     <div class="box c-info reveal d1">
       <div>
         <div class="lbl">About</div>
-        <p class="about-text">Mechanical Engineering student at the University of Georgia with a passion for design and
-          manufacturing. I enjoy solving hard technical problems and making cool stuff.</p>
         <p class="about-text">Born in Venezuela and moved to the USA before high school. I am currently an intern at
           VAST, working on the next International Space Station. Similarily, I'm the "Chief Structures and Mechanisms
           Engineer" at UGA Rocketry, as well as the marketing chair at SHPE.</p>
