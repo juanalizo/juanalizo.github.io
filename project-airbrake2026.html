@@ -1424,7 +1424,7 @@
 
           <div class="viz-wrap">
             <div class="viz-header">
-              <span class="viz-title">Linkage Kinematic Model — Real-time</span>
+              <span class="viz-title">Linkage Kinematic Model, Real-time. FOR DEMONSTRATION PURPOSES ONLY</span>
               <div>
                 <button id="reset-geo-btn" class="viewer-btn"
                   style="padding: 0.2rem 0.6rem; font-size: 0.6rem; margin-right: 0.5rem; position:relative; z-index:1;">Reset</button>
@@ -1541,7 +1541,7 @@
             magnetic link. Motor position is tracked through the 42-count/rev Hall encoder; absolute position is reset
             at pre-flight via EGSE umbilical.</p>
           <p>Four controller architectures were tested in RocketPy with 370,000 Monte Carlo simulations each. The EMPC
-            pre-computes optimal control laws offline, then evaluates them in microseconds — delivering the lowest RMSE
+            pre-computes optimal control laws offline, then evaluates them in microseconds, delivering the lowest RMSE
             and minimal bias across all environmental variability scenarios.</p>
 
           <div class="ctrl-grid" id="ctrl-grid">
@@ -2046,7 +2046,7 @@
     const GEO_STEPS = [
       {
         title: 'Step 1: Define the Two Circles',
-        desc: 'The linkage and arm are modeled as two intersecting circles. Circle D (red) is centered at the cuff pin, radius = linkage length D→C. Circle B (blue) is centered at the fixed pivot, radius = arm length B→C.',
+        desc: 'The linkage and arm are modeled as two intersecting circles. Circle D (on the left) is centered at the cuff pin, radius = linkage length D-C. Circle B (on the right) is centered at the fixed pivot, radius = arm length B-C.',
         math: '<span class="var">(x − D<sub>x</sub>)² + (y − D<sub>y</sub>)²</span> <span class="eq">= DC²</span><br><span class="var">(x − B<sub>x</sub>)² + (y − B<sub>y</sub>)²</span> <span class="eq">= BC²</span>'
       },
       {
@@ -2066,8 +2066,8 @@
       },
       {
         title: 'Step 5: Optimal Result',
-        desc: 'After 1.5M+ evaluations, the optimizer selects the geometry that minimizes peak axial load while achieving 79–81° flap deployment. The optimized design draws only 17 A — 32% below the 25 A budget.',
-        math: '<span class="var">B</span> <span class="eq">= (57.9, 36.3) mm  ← fixed pivot</span><br><span class="var">D₀</span> <span class="eq">= (10.0, 65.7) mm  ← nut start</span><br><span class="var">stroke</span> <span class="eq">= 49.65 mm  →  β<sub>max</sub> ≈ 80°</span>'
+        desc: 'After 1.5M+ evaluations, the optimizer selects the geometry that minimizes peak axial load while achieving 79–81° flap deployment. The optimized design draws only 17 A  (32% below the 25 A budget.)',
+        math: '<span class="var">B</span> <span class="eq">= (57.9, 36.3) mm   [fixed pivot]</span><br><span class="var">D₀</span> <span class="eq">= (10.0, 65.7) mm  [nut start]</span><br><span class="var">stroke</span> <span class="eq">= 49.65 mm,  therefore,  β<sub>max</sub> ≈ 80°</span>'
       }
     ];
 

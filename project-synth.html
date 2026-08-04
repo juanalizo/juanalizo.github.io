@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Not-So-Classical Guitar | Juan Carlos Alizo</title>
+    <title>Guitar-Driven Synth | Juan Carlos Alizo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -336,8 +336,8 @@
 
             <header>
                 <a href="index.html" class="nav-back">← RETURN TO BASE</a>
-                <h1>Not-So-Classical Guitar</h1>
-                <div class="subtitle">PLYWOOD · CNC ROUTER · HIGH SCHOOL</div>
+                <h1>Guitar-Driven Synth</h1>
+                <div class="subtitle">MUSIC · ANALOG ELECTRONICS · PRODUCT DESIGN</div>
             </header>
 
             <div class="content-grid">
@@ -345,20 +345,21 @@
                     <div class="meta-pair">
                         <div class="meta-block">
                             <span class="meta-lbl">Role</span>
-                            <div class="meta-val">11th Grade, High School Student</div>
+                            <div class="meta-val">Current Personal Project</div>
                         </div>
                         <div class="meta-block">
                             <span class="meta-lbl">Timeline</span>
-                            <div class="meta-val">Jan 2021 — May 2021</div>
+                            <div class="meta-val">Present</div>
                         </div>
                     </div>
                     <div class="meta-block">
-                        <span class="meta-lbl">Techniques</span>
+                        <span class="meta-lbl">Skills</span>
                         <div class="tech-tags">
-                            <span class="tech-tag">CNC Routing</span>
-                            <span class="tech-tag">Woodworking</span>
+                            <span class="tech-tag">Product Design</span>
+                            <span class="tech-tag">Analog Electronics</span>
                             <span class="tech-tag">Prototyping</span>
                             <span class="tech-tag">3D Modeling</span>
+                            <span class="tech-tag">KiCad</span>
                         </div>
                     </div>
                 </aside>
@@ -366,23 +367,24 @@
                 <article class="body-text">
 
                     <div style="margin-bottom: 2rem;">
-                        <img src="images/guitar/guitar_a_2.jpg" alt="Not-So-Classical Guitar" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; border: 1px solid var(--line); background: var(--s2); border-radius: 6px; display: block; margin-bottom: 0.75rem;" />
+                        <img src="images/synth/synth_setup.jpeg" alt="Guitar-Driven Synth" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; border: 1px solid var(--line); background: var(--s2); border-radius: 6px; display: block; margin-bottom: 0.75rem;" />
                         <p style="font-size: 0.85rem; color: var(--dim); text-align: center; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0;">
-                            Not-So-Classical Guitar
+                            Guitar-Driven Synth
                         </p>
                     </div>
 
-                    <p>The Not-So-Classical guitar was a project that I worked on during my "Drafting and Design" pathway high school class.
-                        Around this time, I became very interested in making musical instruments, and I wanted to make a guitar that was unique, beautiful,
-                        and affordable. Although the class was tasked with designing a table, I was permitted to work on the guitar instead.
+                    <p>Continuing on my interest in music and electronics, I am currently working on a guitar-driven synthesizer.
+                        The project consists on three main parts: an analog voltage control oscillator (VCO), a live guitar note 
+                        detection system, and the embedded software that would autonomously what notes the VCO plays based on the guitar input
+                    </p>    
+                    <p>The plan is to have a CD40106-based VCO (based on Moritz Klein's design) that is controlled by an ESP32 via a 
+                        Digital to Analog Converter (DAC). The guitar would be connected to the ESP32 via a 6.35mm jack, and the ESP32
+                        would run a Fast Fourier Transform (FFT) to detect the fundamental frequency of the guitar input and its modes. 
+                        The microcontroller would then process this information and live select an accompanying harmony to the original melody
+                        which would be played by the VCO.
                     </p>
-                    <p>The guitar was designed in Autodesk Fusion, with a shape based on the later Antonio de Torres (1817-1892) models. One of the more
-                        unique features of my version is the placement of the sound holes, which unlike a traditional guitar, are placed on the upper sides of the body.
-                        It does not have frets either, which allows the player to slide between the notes and play microtones. It has a piezoelectric pickup and was 
-                        made with layers of plywood 
-                        that were later cut on a CNC router.
+                    <p>Special attention is placed on the synthesizer's visual aesthetic and user interface.
                     </p>
-
                     <h2>Design</h2>
                     <div class="manufacturing-grid">
                         <div class="manufacturing-item">
